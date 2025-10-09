@@ -37,11 +37,27 @@
     transition: all 0.3s ease;
 }
 
+.user-dashboard-box-btn-two {
+    border: 1px solid #E0B659;
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    color: #FFFFFF;
+    border-radius: 50px;
+    /* Fully rounded */
+    padding: 12px 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
 .user-dashboard-box-btn:hover {
     opacity: 0.9;
     transform: translateY(-2px);
 }
 
+.user-dashboard-box-btn-two:hover {
+    transform: translateY(-2px);
+}
 
 .small-img-card {
     border: 1px solid #E0B659;
@@ -170,4 +186,25 @@ p {
 .slick-slide {
     float: none !important;
     height: auto;
+}
+
+/* inc dec btn styles */
+.inc-dec-count {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    /* margin: 0 6px; */
+}
+
+.inc-dec-btn {
+    height: 40px;
+    width: 40px;
+    border: 1px solid #E0B659;
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    color: #E0B659;
+    font-size: 24px;
+    display: flex  ;
+    justify-content: center;
+    align-items: center;
 }

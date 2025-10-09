@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/validation/loginSchema"; // Import the login schema
 import { useDispatch, useSelector } from "react-redux";
-import { signInAdmin } from "@/features/auth/authSlice"; // Import the thunk
+import { signInAdmin } from "@/redux/features/auth/authSlice"; // Import the thunk
 
 const Signin = () => {
     const router = useRouter();

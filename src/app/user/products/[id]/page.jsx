@@ -4,7 +4,8 @@ import ReviewCard from "@/components/user/cards/review-card";
 import BorderTabs from "@/components/user/tabs/border-tabs";
 import TabPanel from "@/components/user/tabs/tab-panel";
 import { userproducts } from "@/lib/products-data";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { use, useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
 
 const reviews = [
@@ -32,8 +33,10 @@ const reviews = [
   },
 ];
 
-const UserDashboardProductServiceDetails = () => {
+const UserProductDetails = () => {
   const [activeTab, setActiveTab] = useState("products");
+  const [count, setCount] = useState(0);
+  const router = useRouter();
 
   const tabs = [
     {
@@ -43,70 +46,49 @@ const UserDashboardProductServiceDetails = () => {
     },
     {
       id: 2,
-      value: "services",
-      label: "Services",
-    },
-    {
-      id: 3,
       value: "customers reviews",
       label: "Customers Reviews",
     },
   ];
 
+  const handleIncrement = () => {
+    setCount(count + 1);
+  };
+  const handleDecrement = () => {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  };
+
   return (
     <div className="userdashboard-product-details">
       <div className="row w-100">
-        <div className="col-md-4 d-flex flex-column gap-3">
+        <div className="col-md-3 d-flex flex-column gap-3">
           {/* Main Image */}
           <div className="rounded-4 overflow-hidden shadow-sm">
             <img
               src="/images/p_view_main.png"
               alt="main product"
               className="object-fit-cover w-100 rounded-4"
-              style={{ height: "300px" }}
+              style={{ height: "100%" }}
             />
-          </div>
-
-          {/* Thumbnail Images */}
-          <div className="d-flex flex-row gap-3 w-100">
-            <div
-              className="rounded-4 overflow-hidden shadow-sm cursor-pointer"
-              style={{ flex: 1 }}
-            >
-              <img
-                src="/images/p_view_1.png"
-                alt="product view 1"
-                className="object-fit-cover w-100 rounded-4"
-                style={{ height: "150px" }}
-              />
-            </div>
-            <div
-              className="rounded-4 overflow-hidden shadow-sm cursor-pointer"
-              style={{ flex: 1 }}
-            >
-              <img
-                src="/images/p_view_2.png"
-                alt="product view 2"
-                className="object-fit-cover w-100 rounded-4"
-                style={{ height: "150px" }}
-              />
-            </div>
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="col-md-8 d-flex flex-column justify-content-start">
+        <div className="col-md-9 d-flex flex-column justify-content-start">
           <div className="ps-md-2 ps-0 pt-3 pt-md-0">
             <div className="d-flex  justify-content-between gap-3 flex-wrap mb-4">
               <div>
-                <h3 className="fw-bold  mb-3 txt_color">Omni iste</h3>
+                <h3 className="fw-bold  mb-3 txt_color">
+                  Deep Mask Conditioner
+                </h3>
                 <h4 className="fw-medium text-light mb-3">
-                  1609 Oak, St. (2km)
+                  $24.00 (34 available)
                 </h4>
-                <h5 className="fw-medium mb-3 txt_color">About Omni iste</h5>
               </div>
               <div className="d-flex flex-column justify-content-between ">
-                <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
+                <div className="d-flex flex-row gap-3 align-items-center justify-content-end mb-3">
                   <button
                     className="d-flex text-light align-items-center gap-2 rounded-circle p-2"
                     style={{
@@ -116,21 +98,32 @@ const UserDashboardProductServiceDetails = () => {
                   >
                     <FiMessageSquare size={28} />
                   </button>
-                  <button className="user-dashboard-box-btn">Book Now</button>
+                  <button
+                    className="user-dashboard-box-btn-two"
+                    onClick={() => router.push("/user/cart")}
+                  >
+                    Add to Cart
+                  </button>
+                  <button className="user-dashboard-box-btn">Buy Now</button>
                 </div>
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
-                  <p className="text-light mb-0">Explore</p>
-                  <div className="rounded-4 overflow-hidden shadow-sm cursor-pointer">
-                    <img
-                      src="/images/p_map.png"
-                      alt="map"
-                      className="object-fit-cover w-100 rounded-4"
-                      style={{ height: "60px" }}
-                    />
-                  </div>
+                  <button
+                    className="inc-dec-btn rounded-circle"
+                    onClick={handleIncrement}
+                  >
+                    +
+                  </button>
+                  <span className="inc-dec-count">{count}</span>
+                  <button
+                    className="inc-dec-btn rounded-circle"
+                    onClick={handleDecrement}
+                  >
+                    -
+                  </button>
                 </div>
               </div>
             </div>
+            <h5 className="fw-medium mb-3 txt_color">Description</h5>
             <p className="text-light lh-lg mb-4 fw-light">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -139,11 +132,7 @@ const UserDashboardProductServiceDetails = () => {
               reprehenderit in voluptate velit esse cillum dolore eu fugiat
               nulla pariatur. Excepteur sint occaecat cupidatat non proident,
               sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum.
+              laborum.Lorem ipsum dolor sit amet,
             </p>
           </div>
         </div>
@@ -177,26 +166,6 @@ const UserDashboardProductServiceDetails = () => {
             </div>
           </TabPanel>
 
-          <TabPanel value={activeTab} tabValue="services">
-            <div className="row g-3 g-lg-4">
-              {userproducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="col-12 col-sm-6 col-md-4 col-lg-3"
-                >
-                  <UserProductCard
-                    showOrderBtn={true}
-                    showProgress={true}
-                    onCardClick={() => router.push(`/user/${item.id}`)}
-                    onChairClick={() => alert("Chair icon clicked")}
-                    onBagClick={() => alert("Beg icon clicked")}
-                    {...item}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-
           <TabPanel value={activeTab} tabValue="customers reviews">
             {reviews.map((review) => (
               <ReviewCard
@@ -213,4 +182,4 @@ const UserDashboardProductServiceDetails = () => {
   );
 };
 
-export default UserDashboardProductServiceDetails;
+export default UserProductDetails;

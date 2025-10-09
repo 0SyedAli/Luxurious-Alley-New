@@ -11,7 +11,7 @@ export default function Sidebar() {
   const links = [
     { href: "/user", name: "Home", icon: HiOutlineSquares2X2 },
     { href: "/user", name: "Location", icon: IoCalendarOutline },
-    { href: "/user", name: "Products", icon: BiMessageSquareDots },
+    { href: "/user/products", name: "Products", icon: BiMessageSquareDots },
     { href: "/user/inbox", name: "Inbox", icon: MdDisplaySettings },
     { href: "/user", name: "Settings", icon: MdDisplaySettings },
   ];

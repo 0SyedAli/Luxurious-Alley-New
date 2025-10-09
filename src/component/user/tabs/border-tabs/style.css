@@ -1,5 +1,10 @@
-/* Border Tabs Container */
+Border Tabs Container
 .border-tabs-container {
+  width: 100%;
+}
+
+/* Border Tabs Wrapper */
+.border-tabs-wrapper {
   width: 100%;
 }
 
@@ -8,26 +13,55 @@
   border-bottom: 1px solid #573D1A;
   display: flex;
   flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Left side - All tabs */
+.border-tabs-left {
+  display: flex;
+  flex-wrap: nowrap;
+  flex: 1;
+}
+
+/* Right side - Conditional button */
+.border-tabs-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+
+}
+
+/* Custom Button for right side */
+.border-tab-custom-button {
+  text-transform: none;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 12px 20px;
+  border: none;
+  background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
+  border-radius: 50px;
+  cursor: pointer;
+  color: #000;
+  margin-left: 16px;
+  transition: all 0.3s ease;
+  bottom: 10px;
+  /* 👈 lifts button upward (creates visual bottom gap) */
+  position: relative;
+}
+
+.border-tab-custom-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* Hide scrollbar for a cleaner look (optional) */
 .border-tabs-custom::-webkit-scrollbar {
   height: 6px;
 }
-
-/* .border-tabs-custom::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-} */
-
-/* .border-tabs-custom::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-} */
-
-/* .border-tabs-custom::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-} */
 
 /* Tab Item */
 .border-tab-item {
@@ -55,20 +89,10 @@
   color: transparent;
 }
 
-/* .border-tab-item:hover {
-border: none;
-  background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
-  border-radius: 15px 15px 0 0;
-  padding: 12px 24px;
-  font-weight: bold;
-  cursor: pointer;
-} */
-
 .border-tab-item.active {
   border: none;
   background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
   border-radius: 15px 15px 0 0;
-  /* Fully rounded */
   padding: 12px 24px;
   font-weight: bold;
   cursor: pointer;
@@ -103,6 +127,12 @@ border: none;
     font-size: 12px;
   }
 
+  .border-tab-custom-button {
+    padding: 8px 16px;
+    font-size: 12px;
+    margin-left: 12px;
+  }
+
   .border-tab-item .border-tab-icon {
     width: 20px;
     height: 20px;
@@ -113,6 +143,12 @@ border: none;
   .border-tab-item {
     padding: 6px 12px;
     font-size: 11px;
+  }
+
+  .border-tab-custom-button {
+    padding: 6px 12px;
+    font-size: 11px;
+    margin-left: 8px;
   }
 
   .border-tabs-custom {
