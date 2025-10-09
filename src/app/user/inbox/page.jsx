@@ -545,8 +545,9 @@ function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
           width={size}
           height={size}
           style={{ objectFit: "cover" }}
-          priority={false}
-          quality={true}
+          priority={true}
+          // quality={true}
+          unoptimized={true}
         />
       ) : (
         <BsPersonCircle size={24} color="#000000" />
@@ -595,7 +596,7 @@ function ConversationList({ items, activeId, onSelect }) {
                 }}
               >
                 <div className="position-relative">
-                  <AvatarImage size={40} src={c.avatar || ""} alt={c.name} />
+                  <AvatarImage size={50} src={c.avatar || ""} alt={c.name} />
                   <span className="position-absolute bottom-0 end-0 translate-middle badge bg-success border border-white rounded-circle p-1"></span>
                 </div>
                 <div className="flex-grow-1 min-w-0">
@@ -635,7 +636,7 @@ function ChatHeader({ name, subtitle, avatar, onBack, showBack }) {
           <BiArrowBack size={20} />
         </button>
       )}
-      <AvatarImage size={36} src={avatar || ""} alt={name} />
+      <AvatarImage size={45} src={avatar || ""} alt={name} />
       <div className="flex-grow-1 min-w-0">
         <h6 className="fw-bold text-truncate mb-0 txt_color">{name}</h6>
         <small className="text-light text-truncate">{subtitle}</small>

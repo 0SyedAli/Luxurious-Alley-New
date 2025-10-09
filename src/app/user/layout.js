@@ -1,9 +1,10 @@
 
 'use client'
 import '../dashboard_main.css';
-import Sidebar from '@/components/sidebar/index';
-import Header from '@/components/header';
+import Sidebar from '@/components/user/sidebar/index';
+import Header from '@/components/user/header';
 import { usePathname } from 'next/navigation';
+import './style.css'
 
 export default function UserDashboardLayout({ children }) {
 
@@ -15,9 +16,7 @@ export default function UserDashboardLayout({ children }) {
       <div className="main-content main-dashboard">
         <div className='dash_bg_image'></div>
         <Header />
-        <div className="content" style={{
-          borderTop: pathname === "/user/inbox" ? "1px solid #573D1A" : "none"
-        }}>{children}</div>
+        <div className="content" >{children}</div>
       </div>
     </div>
   );

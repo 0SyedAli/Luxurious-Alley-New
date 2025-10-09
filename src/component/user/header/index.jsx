@@ -3,7 +3,9 @@ import Image from "next/image";
 export default function Header() {
   return (
     <div className="dash_top_header my-4 ">
-      <header className="d-flex align-items-center justify-content-between dth_content">
+      <header className="d-flex align-items-center justify-content-between dth_content pb-4" style={{
+        borderBottom: "1px solid #573D1A",
+      }}>
         <div>
           <h2 className="display-6 fw-semibold text-balance text-brand-primary mb-1">
             Hi Hair Affair,

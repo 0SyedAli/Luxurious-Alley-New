@@ -1,0 +1,136 @@
+/* Border Tabs Container */
+.border-tabs-container {
+  width: 100%;
+}
+
+/* Custom Tabs */
+.border-tabs-custom {
+  border-bottom: 1px solid #573D1A;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* Hide scrollbar for a cleaner look (optional) */
+.border-tabs-custom::-webkit-scrollbar {
+  height: 6px;
+}
+
+/* .border-tabs-custom::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+} */
+
+/* .border-tabs-custom::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+} */
+
+/* .border-tabs-custom::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+} */
+
+/* Tab Item */
+.border-tab-item {
+  text-transform: none;
+  font-size: 14px;
+  font-weight: 600;
+  min-width: auto;
+  white-space: nowrap;
+  padding: 12px 20px;
+  flex-shrink: 0;
+  border: none;
+  border-top: none;
+  border-bottom: none;
+  border-left: none;
+  background: transparent;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* .border-tab-item:hover {
+border: none;
+  background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
+  border-radius: 15px 15px 0 0;
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+} */
+
+.border-tab-item.active {
+  border: none;
+  background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
+  border-radius: 15px 15px 0 0;
+  /* Fully rounded */
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.border-tab-item.disabled {
+  color: #6c757d !important;
+  background-color: transparent !important;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Tab Icon */
+.border-tab-icon {
+  flex-shrink: 0;
+}
+
+/* Tab Label */
+.border-tab-label {
+  white-space: nowrap;
+  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .border-tab-item {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .border-tab-item .border-tab-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .border-tab-item {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .border-tabs-custom {
+    gap: 0;
+  }
+}
+
+/* Centered variant */
+.border-tabs-custom.centered {
+  justify-content: center;
+}
+
+/* Full width variant */
+.border-tabs-custom.full-width {
+  display: flex;
+}
+
+.border-tabs-custom.full-width .border-tab-item {
+  flex: 1;
+  justify-content: center;
+}

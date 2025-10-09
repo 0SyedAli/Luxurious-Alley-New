@@ -18,6 +18,8 @@
     "react-hook-form": "^7.64.0",
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
+    "react-slick": "^0.31.0",
+    "slick-carousel": "^1.8.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
