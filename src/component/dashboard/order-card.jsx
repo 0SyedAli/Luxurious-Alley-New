@@ -8,9 +8,9 @@ export default function OrderCard({
   return (
     <div className="card glass2 border-0 h-100">
       <div className="card-body">
-        <div className="d-flex align-items-center justify-content-between mb-3">
-          <div className="d-flex align-items-center gap-3">
-            <div className="rounded-3 overflow-hidden" style={{ width: 56, height: 56 }}>
+        <div className="d-flex align-items-center justify-content-center mb-3">
+          <div className="d-flex align-items-center gap-3 flex-column text-center">
+            <div className="rounded-3 overflow-hidden" style={{ width: 100, height: 100 }}>
               <img
                 src={image || "/placeholder.svg"}
                 alt={`${title} thumbnail`}
@@ -18,8 +18,8 @@ export default function OrderCard({
               />
             </div>
             <div>
-              <div className="fw-semibold">{title}</div>
-              <div className="text-white small">{time}</div>
+              <div className="fw-semibold" style={{ fontSize: 20 }}>{title}</div>
+              <div className="text-white small" style={{ fontSize: 14 }}>{time}</div>
             </div>
           </div>
           <span className="oc_message"><FiMessageSquare /></span>

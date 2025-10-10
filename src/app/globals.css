@@ -145,7 +145,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -218,6 +218,7 @@ textarea {
   padding: 90px 50px 0 50px;
   position: relative;
   height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar .logo {
@@ -414,6 +415,28 @@ textarea {
   border: 1px solid #CD8A1A;
 }
 
+.dropdown-heading {
+  width: 100%;
+  height: 54px !important;
+  border-radius: 30px;
+  padding: 10px 20px !important;
+  border: 1px solid transparent;
+  background: #07162E;
+  background: linear-gradient(90deg, rgba(7, 22, 46, 1) 0%, rgba(35, 20, 122, 1) 100%);
+  font-weight: 500;
+  font-family: var(--font-open-sans);
+  font-size: 16px;
+  color: #FFF;
+  border: 1px solid #CD8A1A;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-selected-button {
+  color: #FFF;
+}
+
 .auth_container textarea {
   height: auto;
 }
@@ -422,6 +445,10 @@ textarea {
 .auth_container select:focus-visible {
   border: 1px solid #CD8A1A;
   outline: none;
+}
+
+.calender_container label {
+  font-size: 14px;
 }
 
 /* .auth_container input:-webkit-autofill {
@@ -485,6 +512,7 @@ textarea {
   position: absolute;
   top: 0;
   left: 0;
+  cursor: pointer;
 }
 
 .cp_upload_img {
@@ -524,7 +552,7 @@ textarea {
   right: 3px;
 }
 
-.calender_item input[type="radio"]:checked+label+.calender_spot {
+.calender_item input[type="checkbox"]:checked+label+.calender_spot {
   background-color: #CD8A1A;
 }
 
@@ -567,6 +595,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   border-radius: 16px !important;
   box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
   color: var(--token-foreground);
+  font-family: var(--font-inter);
 }
 
 .glass-pill {
@@ -610,11 +639,14 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .oc_message {
   background-color: #19CC89;
   border-radius: 100%;
-  width: 25px;
-  height: 25px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .dash-2 select {
@@ -739,6 +771,127 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   background-clip: text;
   color: transparent;
 
+}
+
+.auth_otp div {
+  gap: 15px;
+  justify-content: center;
+}
+
+.auth_otp input {
+  font-family: var(--font-open-sans);
+  width: 54px !important;
+  height: 54px;
+}
+
+.resend_code {
+  text-align: center;
+}
+
+.resend_code p {
+  color: #858585;
+  font-size: 15px;
+  font-family: var(--font-inter);
+  margin: 0;
+}
+
+.resend_code h5 {
+  color: #000;
+  font-size: 16px;
+  font-family: var(--font-inter);
+  font-weight: 600;
+  border-bottom: 1px solid #FFF;
+  display: inline-block;
+}
+
+.auth_container.otp_container {
+  gap: 50px;
+}
+
+.upload_img_cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 124px;
+  height: 124px;
+  outline: 1px solid #000;
+  text-align: center;
+  border-radius: 100%;
+  margin: 20px auto 50px;
+  position: relative;
+}
+
+.upload_user_image {
+  position: relative;
+  width: fit-content;
+}
+
+.upload_user_image img {
+  border-radius: 100%;
+  border: 2px solid #CD8A1A;
+  padding: 5px;
+}
+
+.img_plus {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: #FFF;
+  background: #C78015;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #0e1541;
+}
+
+.upload_user_image input {
+  position: absolute;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  z-index: 1111;
+}
+
+.multi-select-custom {
+  text-align: start;
+}
+
+
+.multi-select-custom input[type="checkbox"] {
+  height: 20px !important;
+  width: 20px !important;
+  top: -4px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.multi-select-custom .dropdown-content {
+  background-color: #FFF;
+  padding: 10px;
+}
+
+.multi-select-custom .dropdown-content div {
+  background-color: transparent !important;
+  box-shadow: none;
+  color: #000;
+}
+
+.multi-select-custom input {
+  background: #FFF !important;
+  padding: 5px !important;
+  border-radius: 5px !important;
+  border: 1px solid #CD8A1A !important;
+  color: #000;
+}
+
+.multi-select-custom input::placeholder {
+  color: #000;
 }
 
 @media (prefers-color-scheme: dark) {

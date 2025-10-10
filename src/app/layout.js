@@ -3,7 +3,8 @@ import { Open_Sans, Inter, Epilogue, Montserrat, Lato, Roboto, Poppins, Lora } f
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import BootstrapClients from "@/components/BootstrapClients";
-import { Providers } from '../component/Providers';
+import ToastProvider from "@/components/ToastProvider";
+import Providers from "@/components/Providers";
 
 const interFont = Inter({
   variable: "--font-inter",
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${epilogue.variable} ${roboto.variable} ${lato.variable} ${montserrat.variable} ${interFont.variable} ${openSans.variable} ${lora.variable}`}>
+        <ToastProvider /> {/* Global toast notifications */}
         <Providers>
           {children}
         </Providers>
