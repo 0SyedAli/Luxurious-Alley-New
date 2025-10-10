@@ -1,4 +1,4 @@
-Border Tabs Container
+/* Border Tabs Container */
 .border-tabs-container {
   width: 100%;
 }
@@ -30,8 +30,6 @@ Border Tabs Container
   display: flex;
   align-items: center;
   margin-left: auto;
-
-
 }
 
 /* Custom Button for right side */
@@ -49,7 +47,6 @@ Border Tabs Container
   margin-left: 16px;
   transition: all 0.3s ease;
   bottom: 10px;
-  /* 👈 lifts button upward (creates visual bottom gap) */
   position: relative;
 }
 
@@ -82,13 +79,12 @@ Border Tabs Container
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  /* Inactive tab - Plain White text */
+  color: #FFFFFF;
+  background: transparent;
 }
 
+/* Active Tab - Same gradient background but BLACK text */
 .border-tab-item.active {
   border: none;
   background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
@@ -96,6 +92,25 @@ Border Tabs Container
   padding: 12px 24px;
   font-weight: bold;
   cursor: pointer;
+  /* Black text for active tab */
+  color: #000000;
+}
+
+/* Remove all gradient effects for labels - use plain colors */
+.border-tab-label {
+  white-space: nowrap;
+  /* Default white color for inactive tabs */
+  color: #FFFFFF;
+}
+
+/* Active tab - black text */
+.border-tab-item.active .border-tab-label {
+  color: #000000;
+}
+
+/* Inactive tab - white text */
+.border-tab-item:not(.active) .border-tab-label {
+  color: #FFFFFF;
 }
 
 .border-tab-item.disabled {
@@ -105,19 +120,24 @@ Border Tabs Container
   opacity: 0.6;
 }
 
+/* Disabled tabs - gray text */
+.border-tab-item.disabled .border-tab-label {
+  color: #6c757d !important;
+}
+
 /* Tab Icon */
 .border-tab-icon {
   flex-shrink: 0;
 }
 
-/* Tab Label */
-.border-tab-label {
-  white-space: nowrap;
-  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+/* Active tab icon color adjustment */
+.border-tab-item.active .border-tab-icon {
+  filter: brightness(0); /* Makes icons black for active tab */
+}
+
+/* Inactive tab icon - adjust if needed for white background */
+.border-tab-item:not(.active) .border-tab-icon {
+  filter: brightness(10); /* Makes icons white for inactive tab */
 }
 
 /* Responsive Design */
@@ -125,6 +145,10 @@ Border Tabs Container
   .border-tab-item {
     padding: 8px 16px;
     font-size: 12px;
+  }
+
+  .border-tab-item.active {
+    padding: 8px 20px;
   }
 
   .border-tab-custom-button {
@@ -143,6 +167,10 @@ Border Tabs Container
   .border-tab-item {
     padding: 6px 12px;
     font-size: 11px;
+  }
+
+  .border-tab-item.active {
+    padding: 6px 16px;
   }
 
   .border-tab-custom-button {
@@ -169,4 +197,14 @@ Border Tabs Container
 .border-tabs-custom.full-width .border-tab-item {
   flex: 1;
   justify-content: center;
+}
+
+/* Hover effects for inactive tabs */
+.border-tab-item:not(.active):not(.disabled):hover {
+  background: rgba(244, 187, 1, 0.2);
+  color: #FFFFFF;
+}
+
+.border-tab-item:not(.active):not(.disabled):hover .border-tab-label {
+  color: #FFFFFF;
 }
