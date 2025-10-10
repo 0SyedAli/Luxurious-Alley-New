@@ -17,7 +17,7 @@ export function ProductCard({
           src={image || "/images/product2.png"}
           alt={title}
           className="card-img-top object-fit-cover product_img22"
-          style={{ height: 160 }}
+          style={{ height: 180 }}
         />
         <div className="position-absolute top-0 start-0 m-2 d-flex align-items-center gap-2 bg-dark bg-opacity-50 rounded-pill px-2 py-1 shadow-sm">
           <img src={sellerAvatar || "/images/dashboard-prof.png"} alt="" width={25} height={25} className="rounded-circle" />

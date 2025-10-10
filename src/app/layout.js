@@ -3,7 +3,8 @@ import { Open_Sans, Inter, Epilogue, Montserrat, Lato, Roboto, Poppins, Lora } f
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 import BootstrapClients from "@/components/BootstrapClients";
-import { Providers } from '../component/Providers';
+import ToastProvider from "@/components/ToastProvider";
+import Providers from "@/components/Providers";
 
 const interFont = Inter({
   variable: "--font-inter",

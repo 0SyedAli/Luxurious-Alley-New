@@ -18,19 +18,31 @@ export const signupSchema = z.object({
 
 export const createProfileSchema = z.object({
   // Assuming "Username" is First Name and "Password" is Last Name based on typical form layout
-  firstName: z.string().trim().min(2, 'First Name is required.'),
-  lastName: z.string().trim().min(2, 'Last Name is required.'),
-
+  fullName: z.string().trim().min(2, 'Full Name is required.'),
   gender: z.enum(['male', 'female'], {
     errorMap: () => ({ message: 'Please select a gender.' }),
   }),
-
   country: z.string().trim().min(2, 'Country/Region is required.'),
+  city: z.string().trim().min(2, 'City is required.'),
   state: z.string().trim().min(2, 'State is required.'),
   pinCode: z.string().trim().regex(/^\d+$/, 'PIN Code must be a number.').min(5, 'PIN Code is required.'),
-  streetAddress: z.string().trim().min(5, 'Street address is required.'),
+  // streetAddress: z.string().trim().min(5, 'Street address is required.'),
   phone: z.string().trim().regex(/^\d{10,}$/, 'Invalid phone number format.'),
 
   // File is optional/handled outside the main form data, but we'll include a placeholder validation for the field itself
   profilePicture: z.any().optional(),
+});
+
+export const createBussinessSchema = z.object({
+  bname: z.string().trim().min(2, 'Full Name is required.'),
+  ownerName: z.string().trim().min(2, 'Full Name is required.'),
+  country: z.string().trim().min(2, 'Country/Region is required.'),
+  state: z.string().trim().min(2, 'State is required.'),
+  pinCode: z.string().trim().regex(/^\d+$/, 'PIN Code must be a number.').min(5, 'PIN Code is required.'),
+  bAddress: z.string().trim().min(5, 'Street address is required.'),
+  phone: z.string().trim().regex(/^\d{10,}$/, 'Invalid phone number format.'),
+});
+export const createBussiness2Schema = z.object({
+  businessDetails: z.string().min(10, "Please enter at least 10 characters."),
+  categoryId: z.any().optional(), // ✅ let React handle this
 });

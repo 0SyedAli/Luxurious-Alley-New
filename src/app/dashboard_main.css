@@ -2166,18 +2166,9 @@ background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34,
         margin-bottom: 40px;
     }
 
-    .side_menu2 ul li {
-        margin: 10px 0;
-    }
-
     .side_menu2 ul {
         padding: 0 !important;
     }
-
-    .side_menu2 ul li a {
-        font-size: 14px;
-    }
-
     .side_menu2 ul li span {
         font-size: 15px;
         height: 30px;

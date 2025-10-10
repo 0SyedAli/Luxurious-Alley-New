@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/validation/loginSchema"; // Import the login schema
 import { useDispatch, useSelector } from "react-redux";
 import { signInAdmin } from "@/redux/features/auth/authSlice"; // Import the thunk
+import { showErrorToast, showSuccessToast } from '@/lib/toast';
 
 const Signin = () => {
   const router = useRouter();
@@ -31,13 +32,17 @@ const Signin = () => {
     // Dispatch the login thunk
     // const resultAction = await dispatch(signInAdmin(data));
 
-    // Check if the login was successful (fulfilled)
-    // if (signInAdmin.fulfilled.match(resultAction)) {
-    //   // Success: Redirect to the dashboard
-    //   router.push("/dashboard");
-    // }
-    // Error handling is managed by the error state
-  };
+        // Check if the login was successful (fulfilled)
+        if (signInAdmin.fulfilled.match(resultAction)) {
+            // Success: Redirect to the dashboard
+            showSuccessToast("Login Successfull")
+
+            router.push("/dashboard");
+        } else {
+            showErrorToast(resultAction.payload)
+        }
+        // Error handling is managed by the error state
+    };
 
   const isSubmitting = status === "loading";
 
@@ -83,27 +88,32 @@ const Signin = () => {
           <div className="">
             {/* Note: Checkbox logic should be handled separately if needed, 
                            but not required for basic API call/validation. */}
-            <div className="remember form-check">
-              <input
-                type="checkbox"
-                className="form-check-input"
-                id="exampleCheck1"
-              />
-              <label className="form-check-label" htmlFor="exampleCheck1">
-                Remember me
-              </label>
-            </div>
-          </div>
-
-          <div className="text-center">
-            {/* Use a button of type submit */}
-            <button
-              type="submit"
-              className="theme-btn2"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Signing In..." : "Sign in"}
-            </button>
+                        <div className="remember form-check">
+                            <input
+                                type="checkbox"
+                                className="form-check-input"
+                                id="exampleCheck1"
+                            />
+                            <label className="form-check-label" htmlFor="exampleCheck1">
+                                Remember me
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div className="text-center">
+                        {/* Use a button of type submit */}
+                        <button type="submit" className="theme-btn2" disabled={isSubmitting}>
+                            {isSubmitting ? 'Signing In...' : 'Sign in'}
+                        </button>
+                        
+                        <div className="register_link">
+                            <h5>
+                                Don't have an account?
+                                <Link href="signup"> Sign Up</Link>
+                            </h5>
+                        </div>
+                    </div>
+                </form>
 
             <div className="register_link">
               <h5>
