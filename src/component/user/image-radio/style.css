@@ -1,0 +1,86 @@
+:root {
+  --color-gold: #F4BB01;
+  --color-card: #ffffff;
+}
+
+/* Group container */
+.image-radio-group {
+  gap: 12px;
+}
+
+/* Each item */
+.image-radio-item {
+  position: relative;
+  gap: 12px;
+}
+
+/* Hide default radio */
+.image-radio-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Custom radio circle */
+.image-radio-control {
+  --ir-size: 20px;
+  width: var(--ir-size);
+  height: var(--ir-size);
+  border-radius: 50%;
+  border: 3px solid var(--color-gold);
+  background: transparent;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+/* Filled when checked */
+.image-radio-control.checked {
+  background: var(--color-gold);
+}
+
+/* Focus ring */
+.image-radio-input:focus-visible + .image-radio-control {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Image card */
+.image-radio-card {
+  background: transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Image styling */
+.image-radio-logo {
+  display: block;
+  width: 70px;
+  height: 50px;
+  object-fit: contain;
+}
+
+/* Gold separator dots */
+.image-radio-sep {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  margin-left: 14px;
+  margin-right: 6px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 575.98px) {
+  .image-radio-group {
+    gap: 14px;
+  }
+  .image-radio-sep {
+    margin-left: 10px;
+    margin-right: 4px;
+  }
+}

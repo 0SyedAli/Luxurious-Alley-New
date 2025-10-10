@@ -1,6 +1,7 @@
 "use client";
 
 import CartTable from "@/components/user/tables/cart-table";
+import { useRouter } from "next/navigation";
 
 const demoItems = [
   {
@@ -34,6 +35,7 @@ const demoItems = [
 ];
 
 const UserCart = () => {
+    const router = useRouter();
   return (
     <main className="container py-4" aria-label="Cart">
       <h4 className="txt_color mb-4 display-6">Cart Summary</h4>
@@ -57,7 +59,7 @@ const UserCart = () => {
             <h5 className="text-light">Sub Total</h5>
             <p style={{ color: "#D99C15" }}>$65.00</p>
           </div>
-          <button className="user-dashboard-box-btn">
+          <button className="user-dashboard-box-btn" onClick={() => router.push('/user/checkout')}>
             Proceed to checkout
           </button>
         </div>
