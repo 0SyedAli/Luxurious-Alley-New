@@ -1,0 +1,210 @@
+.user-dashboard,
+.userdashboard-product-details {
+    font-family: var(--font-lora);
+}
+
+.user-dashboard-box {
+    border: 2px solid #E0B659;
+    border-radius: 11px;
+    padding: 32px 36px;
+    margin-bottom: 32px;
+    background: url('../../../public/images/user_home_box_bg.png') no-repeat right center;
+    background-size: 50% 100%;
+    /* 30% width, auto height */
+    min-height: 100%;
+    /* Set a minimum height */
+    width: 100%;
+    /* Full width of container */
+    position: relative;
+    overflow: hidden;
+}
+
+.user-dashboard-box-title {
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 44px;
+}
+
+.user-dashboard-box-btn {
+    border: none;
+    background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
+    color: #000;
+    border-radius: 50px;
+    /* Fully rounded */
+    padding: 12px 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-dashboard-box-btn-two {
+    border: 1px solid #E0B659;
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    color: #FFFFFF;
+    border-radius: 50px;
+    /* Fully rounded */
+    padding: 12px 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-dashboard-box-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.user-dashboard-box-btn-two:hover {
+    transform: translateY(-2px);
+}
+
+.small-img-card {
+    border: 1px solid #E0B659;
+    border-radius: 8px;
+    width: 120px;
+    padding: 16px;
+    padding-top: 30px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.small-img-card,
+p {
+    color: #DADADA;
+    font-weight: 500;
+}
+
+
+.arrow-button {
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    font-size: 28px;
+}
+
+.txt_color {
+    margin: 0;
+    font-family: var(--font-lora);
+    background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+
+.circle-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    bottom: -20px;
+    right: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.star-icon {
+    color: #C19B3F;
+    font-size: 20px;
+    z-index: 2;
+}
+
+.card-img-icon {
+    color: #fff;
+    font-size: 20px;
+    z-index: 2;
+}
+
+.progress-ring {
+    width: 50px;
+    height: 50px;
+    border-radius: 60%;
+    border: 3px solid transparent;
+    border-top-color: #00c37a;
+    border-left-color: #00c37a;
+    border-right-color: #00c37a;
+    transform: rotate(0deg) scale(0.85);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+
+
+
+/* Fix slider container width */
+.slider-section {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* Ensure proper card sizing within slider */
+.slick-slide {
+    height: auto;
+}
+
+.slick-slide>div {
+    height: 100%;
+}
+
+.slick-slide>div>div {
+    height: 100%;
+}
+
+/* Custom arrow styling */
+.arrow-button {
+    /* background: #007bff; */
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.arrow-button:hover {
+    /* background: #0056b3; */
+    transform: scale(1.1);
+}
+
+/* Fix slider track and slide spacing */
+.slick-list {
+    margin: 0 -10px;
+}
+
+.slick-track {
+    display: flex !important;
+}
+
+.slick-slide {
+    float: none !important;
+    height: auto;
+}
+
+/* inc dec btn styles */
+.inc-dec-count {
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    /* margin: 0 6px; */
+}
+
+.inc-dec-btn {
+    height: 40px;
+    width: 40px;
+    border: 1px solid #E0B659;
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    color: #E0B659;
+    font-size: 24px;
+    display: flex  ;
+    justify-content: center;
+    align-items: center;
+}

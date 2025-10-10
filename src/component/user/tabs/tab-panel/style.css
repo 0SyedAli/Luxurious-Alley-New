@@ -1,0 +1,26 @@
+/* Tab Panel Styles */
+.tab-panel {
+  width: 100%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-panel-content {
+  padding: 1.5rem 0;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Add smooth transitions */
+.tab-panel {
+  transition: all 0.3s ease-in-out;
+}

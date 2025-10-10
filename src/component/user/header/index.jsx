@@ -1,0 +1,42 @@
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+export default function Header() {
+  const router = useRouter();
+  return (
+    <div className="dash_top_header my-4 ">
+      <header
+        className="d-flex align-items-center justify-content-between dth_content pb-4"
+        style={{
+          borderBottom: "1px solid #573D1A",
+        }}
+      >
+        <div>
+          <h2 className="display-6 fw-semibold text-balance text-brand-primary mb-1">
+            Hi Hair Affair,
+          </h2>
+          <p className="small mb-0" style={{ color: "#808080" }}>
+            Let's make your hair attractive
+          </p>
+        </div>
+        <button
+          className="d-flex align-items-center gap-3 bg-transparent border-0"
+          onClick={() => router.push("/user/profile")}
+        >
+          <Image
+            src="/images/dashboard-prof.png"
+            alt="User avatar"
+            width={44}
+            height={44}
+            className="rounded-circle object-fit-cover text-white"
+            style={{ width: 44, height: 44 }}
+          />
+          <div className="text-start me-2">
+            <h4 className="fw-medium text-white">Hi HairAffair</h4>
+            <div className="text-white small">Los Angeles</div>
+          </div>
+        </button>
+      </header>
+    </div>
+  );
+}

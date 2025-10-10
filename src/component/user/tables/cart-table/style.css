@@ -1,0 +1,100 @@
+/* Custom CSS to achieve the exact look with Bootstrap semantics */
+
+/* Transparent header, subtle muted text */
+.cart-table .cart-th {
+  background: transparent !important;
+  border: 0 !important;
+  font-size: 0.95rem;
+  /* opacity: 0.8; */
+  color: #DADADA!important;
+}
+
+/* Create spacing between rows while keeping table layout */
+.cart-table table {
+  border-collapse: separate !important;
+  border-spacing: 0 16px !important;
+}
+
+/* Row look: card-like, rounded, no inner borders */
+.cart-table .cart-row .cart-td {
+  background: #0E0A27;
+  border: 0 !important;
+  vertical-align: middle;
+  padding: 24px 18px;
+}
+
+/* Rounded corners only at the row edges */
+.cart-table tbody tr > td:first-child {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+.cart-table tbody tr > td:last-child {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+/* Hover effect for clarity */
+.cart-table tbody tr:hover td {
+  background: var(--color-row-hover);
+}
+
+/* Product cell: remove icon + image + name aligned center */
+.cart-product {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-remove {
+  background: transparent;
+  border: none;
+  color: #E50000;
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.cart-product-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-product-image {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.cart-product-name {
+  color: #FFFFFF; 
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Price and subtotal styled in gold */
+.cart-price,
+.cart-subtotal {
+  color: #BD9B48;
+  font-weight: 600;
+}
+
+/* Quantity control */
+.cart-qty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+
+
+/* Responsive: on small screens, keep quantities centered and simplify spacing */
+@media (max-width: 767.98px) {
+  .cart-table .cart-td {
+    padding: 14px 14px;
+  }
+  .cart-product-name {
+    font-size: 0.95rem;
+  }
+}
