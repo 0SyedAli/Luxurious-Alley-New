@@ -4,6 +4,7 @@ import ReviewCard from "@/components/user/cards/review-card";
 import BorderTabs from "@/components/user/tabs/border-tabs";
 import TabPanel from "@/components/user/tabs/tab-panel";
 import { userproducts } from "@/lib/products-data";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
 
@@ -34,6 +35,7 @@ const reviews = [
 
 const UserDashboardProductServiceDetails = () => {
   const [activeTab, setActiveTab] = useState("products");
+  const router = useRouter();
 
   const tabs = [
     {
@@ -116,7 +118,12 @@ const UserDashboardProductServiceDetails = () => {
                   >
                     <FiMessageSquare size={28} />
                   </button>
-                  <button className="user-dashboard-box-btn">Book Now</button>
+                  <button
+                    className="user-dashboard-box-btn"
+                    onClick={() => router.push("/user/book-appointment")}
+                  >
+                    Book Now
+                  </button>
                 </div>
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
                   <p className="text-light mb-0">Explore</p>
