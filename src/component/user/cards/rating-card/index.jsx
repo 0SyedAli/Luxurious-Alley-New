@@ -1,7 +1,7 @@
 "use client";
 import { FaStar } from "react-icons/fa";
-import { RiShoppingBag3Line,RiShoppingBag4Fill } from "react-icons/ri";
-import '../style.css';
+import { RiShoppingBag3Line, RiShoppingBag4Fill } from "react-icons/ri";
+import "../style.css";
 
 const RatingCard = ({
   productName,
@@ -48,7 +48,7 @@ const RatingCard = ({
             onClick={handleShopClick}
             aria-label="Add to cart"
           >
-            <RiShoppingBag4Fill className="shop-icon" color="#CC8819"/>
+            <RiShoppingBag4Fill className="shop-icon" color="#CC8819" />
           </button>
         </div>
 
@@ -57,15 +57,23 @@ const RatingCard = ({
           <h3 className="product-name">{productName}</h3>
           <p className="product-subtitle">{subTitle}</p>
 
-          <div className="label-date-container flex-column gap-3">
+          <div className="label-date-container flex-column">
             <span className="product-label">{label}</span>
-            <span className="product-date">{date}</span>
+            <span className="product-date text-center">
+              Date <br /> {date}
+            </span>
           </div>
         </div>
 
         {/* Rating Box - Outside card bottom right */}
         <div className="rating-box">
-          <FaStar className="rating-star" />
+          <img
+            src="/images/progress_img.png"
+            alt="progress-img"
+            height={25}
+            width={25}
+            className="object-fit-contain"
+          />
           <span className="rating-number">{rating} Rating</span>
         </div>
       </div>

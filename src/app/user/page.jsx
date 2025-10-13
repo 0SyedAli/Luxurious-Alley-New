@@ -1,6 +1,6 @@
 "use client";
-import { UserProductCard } from "@/component/user/cards/product-card";
-import { userproducts } from "../../lib/products-data";
+import { UserProductCard } from "@/components/user/cards/product-card";
+import { userproducts, userproductsTwo } from "@/lib/products-data";
 import { useRouter } from "next/navigation";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import React, { useRef } from "react";
@@ -9,6 +9,7 @@ import Slider from "react-slick";
 // Import React Slick CSS
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Link from "next/link";
 
 const SmallCardData = [
   { id: 1, image: "/images/fire.png", text: "Trending" },
@@ -131,8 +132,50 @@ const UserDashboard = () => {
         ))}
       </div>
 
+      <div className="mb-5">
+        <div className="d-flex justify-content-between mb-4 align-items-center">
+          <h4 className="txt_color">Top Stylists</h4>
+          <Link href={"/user/top-stylists"} className="text-light">
+            View More
+          </Link>
+        </div>
+
+        <div className="row g-3 g-lg-4">
+          {userproductsTwo.map((item) => (
+            <div className="col-md-3 col-sm-6 col-12" key={item.id}>
+              <UserProductCard
+                showSellerName={true}
+                showCalender={true}
+                onCardClick={() => router.push(`/user/${item.id}`)}
+                {...item}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mb-3">
+        <div className="d-flex justify-content-between mb-4 align-items-center">
+          <h4 className="txt_color ">Recent Products</h4>
+          <Link href={"/user/recent-stylists"} className="text-light">
+            View More
+          </Link>
+        </div>
+        <div className="row g-3 g-lg-4">
+          {userproductsTwo.map((item) => (
+            <div className="col-md-3 col-sm-6 col-12" key={item.id}>
+              <UserProductCard
+                showSellerName={true}
+                showCalender={true}
+                onCardClick={() => router.push(`/user/${item.id}`)}
+                {...item}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
       {/* Multiple Sliders */}
-      <div className="row">
+      {/* <div className="row">
         <div className="col-12">
           <ProductSlider
             title="Top Stylists"
@@ -140,9 +183,9 @@ const UserDashboard = () => {
             onProductClick={handleViewProduct}
           />
         </div>
-      </div>
+      </div> */}
 
-      <div className="row">
+      {/* <div className="row">
         <div className="col-12">
           <ProductSlider
             title="Recent Products"
@@ -150,7 +193,7 @@ const UserDashboard = () => {
             onProductClick={handleViewProduct}
           />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

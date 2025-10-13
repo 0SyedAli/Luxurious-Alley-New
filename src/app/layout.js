@@ -1,7 +1,7 @@
 import { Open_Sans, Inter, Epilogue, Montserrat, Lato, Roboto, Poppins, Lora } from "next/font/google";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../app/user/style.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
 import BootstrapClients from "../component/BootstrapClients";
 import Providers from "../component/Providers";

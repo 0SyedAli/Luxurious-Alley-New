@@ -38,9 +38,17 @@
     bottom: -48px;
 }
 
-.avatar-wrapper {
+.avatar-wrapper-profile {
     position: relative;
     display: inline-block;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    /* overflow: hidden; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .avatar-image {

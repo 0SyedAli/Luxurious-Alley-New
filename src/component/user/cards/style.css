@@ -1,120 +1,95 @@
 .review-card {
-    border: 1px solid #E0B659;
-    padding: 32px;
-    border-radius: 14px;
-    background: #23147A;
-    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    width: 100%; /* Full width */
+  border: 1px solid #E0B659;
+  padding: 32px;
+  border-radius: 14px;
+  background: #23147A;
+  background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+  /* Full width */
 }
 
 /* Avatar Circle - Left Side */
 .avatar-wrapper {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* Avatar size fixed rahega */
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  /* overflow: hidden; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  /* Avatar size fixed rahega */
 }
 
 .avatar-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* Right Section - Full Width */
 .review-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex: 1; /* Poori available space le lega */
-    width: 100%; /* Full width */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  flex: 1;
+  /* Poori available space le lega */
+  width: 100%;
+  /* Full width */
 }
 
 /* Header - Username + Date */
 .review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    /* margin-bottom: 8px; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* margin-bottom: 8px; */
 }
 
 .review-username {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0;
-    color: #DADADA;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #DADADA;
 }
 
 .review-date {
-    font-size: 13px;
-    color: #DADADA;
-    flex-shrink: 0;
-    margin-left: 15px;
+  font-size: 13px;
+  color: #DADADA;
+  flex-shrink: 0;
+  margin-left: 15px;
 }
 
 /* Rating Stars */
 .review-rating {
-    margin: 6px 0;
-    width: 100%;
+  margin: 6px 0;
+  width: 100%;
 }
 
 .star-icon {
-    color: #D49621;
-    margin-right: 4px;
-    font-size: 16px;
+  color: #D49621;
+  margin-right: 4px;
+  font-size: 16px;
 }
 
 /* Review Text - Full Width */
 .review-text {
-    margin: 0;
-    font-size: 14px;
-    color: #DADADA;
-    line-height: 1.6;
-    width: 100%;
-    word-wrap: break-word;
+  margin: 0;
+  font-size: 14px;
+  color: #DADADA;
+  line-height: 1.6;
+  width: 100%;
+  word-wrap: break-word;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .review-card {
-        padding: 24px;
-        gap: 15px;
-    }
-    
-    .avatar-wrapper {
-        width: 60px;
-        height: 60px;
-    }
-}
 
-@media (max-width: 576px) {
-    .review-card {
-        padding: 20px;
-        gap: 15px;
-    }
 
-    .avatar-wrapper {
-        width: 50px;
-        height: 50px;
-    }
 
-    .review-username {
-        font-size: 14px;
-    }
-
-    .review-text {
-        font-size: 13px;
-    }
-}
 
 
 
@@ -140,7 +115,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  position: relative;
+  /* position: relative; */
+  align-items: center;
 }
 
 /* Image Section */
@@ -164,7 +140,7 @@
 .shop-icon-btn {
   position: absolute;
   bottom: -16px;
-  right: 16px;
+  right: -16px;
   background-color: #fff;
   border: none;
   border-radius: 50%;
@@ -219,30 +195,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  gap: 8px;
+  /* padding-bottom: 16px; */
 }
 
 .product-label {
   color: #19CC89;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
-  padding: 4px 8px;
-  background: rgba(25, 204, 137, 0.1);
-  border-radius: 6px;
-  border: 1px solid #19CC89;
 }
 
 .product-date {
   color: #FFFFFF;
-  font-size: 12px;
-  opacity: 0.8;
+  font-size: 16px;
 }
 
 /* Rating Box - Outside card bottom right */
 .rating-box {
-  position: absolute;
-  bottom: -38px;
-  right: 40px;
+  display: inline-block;
+  position: relative;
   background: #CE8F24;
   border-radius: 8px;
   padding: 8px 12px;
@@ -251,6 +222,7 @@
   gap: 6px;
   border: none;
   z-index: 3;
+  margin-bottom: -38px
 }
 
 .rating-star {
@@ -269,41 +241,41 @@
   .rating-card {
     padding: 16px;
   }
-  
+
   .product-image {
     width: 100px;
     height: 100px;
   }
-  
+
   .product-name {
     font-size: 16px;
   }
-  
+
   .product-subtitle {
     font-size: 13px;
   }
-  
+
   .shop-icon-btn {
     width: 36px;
     height: 36px;
     bottom: -6px;
     right: -6px;
   }
-  
+
   .shop-icon {
     font-size: 16px;
   }
-  
-  .rating-box {
+
+  /* .rating-box {
     bottom: -12px;
     right: -12px;
     padding: 6px 10px;
-  }
-  
+  } */
+
   .rating-star {
     font-size: 12px;
   }
-  
+
   .rating-number {
     font-size: 12px;
   }
@@ -313,42 +285,42 @@
   .rating-card {
     padding: 12px;
   }
-  
+
   .product-image {
     width: 80px;
     height: 80px;
   }
-  
+
   .product-name {
     font-size: 14px;
   }
-  
+
   .product-subtitle {
     font-size: 12px;
   }
-  
+
   .label-date-container {
     flex-direction: column;
     gap: 6px;
     align-items: center;
   }
-  
+
   .shop-icon-btn {
     width: 32px;
     height: 32px;
     bottom: -4px;
     right: -4px;
   }
-  
+
   .shop-icon {
     font-size: 14px;
   }
-  
-  .rating-box {
+
+  /* .rating-box {
     bottom: -10px;
     right: -10px;
     padding: 4px 8px;
-  }
+  } */
 }
 
 /* Alternative Layout - Horizontal */
