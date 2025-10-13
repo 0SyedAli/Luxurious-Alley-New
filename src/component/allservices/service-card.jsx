@@ -34,12 +34,12 @@ export function ServiceCard({
           </div>
           <button
             type="button"
-            className="btn btn-dark btn-sm rounded-circle d-inline-flex align-items-center justify-content-center "
+            className="btn text-white"
             aria-label="Add to cart"
             onClick={onAction}
             style={{ width: 32, height: 32 }}
           >
-            <RiShoppingBag3Line color="#D49621" />
+            <RiShoppingBag3Line color="#FFFF" />
           </button>
         </div>
       </div>

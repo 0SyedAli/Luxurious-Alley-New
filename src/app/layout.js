@@ -1,10 +1,10 @@
 import { Open_Sans, Inter, Epilogue, Montserrat, Lato, Roboto, Poppins, Lora } from "next/font/google";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../app/user/style.css";
 import "./globals.css";
-import BootstrapClients from "@/components/BootstrapClients";
-import ToastProvider from "@/components/ToastProvider";
-import Providers from "@/components/Providers";
+import BootstrapClients from "../component/BootstrapClients";
+import Providers from "../component/Providers";
 
 const interFont = Inter({
   variable: "--font-inter",

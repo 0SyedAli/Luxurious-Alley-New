@@ -1,8 +1,8 @@
 
 'use client'
 import '../dashboard_main.css';
-import Sidebar from '@/components/user/sidebar/index';
-import Header from '@/components/user/header';
+import Sidebar from '@/component/user/sidebar';
+import Header from '@/component/user/header';
 import { usePathname } from 'next/navigation';
 import './style.css'
 

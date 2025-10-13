@@ -1,7 +1,9 @@
 "use client"
-import { products } from "@/lib/products-data"
-import { ProductCard } from "@/components/allproduct/product-card"
+import { useRouter } from "next/navigation"
+import { products } from "../../../lib/products-data"
+import { ProductCard } from "@/component/allproduct/product-card"
 const AllProducts = () => {
+  const router = useRouter();
   return (
     <main className="allproducts_gradientBg">
       <div className="container">
@@ -14,7 +16,7 @@ const AllProducts = () => {
         {/* grid */}
         <div className="row g-3 g-lg-4">
           {products.map((p) => (
-            <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+            <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2" onClick={() => router.push(`/dashboard/allproducts/${products?.id}`)}>
               <ProductCard {...p} />
             </div>
           ))}

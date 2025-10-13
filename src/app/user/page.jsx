@@ -1,6 +1,6 @@
 "use client";
-import { UserProductCard } from "@/components/user/cards/product-card";
-import { userproducts } from "@/lib/products-data";
+import { UserProductCard } from "@/component/user/cards/product-card";
+import { userproducts } from "../../lib/products-data";
 import { useRouter } from "next/navigation";
 import { IoIosArrowDropright, IoIosArrowDropleft } from "react-icons/io";
 import React, { useRef } from "react";
