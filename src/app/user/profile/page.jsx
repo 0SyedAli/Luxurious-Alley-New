@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import ProfileHeader from "@/component/user/profile-header";
-import BorderTabs from "@/component/user/tabs/border-tabs";
-import RatingCard from "@/component/user/cards/rating-card";
-import TabPanel from "@/component/user/tabs/tab-panel";
+import ProfileHeader from "@/component/new/profile-header";
+import BorderTabs from "@/component/new/tabs/border-tabs";
+import RatingCard from "@/component/new/cards/rating-card";
+import TabPanel from "@/component/new/tabs/tab-panel";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("in-progress");

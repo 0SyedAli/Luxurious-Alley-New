@@ -1,5 +1,5 @@
 "use client";
-import { UserProductCard } from "@/component/user/cards/product-card";
+import { UserProductCard } from "@/component/new/cards/product-card";
 import { userproducts } from "../../../lib/products-data";
 import { useRouter } from "next/navigation";
 

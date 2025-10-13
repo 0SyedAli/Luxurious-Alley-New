@@ -1,6 +1,6 @@
 "use client";
 
-import ImageRadio from "@/component/user/image-radio";
+import ImageRadio from "@/component/new/image-radio";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";

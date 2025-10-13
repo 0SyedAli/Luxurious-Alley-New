@@ -361,3 +361,30 @@
 .rating-card.small .product-subtitle {
   font-size: 12px;
 }
+
+
+
+/* Stats card css */
+.admin-dashboard-stats {
+    border: 1px solid #F4BB01;
+    border-radius: 16px;
+   background-color: rgba(75, 64, 52, 0.9);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.admin-dashboard-stats-content,
+p {
+    color: #00A63E;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.stats-icon {
+    color: #fff;
+    font-size: 28px;
+}

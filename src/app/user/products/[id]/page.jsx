@@ -1,8 +1,8 @@
 "use client";
-import { UserProductCard } from "@/component/user/cards/product-card";
-import ReviewCard from "@/component/user/cards/review-card";
-import BorderTabs from "@/component/user/tabs/border-tabs";
-import TabPanel from "@/component/user/tabs/tab-panel";
+import { UserProductCard } from "@/component/new/cards/product-card";
+import ReviewCard from "@/component/new/cards/review-card";
+import BorderTabs from "@/component/new/tabs/border-tabs";
+import TabPanel from "@/component/new/tabs/tab-panel";
 import { userproducts } from "../../../../lib/products-data";
 import { useRouter } from "next/navigation";
 import React, { use, useState } from "react";

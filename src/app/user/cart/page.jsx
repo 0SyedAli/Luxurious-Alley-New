@@ -1,6 +1,6 @@
 "use client";
 
-import CartTable from "@/component/user/tables/cart-table";
+import CartTable from "@/component/new/tables/cart-table";
 import { useRouter } from "next/navigation";
 
 const demoItems = [

@@ -1,0 +1,56 @@
+.admin-setting-form {
+    background-color: rgba(75, 64, 52, 0.9);
+    border-radius: 16px;
+    border: 1px solid #F4BB01;
+}
+
+.admin-setting-form-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-setting-form-input label {
+    color: #FFFFFF;
+    font-weight: 300;
+}
+
+.admin-setting-form-input input {
+    border-radius: 8px;
+    background-color: #ffffff;
+    border: none;
+    color: #000000;
+    padding: 12px 16px;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+}
+
+/* Placeholder color */
+.admin-setting-form-input input::placeholder {
+    color: #6b7280;
+    /* Gray color */
+    opacity: 1;
+    /* Ensure full opacity */
+}
+
+/* Focus state */
+.admin-setting-form-input input:focus {
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    /* Optional blue focus ring */
+}
+
+/* Hover state */
+.admin-setting-form-input input:hover {
+    background-color: #f9fafb;
+    /* Slightly lighter on hover */
+}
+
+
+.admin-setting-form-btn {
+    background-color: #CD8A1A;
+    border-radius: 8px;
+    border: none;
+    color: black;
+    padding: 8px 16px;
+}
