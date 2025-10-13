@@ -136,7 +136,7 @@ const CreateProfile = () => {
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                     <div className="row gy-4">
                         {/* Profile Picture Upload */}
-                        <div className="col-12 text-center">
+                        <div className="col-12">
                             <div className="upload_user_image text-start">
                                 <label htmlFor="imageUpload" style={{ cursor: "pointer" }}>
                                     <Image
@@ -152,11 +152,11 @@ const CreateProfile = () => {
                                     accept="image/*"
                                     onChange={handleFileChange}
                                 />
-                                {fileError && <p className="text-danger mt-2">{fileError}</p>}
                                 <div className="img_plus">
                                     <FaPlus />
                                 </div>
                             </div>
+                            {fileError && <p className="text-danger text-start mt-2">{fileError}</p>}
                         </div>
 
                         <div className="col-6">

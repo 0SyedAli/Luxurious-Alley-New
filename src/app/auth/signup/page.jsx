@@ -96,11 +96,11 @@ const Signup = () => {
           </div>
 
           {/* Global API Error Display */}
-          {status === 'failed' && error && (
+          {/* {status === 'failed' && error && (
             <div className="text-center text-danger mt-3">
               <p>{error}</p>
             </div>
-          )}
+          )} */}
 
           <div className='text-center mt-4'>
             {/* Use a button of type submit to trigger form submission */}

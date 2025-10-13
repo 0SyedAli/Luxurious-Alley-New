@@ -4,7 +4,6 @@ import ReviewCard from "@/component/user/cards/review-card";
 import BorderTabs from "@/component/user/tabs/border-tabs";
 import TabPanel from "@/component/user/tabs/tab-panel";
 import { userproducts } from "@/lib/products-data";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
 
@@ -34,22 +33,11 @@ const reviews = [
 ];
 
 const UserDashboardProductServiceDetails = () => {
-  const [activeTab, setActiveTab] = useState("products");
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("customers reviews");
 
   const tabs = [
     {
       id: 1,
-      value: "products",
-      label: "Products",
-    },
-    {
-      id: 2,
-      value: "services",
-      label: "Services",
-    },
-    {
-      id: 3,
       value: "customers reviews",
       label: "Customers Reviews",
     },
@@ -109,7 +97,7 @@ const UserDashboardProductServiceDetails = () => {
               </div>
               <div className="d-flex flex-column justify-content-between ">
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
-                  <button
+                  {/* <button
                     className="d-flex text-light align-items-center gap-2 rounded-circle p-2"
                     style={{
                       backgroundColor: "#19CC89",
@@ -117,15 +105,10 @@ const UserDashboardProductServiceDetails = () => {
                     }}
                   >
                     <FiMessageSquare size={28} />
-                  </button>
-                  <button
-                    className="user-dashboard-box-btn"
-                    onClick={() => router.push("/user/book-appointment")}
-                  >
-                    Book Now
-                  </button>
+                  </button> */}
+                  <button className="user-dashboard-box-btn">Edit Now</button>
                 </div>
-                <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
+                {/* <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
                   <p className="text-light mb-0">Explore</p>
                   <div className="rounded-4 overflow-hidden shadow-sm cursor-pointer">
                     <img
@@ -135,7 +118,7 @@ const UserDashboardProductServiceDetails = () => {
                       style={{ height: "60px" }}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <p className="text-light lh-lg mb-4 fw-light">
@@ -161,49 +144,11 @@ const UserDashboardProductServiceDetails = () => {
           tabs={tabs}
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          className="mb-3"
+          className="mb-3 apd"
         />
 
         {/* Tab Panels */}
         <div className="tab-content">
-          <TabPanel value={activeTab} tabValue="products">
-            <div className="row g-3 g-lg-4">
-              {userproducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="col-12 col-sm-6 col-md-4 col-lg-3"
-                >
-                  <UserProductCard
-                    showSellerName={true}
-                    showCalender={true}
-                    // onCardClick={() => router.push(`/user/${item.id}`)}
-                    {...item}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-
-          <TabPanel value={activeTab} tabValue="services">
-            <div className="row g-3 g-lg-4">
-              {userproducts.map((item) => (
-                <div
-                  key={item.id}
-                  className="col-12 col-sm-6 col-md-4 col-lg-3"
-                >
-                  <UserProductCard
-                    showOrderBtn={true}
-                    showProgress={true}
-                    onCardClick={() => router.push(`/user/${item.id}`)}
-                    onChairClick={() => alert("Chair icon clicked")}
-                    onBagClick={() => alert("Beg icon clicked")}
-                    {...item}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-
           <TabPanel value={activeTab} tabValue="customers reviews">
             {reviews.map((review) => (
               <ReviewCard

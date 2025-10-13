@@ -1,0 +1,47 @@
+.conversation_heading {
+    font-size: 28px;
+    margin: 0;
+    font-family: var(--font-lora);
+    font-weight: 400;
+    background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.txt_color {
+    margin: 0;
+    font-family: var(--font-lora);
+    background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+
+
+/* Conversation custom scroll UI  */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #120C31 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #120C31;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #120C31;
+}

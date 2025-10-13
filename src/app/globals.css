@@ -426,7 +426,7 @@ textarea {
   font-weight: 500;
   font-family: var(--font-open-sans);
   font-size: 16px;
-  color: #FFF;
+  color: #8279D0;
   border: 1px solid #CD8A1A;
   display: flex;
   justify-content: space-between;
@@ -921,4 +921,50 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   height: 300px;
   border: none;
   display: block;
+}
+
+.nav-pills-tabs {
+  border-bottom: 1px solid #573D1A;
+}
+
+.nav-item-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.nav-item-tabs .nav-link {
+  color: #FFF;
+}
+
+.nav-item-tabs .nav-link.active {
+  border: none;
+  background: linear-gradient(135deg, #F4BB01, #DCB654, #F5E08F, #E8B832, #C78015);
+  border-radius: 15px 15px 0 0;
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000000;
+}
+
+.border-tabs-container.apd .border-tab-item {
+  font-family: var(--font-lora);
+  font-size: 16px;
+  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.border-tabs-container.apd .border-tab-item:not(.active):not(.disabled):hover {
+  background: transparent;
+  background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34, 1) 8%, rgba(173, 132, 45, 1) 16%, rgba(177, 135, 49, 1) 25%, rgba(227, 185, 91, 1) 42%, rgba(177, 135, 49, 1) 64%, rgba(247, 215, 152, 1) 82%, rgba(160, 124, 31, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.border-tabs-container.apd .border-tab-custom-button {
+  display: none;
 }

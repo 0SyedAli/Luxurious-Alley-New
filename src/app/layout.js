@@ -3,9 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./globals.css";
-import BootstrapClients from "@/components/BootstrapClients";
-import ToastProvider from "@/components/ToastProvider";
-import Providers from "@/components/Providers";
+import BootstrapClients from "../component/BootstrapClients";
+import Providers from "../component/Providers";
 
 const interFont = Inter({
   variable: "--font-inter",

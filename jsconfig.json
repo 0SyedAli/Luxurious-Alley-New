@@ -2,27 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/components/*": [
-        "src/component/*"
-      ],
-      "@/pages/*": [
-        "src/pages/*"
-      ],
-      "@/redux/*": [
-        "src/redux/*"
-      ],
-      "@/validation/*": [
-        "src/validation/*"
-      ],
-      "@/images/*": [
-        "public/images/*"
-      ],
-      "@/lib/*": [
-        "src/lib/*"
-      ],
-      "@/fonts/*": [
-        "public/fonts/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/component/*"],
+      "@/pages/*": ["./src/pages/*"],
+      "@/redux/*": ["./src/redux/*"],
+      "@/validation/*": ["./src/validation/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/images/*": ["./public/images/*"],
+      "@/fonts/*": ["./public/fonts/*"]
     }
   }
 }

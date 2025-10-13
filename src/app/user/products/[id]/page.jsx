@@ -1,9 +1,9 @@
 "use client";
-import { UserProductCard } from "@/components/user/cards/product-card";
-import ReviewCard from "@/components/user/cards/review-card";
-import BorderTabs from "@/components/user/tabs/border-tabs";
-import TabPanel from "@/components/user/tabs/tab-panel";
-import { userproducts } from "@/lib/products-data";
+import { UserProductCard } from "@/component/user/cards/product-card";
+import ReviewCard from "@/component/user/cards/review-card";
+import BorderTabs from "@/component/user/tabs/border-tabs";
+import TabPanel from "@/component/user/tabs/tab-panel";
+import { userproducts } from "../../../../lib/products-data";
 import { useRouter } from "next/navigation";
 import React, { use, useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";

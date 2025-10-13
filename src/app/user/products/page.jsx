@@ -1,6 +1,6 @@
 "use client";
-import { UserProductCard } from "@/components/user/cards/product-card";
-import { userproducts } from "@/lib/products-data";
+import { UserProductCard } from "@/component/user/cards/product-card";
+import { userproducts } from "../../../lib/products-data";
 import { useRouter } from "next/navigation";
 
 const UserProducts = () => {

@@ -1,5 +1,5 @@
 "use client"
-import { ServiceCard } from "@/components/allservices/service-card"
+import { ServiceCard } from "@/component/allservices/service-card"
 import { products } from "../../../lib/products-data"
 const AllProducts = () => {
   return (
@@ -14,7 +14,7 @@ const AllProducts = () => {
         {/* grid */}
         <div className="row g-3 g-lg-4">
           {products.map((p) => (
-            <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+            <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
               <ServiceCard {...p} />
             </div>
           ))}
