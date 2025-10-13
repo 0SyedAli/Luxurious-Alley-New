@@ -1,0 +1,60 @@
+.appointment-card {
+    width: 100%;
+    max-width: 700px;
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    border: 2px solid #d79c2d;
+    color: white;
+}
+
+
+.appointment-card-header {
+    background-color: #D49621;
+    border-radius: 12px 12px 0 0;
+}
+
+.date-btn,
+.time-btn {
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    color: #000;
+    width: 90px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.time-btn {
+    height: 50px;
+    font-weight: 500;
+}
+
+.date-btn:hover,
+.time-btn:hover,
+.date-btn.selected,
+.time-btn.selected {
+    background: #23147A;
+    background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
+    color: #FFFFFF;
+    border: 2px solid #d79c2d;
+    transform: scale(1.05);
+}
+
+.slick-slide>div {
+    display: flex;
+    justify-content: center;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+.appointment-card-service {
+    border: 1px solid #FFFFFF;
+    border-radius: 14px;
+}

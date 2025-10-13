@@ -53,13 +53,13 @@ const UserProfile = () => {
         <div className="tab-content">
           <TabPanel value={activeTab} tabValue="in-progress">
             <div className="row g-3 g-lg-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
                   <RatingCard
                     productName="Omni Este"
                     subTitle="1609 Oak, St. (2km)"
                     label={activeTab}
-                    date="15 Dec 2023"
+                    date="18.10.2023"
                     rating="4.8"
                     image="/images/cart.jpg"
                     onShopClick={() => console.log("Add to cart")}
@@ -69,15 +69,14 @@ const UserProfile = () => {
               ))}
             </div>
           </TabPanel>
-
           <TabPanel value={activeTab} tabValue="completed">
             <div className="row g-3 g-lg-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
                   <RatingCard
                     productName="Premium Office Chair"
                     subTitle="Ergonomic Design"
-                    label="Best Seller"
+                    label={activeTab}
                     date="15 Dec 2023"
                     rating="4.8"
                     image="/images/cart.jpg"
@@ -90,12 +89,12 @@ const UserProfile = () => {
           </TabPanel>
           <TabPanel value={activeTab} tabValue="delivered">
             <div className="row g-3 g-lg-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
                    <RatingCard
                     productName="Premium Office Chair"
                     subTitle="Ergonomic Design"
-                    label="Best Seller"
+                    label={activeTab}
                     date="15 Dec 2023"
                     rating="4.8"
                     image="/images/cart.jpg"
@@ -108,12 +107,12 @@ const UserProfile = () => {
           </TabPanel>
           <TabPanel value={activeTab} tabValue="history">
             <div className="row g-3 g-lg-4">
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
                    <RatingCard
                     productName="Premium Office Chair"
                     subTitle="Ergonomic Design"
-                    label="Best Seller"
+                    label={activeTab}
                     date="15 Dec 2023"
                     rating="4.8"
                     image="/images/cart.jpg"

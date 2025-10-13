@@ -69,7 +69,7 @@ const ProfileHeader = ({
 
         {/* Avatar */}
         <div className="avatar-container">
-          <div className="avatar-wrapper">
+          <div className="avatar-wrapper-profile">
             <img
               src={avatarSrc || "/placeholder.svg"}
               alt={`${name} profile photo`}
