@@ -8,7 +8,7 @@ import { RiMessengerLine } from "react-icons/ri";
 import { IoSend } from "react-icons/io5";
 import "./inbox.css";
 
-import AVATARUSERONE from "../../../../public/images/chat_avatar.png";
+import AVATARUSERONE from "@/images/chat_avatar.png";
 
 function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
   return (
