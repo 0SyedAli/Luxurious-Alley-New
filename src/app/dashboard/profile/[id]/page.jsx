@@ -123,7 +123,7 @@ const UserEditProfile = () => {
                   <button
                     type="button"
                     className="user-dashboard-box-btn px-5"
-                    onClick={() => router.push("/user/new-card")}
+                    // onClick={() => router.push("/user/new-card")}
                   >
                     Update
                   </button>

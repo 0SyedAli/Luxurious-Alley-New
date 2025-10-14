@@ -70,9 +70,8 @@ function ConversationList({ items, activeId, onSelect }) {
             >
               <button
                 onClick={() => onSelect(c.id)}
-                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 ${
-                  c.id === activeId ? "active" : ""
-                }`}
+                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 ${c.id === activeId ? "active" : ""
+                  }`}
                 style={{
                   backgroundColor:
                     c.id === activeId ? "rgba(18, 12, 49, 0.5)" : "transparent",
@@ -156,9 +155,8 @@ function MessageBubble({ message }) {
           <p className="mb-0 small lh-sm">{message.text}</p>
         </div>
         <small
-          className={`text-light d-block mt-1 ${
-            isOut ? "text-end" : "text-start"
-          }`}
+          className={`text-light d-block mt-1 ${isOut ? "text-end" : "text-start"
+            }`}
         >
           {message.time}
         </small>
@@ -405,9 +403,9 @@ const Inbox = () => {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
-    <main className="vh-100 w-100 bg-transparent">
+    <main className="h-100 w-100 bg-transparent">
       {isRefreshing ? (
-        <div className="vh-100 d-flex align-items-center justify-content-center  text-center p-4">
+        <div className="h-100 d-flex align-items-center justify-content-center  text-center p-4">
           <div>
             <RiMessengerLine size={64} className="mb-3 text-light" />
             <h1 className="h3 fw-bold mb-2 text-light">Your Messages</h1>
@@ -433,9 +431,8 @@ const Inbox = () => {
                       setMessages([
                         {
                           id: "m1",
-                          text: `Hi there! This is a new conversation with ${
-                            conversations.find((c) => c.id === id)?.name
-                          }`,
+                          text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
+                            }`,
                           time: new Date().toLocaleTimeString([], {
                             hour: "numeric",
                             minute: "2-digit",
@@ -462,9 +459,8 @@ const Inbox = () => {
                     setMessages([
                       {
                         id: "m1",
-                        text: `Hi there! This is a new conversation with ${
-                          conversations.find((c) => c.id === id)?.name
-                        }`,
+                        text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
+                          }`,
                         time: new Date().toLocaleTimeString([], {
                           hour: "numeric",
                           minute: "2-digit",

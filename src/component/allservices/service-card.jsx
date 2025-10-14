@@ -1,5 +1,5 @@
 "use client"
-import { RiShoppingBag3Line } from "react-icons/ri";
+import { AiOutlineEdit } from "react-icons/ai";
 
 export function ServiceCard({
   title,
@@ -8,9 +8,10 @@ export function ServiceCard({
   sellerName,
   sellerAvatar = "/images/order-prof.png",
   onAction,
+  onActionBtn,
 }) {
   return (
-    <div className="card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden">
+    <div className="card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden" style={{cursor:"pointer"}} onClick={onAction}>
       {/* image + seller chip */}
       <div className="position-relative p-1">
         <img
@@ -34,12 +35,12 @@ export function ServiceCard({
           </div>
           <button
             type="button"
-            className="btn text-white"
+            className="btn text-white d-flex align-items-center justify-content-center p-0"
             aria-label="Add to cart"
-            onClick={onAction}
             style={{ width: 32, height: 32 }}
+            onClick={onActionBtn}
           >
-            <RiShoppingBag3Line color="#FFFF" />
+            <AiOutlineEdit color="#FFFF" size={25} />
           </button>
         </div>
       </div>

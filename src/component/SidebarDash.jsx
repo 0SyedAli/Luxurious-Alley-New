@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { IoCalendarOutline } from "react-icons/io5";
 import { BiMessageSquareDots } from "react-icons/bi";
-import { MdDisplaySettings, MdMiscellaneousServices  } from "react-icons/md";
+import { MdDisplaySettings, MdMiscellaneousServices } from "react-icons/md";
 import { FaRegStar } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
 
 export default function SidebarDash() {
   const links = [
     { href: '/', name: 'Dashboard', icon: HiOutlineSquares2X2 },
-    { href: '/myorders', name: 'My Orders', icon: IoCalendarOutline },
+    { href: '/myappointments', name: 'My Appointments', icon: IoCalendarOutline },
     { href: '/allproducts', name: 'Products', icon: BiMessageSquareDots },
     { href: '/allservices', name: 'Services', icon: MdMiscellaneousServices },
     { href: '/inbox', name: 'Inbox', icon: MdDisplaySettings },

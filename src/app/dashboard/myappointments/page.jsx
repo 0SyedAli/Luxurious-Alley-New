@@ -3,16 +3,16 @@ import { OrderCard } from "@/component/dashboard";
 import { useState } from "react";
 
 const MyOrders = () => {
-  const [activeTab, setActiveTab] = useState("New Orders");
+  const [activeTab, setActiveTab] = useState("New Appointments");
   const tabs = [
-    { id: 1, value: "New Orders", label: "New Orders" },
+    { id: 1, value: "New Appointments", label: "New Appointments" },
     { id: 2, value: "Ongoing", label: "Ongoing" },
     { id: 3, value: "Completed", label: "Completed" },
-    { id: 4, value: "Delivered", label: "Delivered" },
-    { id: 5, value: "History", label: "History" },
+    // { id: 4, value: "Delivered", label: "Delivered" },
+    // { id: 5, value: "History", label: "History" },
   ];
   const orderData = {
-    "New Orders": [
+    "New Appointments": [
       { title: "Hair extensions", time: "9:00 to 10:00 - Oct/25/23" },
       { title: "Beard Trim", time: "11:00 to 12:00 - Oct/26/23" },
       { title: "hair side Trim", time: "11:00 to 12:00 - Oct/26/23" },
@@ -24,17 +24,19 @@ const MyOrders = () => {
     Completed: [
       { title: "Facial", time: "1:00 to 2:00 - Oct/20/23" },
     ],
-    Delivered: [
-      { title: "Massage Therapy", time: "3:00 to 4:00 - Oct/22/23" },
-    ],
-    History: [
-      { title: "Nail Polish", time: "10:00 to 11:00 - Oct/15/23" },
-    ],
+    // Delivered: [
+    //   { title: "Massage Therapy", time: "3:00 to 4:00 - Oct/22/23" },
+    // ],
+    // History: [
+    //   { title: "Nail Polish", time: "10:00 to 11:00 - Oct/15/23" },
+    // ],
   };
   return (
     <>
       <section className=" w-100">
-        <h5 className="mb-3 text-white">My Orders</h5>
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <h1 className="h4 mb-0 allproducts_title">My Appointments</h1>
+        </div>
         <ul className="nav nav-pills nav-pills-tabs gap-2 mb-3" role="tablist">
           {tabs.map((t) => (
             <li className="nav-item nav-item-tabs" key={t.id}>

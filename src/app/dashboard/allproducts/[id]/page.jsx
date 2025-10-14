@@ -4,6 +4,7 @@ import ReviewCard from "@/component/user/cards/review-card";
 import BorderTabs from "@/component/user/tabs/border-tabs";
 import TabPanel from "@/component/user/tabs/tab-panel";
 import { userproducts } from "@/lib/products-data";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
 
@@ -34,7 +35,7 @@ const reviews = [
 
 const UserDashboardProductServiceDetails = () => {
   const [activeTab, setActiveTab] = useState("customers reviews");
-
+const router = useRouter();
   const tabs = [
     {
       id: 1,
@@ -89,11 +90,11 @@ const UserDashboardProductServiceDetails = () => {
           <div className="ps-md-2 ps-0 pt-3 pt-md-0">
             <div className="d-flex  justify-content-between gap-3 flex-wrap mb-4">
               <div>
-                <h3 className="fw-bold  mb-3 txt_color">Omni iste</h3>
+                <h3 className="fw-bold  mb-3 text-white">Omni iste</h3>
                 <h4 className="fw-medium text-light mb-3">
                   1609 Oak, St. (2km)
                 </h4>
-                <h5 className="fw-medium mb-3 txt_color">About Omni iste</h5>
+                <h5 className="fw-medium mb-3 text-white">About Omni iste</h5>
               </div>
               <div className="d-flex flex-column justify-content-between ">
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
@@ -106,7 +107,7 @@ const UserDashboardProductServiceDetails = () => {
                   >
                     <FiMessageSquare size={28} />
                   </button> */}
-                  <button className="user-dashboard-box-btn">Edit Now</button>
+                  <button className="theme-btn2" onClick={()=> router.push("/dashboard/allproducts/edit/1")}>Edit Now</button>
                 </div>
                 {/* <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
                   <p className="text-light mb-0">Explore</p>

@@ -10,7 +10,7 @@ export function ProductCard({
   onAction,
 }) {
   return (
-    <div className="card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden">
+    <div className="card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden" style={{cursor:"pointer"}} onClick={onAction}>
       {/* image + seller chip */}
       <div className="position-relative p-1">
         <img
@@ -36,7 +36,6 @@ export function ProductCard({
             type="button"
             className="btn btn-dark btn-sm rounded-circle d-inline-flex align-items-center justify-content-center "
             aria-label="Add to cart"
-            onClick={onAction}
             style={{ width: 32, height: 32 }}
           >
             <RiShoppingBag3Line color="#D49621" />
