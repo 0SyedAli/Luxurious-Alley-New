@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    unoptimized: true, // ✅ disables sharp requirement
+  },
+};
 
 export default nextConfig;
