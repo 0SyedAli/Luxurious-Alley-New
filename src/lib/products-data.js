@@ -29,7 +29,7 @@ export const userproducts = Array.from({ length: 8 }).map((_, i) => {
   }
 })
 
-const userTwoimg = (q) => `/images/product2.png?height=200&width=300&query=${encodeURIComponent(q)}`
+const userTwoimg = (q) => `/images/product2s.png?height=200&width=300&query=${encodeURIComponent(q)}`
 
 export const userproductsTwo = Array.from({ length: 4 }).map((_, i) => {
   const productId = i + 1;

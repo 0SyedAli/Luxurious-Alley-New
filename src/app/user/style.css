@@ -1,8 +1,12 @@
 .user-dashboard,
 .userdashboard-product-details {
     font-family: var(--font-sans);
+    width: 100%;
 }
 
+.userdashboard-product-details p {
+    white-space: wrap;
+}
 .user-dashboard-box {
     border: 2px solid #E0B659;
     border-radius: 11px;
