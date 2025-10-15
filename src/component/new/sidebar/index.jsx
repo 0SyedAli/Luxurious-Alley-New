@@ -7,15 +7,7 @@ import { MdDisplaySettings, MdMiscellaneousServices } from "react-icons/md";
 import { FaRegStar } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
 
-export default function Sidebar() {
-  const links = [
-    { href: "/user", name: "Home", icon: HiOutlineSquares2X2 },
-    { href: "/user", name: "Location", icon: IoCalendarOutline },
-    { href: "/user/products", name: "Products", icon: BiMessageSquareDots },
-    { href: "/user/inbox", name: "Inbox", icon: MdDisplaySettings },
-    { href: "/user", name: "Settings", icon: MdDisplaySettings },
-  ];
-
+export default function Sidebar({ links = [] }) {
   return (
     <div className="sidebar sidebar2">
       <div className="logo">
@@ -28,7 +20,7 @@ export default function Sidebar() {
       </div>
       <div className="side_menu2">
         <ul>
-          {links.map((link, i) => (
+          {links?.map((link, i) => (
             <li key={i}>
               <span>{link.icon && <link.icon />}</span>
               <Link href={link.href} prefetch={true}>

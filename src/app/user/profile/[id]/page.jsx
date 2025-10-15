@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import ProfileHeader from "@/component/user/profile-header";
+import ProfileHeader from "@/component/new/profile-header";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
 
 const UserEditProfile = () => {
   const router = useRouter();
