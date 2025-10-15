@@ -4,7 +4,6 @@ import { HiOutlineSquares2X2 } from "react-icons/hi2";
 import { IoCalendarOutline } from "react-icons/io5";
 import { BiMessageSquareDots } from "react-icons/bi";
 import { MdDisplaySettings, MdMiscellaneousServices } from "react-icons/md";
-import { FaRegStar } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
 
 export default function SidebarDash() {

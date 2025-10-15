@@ -6,6 +6,7 @@ import "../app/user/style.css";
 import "./globals.css";
 import BootstrapClients from "../component/BootstrapClients";
 import Providers from "../component/Providers";
+import ToastProvider from "@/component/ToastProvider";
 
 const interFont = Inter({
   variable: "--font-inter",
@@ -56,6 +57,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${epilogue.variable} ${roboto.variable} ${lato.variable} ${montserrat.variable} ${interFont.variable} ${openSans.variable} ${lora.variable}`} cz-shortcut-listen="true">
+         <ToastProvider /> {/* Global toast notifications */}
         <Providers>
           {children}
         </Providers>
