@@ -243,13 +243,11 @@ const SmallCardData = [
 
 const UserDashboard = () => {
   const [getSalons, setGetSalons] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleViewProduct = (id) => {
-    router.push(`/user/${id}`);
-  };
-
   const getAllSalons = async () => {
+    setLoading(true);
     try {
       const response = await api.get("/getSalons");
       if (response.data.success) {
@@ -257,6 +255,8 @@ const UserDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching salons:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -264,11 +264,11 @@ const UserDashboard = () => {
     getAllSalons();
   }, []);
 
-   // Safe way to get first 4 salons
+  // Safe way to get first 4 salons
   const getFirstFourSalons = () => {
     try {
       // Check if getSalons exists and has data
-      if (!getSalons || typeof getSalons !== 'object') {
+      if (!getSalons || typeof getSalons !== "object") {
         return [];
       }
 
@@ -278,7 +278,9 @@ const UserDashboard = () => {
       }
 
       // If getSalons is an object with numeric keys, find the array
-      const salonArrays = Object.values(getSalons).filter(item => Array.isArray(item));
+      const salonArrays = Object.values(getSalons).filter((item) =>
+        Array.isArray(item)
+      );
       if (salonArrays.length > 0) {
         // Take the first array found and get first 4 items
         return salonArrays[0].slice(0, 4);
@@ -325,28 +327,43 @@ const UserDashboard = () => {
       <div className="mb-5">
         <div className="d-flex justify-content-between mb-4 align-items-center">
           <h4 className="txt_color">Top Salons</h4>
-          <Link href={"/user/top-salons"} className="text-light">
+          <Link
+            href={"/user/salons"}
+            className="text-light text-decoration-underline"
+          >
             View More
           </Link>
         </div>
 
         <div className="row g-3 g-lg-4">
-          {firstFourSalons.map((item) => (
-            <div className="col-md-3 col-sm-6 col-12" key={item?._id}>
-              <UserProductCard
-                showSellerName={true}
-                onCardClick={() => router.push(`/user/${item?._id}`)}
-                items={item}
-              />
+          {loading ? (
+            <div className="col-12 d-flex justify-content-center align-items-center py-4">
+              <div className="spinner-border text-light" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-          ))}
+          ) : (
+            firstFourSalons.map((item) => (
+              <div className="col-md-3 col-sm-6 col-12" key={item?._id}>
+                <UserProductCard
+                  showSellerName={true}
+                  onCardClick={() => router.push(`/user/${item?._id}`)}
+                  items={item}
+                  title={item?.bName}
+                  sellerName={item?.fullName}
+                  sellerImage={item?.image}
+                  image={item?.bImage}
+                  subTitle={item?.bAddress}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
-
       {/* Show message if no salons available */}
-      {firstFourSalons.length === 0 && (
+      {!loading && firstFourSalons.length === 0 && (
         <div className="text-center py-4">
-          <p className="text-muted">No salons available at the moment.</p>
+          <p className="text-light">No salons available at the moment.</p>
         </div>
       )}
     </div>
