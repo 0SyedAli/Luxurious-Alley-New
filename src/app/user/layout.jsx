@@ -13,7 +13,7 @@ import { MdDisplaySettings } from 'react-icons/md';
 const userLinks = [
   { href: "/user", name: "Home", icon: HiOutlineSquares2X2 },
   { href: "/user", name: "Location", icon: IoCalendarOutline },
-  { href: "/user/products", name: "Products", icon: BiMessageSquareDots },
+  { href: "/user/salons", name: "Salons", icon: BiMessageSquareDots },
   { href: "/user/inbox", name: "Inbox", icon: MdDisplaySettings },
   { href: "/user", name: "Settings", icon: MdDisplaySettings },
 ];

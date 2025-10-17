@@ -254,7 +254,7 @@ const UserDashboard = () => {
         setGetSalons(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching salons:", error);
+      console.log("Error fetching salons:", error);
     } finally {
       setLoading(false);
     }
@@ -326,7 +326,7 @@ const UserDashboard = () => {
 
       <div className="mb-5">
         <div className="d-flex justify-content-between mb-4 align-items-center">
-          <h4 className="txt_color">Top Salons</h4>
+          <h4 className="txt_color">Salons</h4>
           <Link
             href={"/user/salons"}
             className="text-light text-decoration-underline"

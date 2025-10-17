@@ -13,14 +13,45 @@ const ProfileHeader = ({
   location,
   statusLabel = "Active",
   className,
+  loading,
+  handleUpdatePicture
 }) => {
   const [coverSrc, setCoverSrc] = React.useState(defaultCoverSrc);
   const [avatarSrc, setAvatarSrc] = React.useState(defaultAvatarSrc);
+  const [error, setError] = React.useState("");
   const router = useRouter();
   const { id } = useParams();
 
   const coverInputRef = React.useRef(null);
   const avatarInputRef = React.useRef(null);
+
+  // Maximum file size: 2MB in bytes
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
+  // Validate file size and type
+  const validateFile = (file) => {
+    setError("");
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      throw new Error("File size must be less than 2MB");
+    }
+
+    // Check file type
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error("Only JPG, PNG, WebP, and GIF images are allowed");
+    }
+
+    return true;
+  };
+
+  // Fix: Handle avatar source properly
+  React.useEffect(() => {
+    if (defaultAvatarSrc) {
+      setAvatarSrc(defaultAvatarSrc);
+    }
+  }, [defaultAvatarSrc]);
 
   function handleCoverChange(e) {
     const file = e.target.files?.[0];
@@ -32,11 +63,34 @@ const ProfileHeader = ({
 
   function handleAvatarChange(e) {
     const file = e.target.files?.[0];
-    if (file) {
+    
+    if (!file) return;
+
+    try {
+      // Validate file first
+      validateFile(file);
+      
+      // Show preview immediately
       const url = URL.createObjectURL(file);
       setAvatarSrc(url);
+      setError("");
+
+      // Call the parent's update function
+      handleUpdatePicture(file);
+      
+    } catch (error) {
+      console.log("File validation error:", error);
+      setError(error.message);
+      // Clear the file input
+      e.target.value = "";
     }
   }
+
+  // Fix: Handle image error
+  const handleImageError = (e) => {
+    console.log("Image failed to load, using fallback");
+    e.target.src = "/images/noimage.jpg";
+  };
 
   return (
     <div className={`profile-header ${className}`}>
@@ -47,34 +101,26 @@ const ProfileHeader = ({
             src={coverSrc || "/placeholder.svg"}
             alt="Profile cover"
             className="cover-image"
+            onError={handleImageError}
+            sizes=""
           />
-        </div>
-
-        <div className="cover-actions">
-          <input
-            ref={coverInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden-input"
-            onChange={handleCoverChange}
-            aria-label="Change cover photo"
-          />
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => coverInputRef.current?.click()}
-          >
-            Change cover
-          </button>
         </div>
 
         {/* Avatar */}
         <div className="avatar-container">
           <div className="avatar-wrapper-profile">
-            <img
-              src={avatarSrc || "/placeholder.svg"}
-              alt={`${name} profile photo`}
-              className="avatar-image"
-            />
+            {loading ? (
+              <div className="spinner-border text-light" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            ) : (
+              <img
+                src={avatarSrc}
+                alt={`${name} profile photo`}
+                className="avatar-image"
+                onError={handleImageError}
+              />
+            )}
             {/* Upload button with plus icon */}
             <button
               className="avatar-upload-btn"
@@ -93,6 +139,15 @@ const ProfileHeader = ({
             onChange={handleAvatarChange}
             aria-label="Change profile photo"
           />
+
+          {/* Error message under avatar */}
+          {error && (
+            <div className="text-center mt-2">
+              <small className="text-danger bg-light bg-opacity-75 px-2 py-1 rounded">
+                {error}
+              </small>
+            </div>
+          )}
         </div>
       </div>
 
@@ -114,8 +169,6 @@ const ProfileHeader = ({
             <span className="status-label">{statusLabel}</span>
           </div>
         </div>
-
-        {/* Edit button on the right */}
       </div>
     </div>
   );

@@ -3,19 +3,72 @@ import { useRouter } from "next/navigation";
 import ProfileHeader from "@/component/new/profile-header";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import api from "@/lib/api";
 
 const UserEditProfile = () => {
-  const router = useRouter();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const getUser = async () => {
+    try {
+      const { data } = await api.get(
+        `/getUserById?userId=68f11c79f180d3689c7ca111`
+      );
+      if (data.success) {
+        setUserData(data.data);
+        console.log(data.data);
+      }
+    } catch (error) {
+      console.log("Error fetching salons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const handleUpdatePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("userId", "68f11c79f180d3689c7ca111");
+    formData.append("image", file);
+
+    try {
+      const { data } = await api.post("/updateUserById", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (data.success) {
+        console.log(data.data);
+        getUser();
+      }
+    } catch (error) {
+      console.log("Error fetching salons:", error);
+    }
+  };
+
+  // Fix: Properly construct avatar URL with fallback
+  const getAvatarSrc = () => {
+    if (!userData?.image) {
+      return "/images/noimage.jpg";
+    }
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${userData.image}`;
+  };
 
   return (
     <div className="w-100">
       <div className="mb-5">
         <ProfileHeader
           defaultCoverSrc="/images/profile_cover.png"
-          defaultAvatarSrc="/images/profile_demo.jpg"
+          defaultAvatarSrc={getAvatarSrc()}
           name="Sarah J."
           location="47 Hennepard Street, San Diego (92139)"
           statusLabel="Active"
+          handleUpdatePicture={handleUpdatePicture}
+          loading={loading}
         />
       </div>
       <div className="auth_container">

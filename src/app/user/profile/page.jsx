@@ -1,43 +1,95 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileHeader from "@/component/new/profile-header";
 import BorderTabs from "@/component/new/tabs/border-tabs";
 import RatingCard from "@/component/new/cards/rating-card";
 import TabPanel from "@/component/new/tabs/tab-panel";
-
+import api from "@/lib/api";
+const tabs = [
+  {
+    id: 1,
+    value: "in-progress",
+    label: "In-progress",
+  },
+  {
+    id: 2,
+    value: "completed",
+    label: "Completed",
+  },
+  {
+    id: 3,
+    value: "delivered",
+    label: "Delivered",
+  },
+  {
+    id: 4,
+    value: "history",
+    label: "History",
+  },
+];
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("in-progress");
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const tabs = [
-    {
-      id: 1,
-      value: "in-progress",
-      label: "In-progress",
-    },
-    {
-      id: 2,
-      value: "completed",
-      label: "Completed",
-    },
-    {
-      id: 3,
-      value: "delivered",
-      label: "Delivered",
-    },
-    {
-      id: 4,
-      value: "history",
-      label: "History",
-    },
-  ];
+  const getUser = async () => {
+    try {
+      const { data } = await api.get(
+        `/getUserById?userId=68f11c79f180d3689c7ca111`
+      );
+      if (data.success) {
+        setUserData(data.data);
+        console.log(data.data);
+      }
+    } catch (error) {
+      console.log("Error fetching salons:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const handleUpdatePicture = async (file) => {
+    const formData = new FormData();
+    formData.append("userId", "68f11c79f180d3689c7ca111");
+    formData.append("image", file);
+
+    try {
+      const { data } = await api.post("/updateUserById", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (data.success) {
+        console.log(data.data);
+        getUser();
+      }
+    } catch (error) {
+      console.log("Error fetching salons:", error);
+    }
+  };
+
+  // Fix: Properly construct avatar URL with fallback
+  const getAvatarSrc = () => {
+    if (!userData?.image) {
+      return "/images/noimage.jpg";
+    }
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${userData.image}`;
+  };
+
   return (
     <div className="w-100">
       <ProfileHeader
         defaultCoverSrc="/images/profile_cover.png"
-        defaultAvatarSrc="/images/profile_demo.jpg"
-        name="Sarah J."
-        location="47 Hennepard Street, San Diego (92139)"
+        defaultAvatarSrc={getAvatarSrc()}
+        name={userData?.username || "N/A"}
+        location={userData?.locationName || "N/A"}
         statusLabel="Active"
+        loading={loading}
+        handleUpdatePicture={handleUpdatePicture}
       />
       {/* Tabs Card section */}
       <div className="mt-4">
@@ -91,7 +143,7 @@ const UserProfile = () => {
             <div className="row g-3 g-lg-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                   <RatingCard
+                  <RatingCard
                     productName="Premium Office Chair"
                     subTitle="Ergonomic Design"
                     label={activeTab}
@@ -109,7 +161,7 @@ const UserProfile = () => {
             <div className="row g-3 g-lg-4">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                   <RatingCard
+                  <RatingCard
                     productName="Premium Office Chair"
                     subTitle="Ergonomic Design"
                     label={activeTab}

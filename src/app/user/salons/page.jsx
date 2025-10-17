@@ -8,6 +8,7 @@ const TopStylists = () => {
   const [getSalons, setGetSalons] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
   const getAllSalons = async () => {
     setLoading(true);
     try {
@@ -16,7 +17,7 @@ const TopStylists = () => {
         setGetSalons(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching salons:", error);
+      console.log("Error fetching salons:", error);
     } finally {
       setLoading(false);
     }
@@ -29,7 +30,7 @@ const TopStylists = () => {
   return (
     <div className="w-100">
       <div className="mb-5">
-        <h4 className="txt_color mb-4">Top Salons</h4>
+        <h4 className="txt_color mb-4">Salons</h4>
         <div className="row g-3 g-lg-4">
           {loading ? (
             <div
@@ -47,6 +48,11 @@ const TopStylists = () => {
                   showSellerName={true}
                   onCardClick={() => router.push(`/user/${item?._id}`)}
                   items={item}
+                  title={item?.bName}
+                  sellerName={item?.fullName}
+                  sellerImage={item?.image}
+                  image={item?.bImage}
+                  subTitle={item?.bAddress}
                 />
               </div>
             ))

@@ -12,6 +12,7 @@ const BorderTabs = ({
   fullWidth = false,
   className,
   iconSize = 24,
+  onWriteReviewClick,
 }) => {
   const handleChange = (newValue) => {
     console.log("Tab clicked in BorderTabs:", newValue);
@@ -55,7 +56,7 @@ const BorderTabs = ({
           {/* Right side - Conditional button */}
           {activeTab === "customers reviews" && (
             <div className="border-tabs-right">
-              <button className="border-tab-custom-button">
+              <button className="border-tab-custom-button" onClick={onWriteReviewClick}>
                 Write Review
               </button>
             </div>
