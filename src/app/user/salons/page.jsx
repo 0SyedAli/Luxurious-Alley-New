@@ -3,11 +3,13 @@ import { UserProductCard } from "@/component/new/cards/product-card";
 import api from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 const TopStylists = () => {
   const [getSalons, setGetSalons] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const getAllSalons = async () => {
     setLoading(true);
@@ -46,7 +48,10 @@ const TopStylists = () => {
               <div className="col-md-3 col-sm-6 col-12" key={item?._id}>
                 <UserProductCard
                   showSellerName={true}
-                  onCardClick={() => router.push(`/user/${item?._id}`)}
+                  onCardClick={() => {
+                    router.push(`/user/${item?._id}`);
+                    dispatch(setBooking({ salonId: item?._id }));
+                  }}
                   items={item}
                   title={item?.bName}
                   sellerName={item?.fullName}

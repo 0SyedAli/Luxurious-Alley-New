@@ -233,6 +233,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Link from "next/link";
 import { tr } from "zod/v4/locales";
 import api from "@/lib/api";
+import { useDispatch } from "react-redux";
+import { setBooking } from "@/redux/features/booking/bookingSlice";
 
 const SmallCardData = [
   { id: 1, image: "/images/fire.png", text: "Trending" },
@@ -245,6 +247,7 @@ const UserDashboard = () => {
   const [getSalons, setGetSalons] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const getAllSalons = async () => {
     setLoading(true);
@@ -347,7 +350,10 @@ const UserDashboard = () => {
               <div className="col-md-3 col-sm-6 col-12" key={item?._id}>
                 <UserProductCard
                   showSellerName={true}
-                  onCardClick={() => router.push(`/user/${item?._id}`)}
+                  onCardClick={() => {
+                    router.push(`/user/${item?._id}`);
+                    dispatch(setBooking({ salonId: item?._id }));
+                  }}
                   items={item}
                   title={item?.bName}
                   sellerName={item?.fullName}

@@ -6,50 +6,28 @@ import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
 import api from "@/lib/api";
 import { userproducts } from "@/lib/products-data";
+import { setBooking } from "@/redux/features/booking/bookingSlice";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
-
-const reviews = [
-  {
-    id: 1,
-    userName: "John Doe",
-    date: "18 Oct 2023",
-    rating: 5,
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`,
-    avatar: "/images/review_img.jpg",
-  },
-  {
-    id: 2,
-    userName: "Jane Smith",
-    date: "15 Oct 2023",
-    rating: 4,
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`,
-    avatar: "/images/review_img.jpg",
-  },
-];
+import { useDispatch } from "react-redux";
 
 const tabs = [
   {
     id: 1,
-    value: "products",
-    label: "Products",
-  },
-  {
-    id: 2,
     value: "services",
     label: "Services",
   },
+
   {
-    id: 3,
+    id: 2,
     value: "stylists",
     label: "Stylists",
+  },
+  {
+    id: 3,
+    value: "products",
+    label: "Products",
   },
   {
     id: 4,
@@ -67,7 +45,7 @@ const TabPanelApi = {
 
 const UserDashboardProductServiceDetails = () => {
   const { id } = useParams();
-  const [activeTab, setActiveTab] = useState("products");
+  const [activeTab, setActiveTab] = useState("services");
   const [open, setOpen] = useState(false);
   const [getSalon, setGetSalon] = useState(null);
   const [getSalonTab, setGetSalonTab] = useState([]);
@@ -75,6 +53,7 @@ const UserDashboardProductServiceDetails = () => {
   const [tabLoading, setTabLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   // These would typically come from your app context or props
 
@@ -257,7 +236,9 @@ const UserDashboardProductServiceDetails = () => {
                 })}
               </div>
               <div>
-                <h5 className="fw-bold text-light mb-3 txt_color">Time Range</h5>
+                <h5 className="fw-bold text-light mb-3 txt_color">
+                  Time Range
+                </h5>
               </div>
               <div className="d-flex flex-row gap-4 mb-4 flex-wrap align-items-center">
                 <div
@@ -346,9 +327,10 @@ const UserDashboardProductServiceDetails = () => {
                       image={item?.images?.[0]}
                       title={item?.serviceName}
                       subTitle={`$${Number(item?.price)?.toFixed(2)}`}
-                      onCardClick={() =>
-                        router.push(`/user/services/${item._id}`)
-                      }
+                      onCardClick={() => {
+                        dispatch(setBooking({ serviceId: item?._id }));
+                        router.push(`/user/services/${item?._id}`);
+                      }}
                     />
                   </div>
                 ))
