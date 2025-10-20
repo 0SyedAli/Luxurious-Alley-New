@@ -10,10 +10,11 @@ import { FiMessageSquare } from "react-icons/fi";
 import api from "@/lib/api";
 import ReviewModal from "@/component/new/modals/review-modal/page";
 import { setBooking } from "@/redux/features/booking/bookingSlice";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const UserServicesDetails = () => {
   const { id } = useParams();
+  const state = useSelector((state) => state.booking);
   const [getService, setGetService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -103,7 +104,11 @@ const UserServicesDetails = () => {
                     <button
                       className="user-dashboard-box-btn"
                       onClick={() => {
-                        router.push(`/user/stylists/${id}`);
+                        router.push(
+                          state.isService
+                            ? `/user/stylists/${id}`
+                            : `/user/book-appointment/${state.technicianId}`
+                        );
                       }}
                     >
                       Continue

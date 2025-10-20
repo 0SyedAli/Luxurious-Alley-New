@@ -7,6 +7,7 @@ const initialState = {
   technicianId: null,
   date: null,
   time: null,
+  isService: false
 };
 
 const bookingSlice = createSlice({

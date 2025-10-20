@@ -4,7 +4,7 @@ import Image from "next/image";
 import "./style.css";
 
 // Main Component
-const BorderTabs = ({
+const CardTabs = ({
   tabs,
   activeTab,
   onTabChange,
@@ -67,4 +67,4 @@ const BorderTabs = ({
   );
 };
 
-export default BorderTabs;
+export default CardTabs;

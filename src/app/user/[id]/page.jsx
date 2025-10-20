@@ -328,7 +328,9 @@ const UserDashboardProductServiceDetails = () => {
                       title={item?.serviceName}
                       subTitle={`$${Number(item?.price)?.toFixed(2)}`}
                       onCardClick={() => {
-                        dispatch(setBooking({ serviceId: item?._id }));
+                        dispatch(
+                          setBooking({ serviceId: item?._id, isService: true })
+                        );
                         router.push(`/user/services/${item?._id}`);
                       }}
                     />
@@ -365,9 +367,10 @@ const UserDashboardProductServiceDetails = () => {
                       image={item?.image}
                       title={item?.fullName}
                       subTitle={item?.designation}
-                      // onCardClick={() =>
-                      //   router.push(`/user/products/${item._id}`)
-                      // }
+                      onCardClick={() => {
+                        dispatch(setBooking({ technicianId: item?._id, isService: false }));
+                        router.push(`/user/all-services`);
+                      }}
                     />
                   </div>
                 ))

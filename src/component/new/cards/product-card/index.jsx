@@ -19,13 +19,14 @@ export function UserProductCard({
   sellerName,
   sellerImage,
   subTitle,
+  className,
+  imgHeight = 200,
 }) {
   const [imgSrc, setImgSrc] = useState(
-    `${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}` ||
-      "/images/noimage.jpg"
+    `${process.env.NEXT_PUBLIC_IMAGE_URL}/${image}` || "/images/noimage.jpg"
   );
   const [hasError, setHasError] = useState(false);
-
+console.log({imgSrc})
   const businessNameRef = useRef(null);
   const businessAddressRef = useRef(null);
   const sellerNameRef = useRef(null);
@@ -111,7 +112,7 @@ export function UserProductCard({
 
   return (
     <div
-      className="card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden"
+      className={`card h-100 border-2 border-warning2 rounded-4 shadow-sm overflow-hidden ${className}`}
       onClick={handleCardClick}
       style={{ cursor: onCardClick || onClick ? "pointer" : "default" }}
     >
@@ -122,7 +123,7 @@ export function UserProductCard({
           alt={"Product Image"}
           onError={handleError}
           className="card-img-top object-fit-cover product_img22"
-          style={{ height: 200 }}
+          style={{ height: imgHeight }}
         />
         {showOrderBtn && (
           <div
@@ -211,7 +212,7 @@ export function UserProductCard({
               ref={businessAddressRef}
               className="small fw-semibold text-white text-truncate d-inline-block w-100"
               data-bs-toggle="tooltip"
-              data-bs-title={subTitle  || "N/A"}
+              data-bs-title={subTitle || "N/A"}
               data-bs-placement="top"
             >
               {subTitle || "N/A"}
