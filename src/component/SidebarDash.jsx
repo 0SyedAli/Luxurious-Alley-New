@@ -1,3 +1,4 @@
+"use client"
 import Image from 'next/image';
 import Link from 'next/link';
 import { HiOutlineSquares2X2 } from "react-icons/hi2";
@@ -5,17 +6,34 @@ import { IoCalendarOutline } from "react-icons/io5";
 import { BiMessageSquareDots } from "react-icons/bi";
 import { MdDisplaySettings, MdMiscellaneousServices } from "react-icons/md";
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { FaUserTie } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/auth/authSlice";
+import { persistor } from "@/redux/store"; // import persistor
+import { useRouter } from "next/navigation";
 
 export default function SidebarDash() {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const links = [
     { href: '/', name: 'Dashboard', icon: HiOutlineSquares2X2 },
     { href: '/myappointments', name: 'My Appointments', icon: IoCalendarOutline },
     { href: '/allproducts', name: 'Products', icon: BiMessageSquareDots },
     { href: '/allservices', name: 'Services', icon: MdMiscellaneousServices },
+    { href: '/addstylist', name: 'Add Stylist', icon: FaUserTie },
     { href: '/inbox', name: 'Inbox', icon: MdDisplaySettings },
-    { href: '/settings', name: 'Settings', icon: MdDisplaySettings },
+    { href: '/setting', name: 'Setting', icon: MdDisplaySettings },
   ];
+  const handleLogout = async () => {
+    // 1️⃣ clear redux state + session storage
+    dispatch(logout());
 
+    // 2️⃣ purge persisted data from localStorage
+    await persistor.purge();
+
+    // 3️⃣ redirect to login page
+    router.push("/auth/signin");
+  };
   return (
     <div className="sidebar sidebar2">
       <div className="logo">
@@ -35,7 +53,7 @@ export default function SidebarDash() {
         <ul className='pt-0 m-0'>
           <li className='pt-0 m-0'>
             <span><RiLogoutBoxLine /></span>
-            <Link href="/auth/signin">Logout</Link>
+            <Link href="/auth/signin" onClick={handleLogout}>Logout</Link>
           </li>
         </ul>
       </div>

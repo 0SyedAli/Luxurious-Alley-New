@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { BiPlus, BiX } from "react-icons/bi";
 
@@ -7,6 +7,19 @@ export default function ImageUploader2({ initialImages = [], onChange }) {
   const [images, setImages] = useState(initialImages);
   const fileInputRef = useRef(null);
 
+  // ✅ Only update from parent when it’s truly new data (not from user selection)
+  useEffect(() => {
+    // Only update when initialImages is NOT empty and different from current
+    if (
+      initialImages.length > 0 &&
+      JSON.stringify(initialImages.map((i) => i.url)) !==
+        JSON.stringify(images.map((i) => i.url))
+    ) {
+      setImages(initialImages);
+    }
+  }, [initialImages]); // safe — won’t loop infinitely
+
+  // ✅ When user selects files, show only the new ones (remove previous previews)
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.map((file) => ({
@@ -14,9 +27,8 @@ export default function ImageUploader2({ initialImages = [], onChange }) {
       url: URL.createObjectURL(file),
     }));
 
-    const updated = [...images, ...newImages];
-    setImages(updated);
-    onChange && onChange(updated);
+    setImages(newImages); // replace old images with new
+    onChange && onChange(newImages);
   };
 
   const handleRemove = (index) => {
@@ -50,7 +62,7 @@ export default function ImageUploader2({ initialImages = [], onChange }) {
               width: "22px",
               height: "22px",
               lineHeight: 0,
-                background: "rgb(165 116 24)"
+              background: "rgb(165 116 24)",
             }}
           >
             <BiX size={12} color="white" />
@@ -65,7 +77,7 @@ export default function ImageUploader2({ initialImages = [], onChange }) {
           width: "130px",
           height: "130px",
           cursor: "pointer",
-          background: "#D49621"
+          background: "#D49621",
         }}
         onClick={() => fileInputRef.current.click()}
       >

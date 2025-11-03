@@ -53,10 +53,10 @@ export default function StatCard({
           <div>
             <div className="fs-4 fw-semibold">{value}</div>
             <div className="small d-flex align-items-center gap-1">
-              <span className={`fw-semibold ${deltaPositive ? "text-success" : "text-danger"}`}>
+              {/* <span className={`fw-semibold ${deltaPositive ? "text-success" : "text-danger"}`}>
                 {deltaPositive ? "▲" : "▼"} {delta}
-              </span>
-              <span className="text-white">{subtitle}</span>
+              </span> */}
+              <span className="text-success">{subtitle}</span>
             </div>
           </div>
         </div>

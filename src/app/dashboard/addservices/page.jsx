@@ -1,45 +1,135 @@
 "use client";
 
 import RHFInput from "@/component/forms/RHFInput";
-import RHFSelect from "@/component/forms/RHFSelect";
 import RHFTextarea from "@/component/forms/RHFTextarea";
 import ImageUploader2 from "@/component/ImageUploader2";
-import ImageRadio from "@/component/user/image-radio";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { fetchCategories } from "@/redux/features/category/categorySlice";
+import api from "@/lib/api";
+import Button from "@/component/MyButton";
 const AddService = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedDays, setSelectedDays] = useState(["Monday"]);
-  // Initialize React Hook Form
+  const [stylists, setStylists] = useState([]);
+
+  const { categories, status } = useSelector((state) => state.category);
+  const token = sessionStorage.getItem("authToken");
+  const salonId = sessionStorage.getItem("adminId");
+  const fetchCalled = useRef(false); // 👈 new ref to track first call
+
+  // Fetch categories
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, status]);
+
+  useEffect(() => {
+    if (salonId && !fetchCalled.current) {
+      fetchCalled.current = true; // prevent second call
+      fetchStylist(salonId);
+    }
+  }, [salonId]);
+
+  const fetchStylist = async (salonId) => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/getAllStylistsBySalonId?salonId=${salonId}`);
+      if (res.data.success && Array.isArray(res.data.data)) {
+        setStylists(res.data.data);
+      } else {
+        toast.error("No technicians found for this salon.");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error fetching technicians.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
-    // resolver: zodResolver(loginSchema), // Use Zod resolver
     defaultValues: {
-      email: "",
-      password: "",
+      serviceName: "",
+      category: "",
+      price: "",
+      description: "",
+      technicianId: "",
+      startTime: "",
+      endTime: "",
     },
   });
 
-  const onSubmit = async (data) => {
-    // Dispatch the login thunk
-    const resultAction = await dispatch(signInAdmin(data));
-
-    // Check if the login was successful (fulfilled)
-    // if (signInAdmin.fulfilled.match(resultAction)) {
-    // Success: Redirect to the dashboard
-    //   router.push("/dashboard");
-    // }
-    // Error handling is managed by the error state
+  const toggleDay = (day) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
   };
 
-  //   const isSubmitting = status === "loading";
+  const onSubmit = async (data) => {
+    if (!salonId || !token) {
+      toast.error("Session expired. Please log in again.");
+      router.push("/auth/signin");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("salonId", salonId);
+      formData.append("serviceName", data.serviceName);
+      formData.append("price", data.price);
+      formData.append("description", data.description);
+      formData.append("technicianId", JSON.stringify([data.technicianId]));
+
+      formData.append("categoryId", data.category);
+      formData.append("days", JSON.stringify(selectedDays));
+      formData.append("startTime", data.startTime);
+      formData.append("endTime", data.endTime);
+
+      images.forEach((imgObj) => {
+        formData.append("images", imgObj.file);
+      });
+
+      const res = await api.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/createService`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.data.success) {
+        toast.success("Service created successfully!");
+        reset();
+        setImages([]);
+        router.push("/dashboard/allservices");
+      } else {
+        toast.error(res.data.message || "Something went wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create service.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const daysList = [
     { short: "Mon", full: "Monday" },
@@ -50,49 +140,19 @@ const AddService = () => {
     { short: "Sat", full: "Saturday" },
     { short: "Sun", full: "Sunday" },
   ];
-   const catOptions = [
-    { value: "hair", label: "Hair" },
-    { value: "skin", label: "Skin" },
-  ];
-  const toggleDay = (day) => {
-    setSelectedDays((prev) =>
-      prev.includes(day)
-        ? prev.filter((d) => d !== day)
-        : [...prev, day]
-    );
-  };
   return (
     <div className="auth_container">
-      <div className="row ">
+      <div className="row">
         <div className="col-sm-12 col-md-6">
-          <h4 className="txt_color mb-4 display-6 text-start">Add Service</h4>
+          <h4 className="h4 mb-4 allproducts_title">Add Service</h4>
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <div className="row g-3 calender_container text-start">
+              {/* ✅ Image Upload */}
               <div className="col-12 d-flex align-items-center">
-                {/* <ImageRadio
-                  aria-label="Payment methods"
-                  options={[
-                    {
-                      value: "visa",
-                      label: "Visa",
-                      imageSrc: "/images/visa.png",
-                    },
-                    {
-                      value: "discover",
-                      label: "Discover",
-                      imageSrc: "/images/discover.png",
-                    },
-                    {
-                      value: "mastercard",
-                      label: "Mastercard",
-                      imageSrc: "/images/mastercard.png",
-                    },
-                  ]}
-                  defaultValue="visa"
-                /> */}
+                <ImageUploader2 onChange={setImages} />
+              </div>
 
-                <ImageUploader2 />
-              </div>
+              {/* ✅ Service Name */}
               <div className="col-12">
                 <RHFInput
                   name="serviceName"
@@ -101,30 +161,63 @@ const AddService = () => {
                   errors={errors}
                 />
               </div>
+
+              {/* ✅ Category Dropdown */}
               <div className="col-12">
-                <RHFSelect
-                  name="category"
-                  label="Select Category *"
-                  options={catOptions}
-                  register={register}
-                  errors={errors}
-                />
+                <select
+                  {...register("category", { required: "Select a category" })}
+                  className="form-select"
+                  defaultValue=""
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
+                {errors.category && (
+                  <p className="text-danger small">{errors.category.message}</p>
+                )}
               </div>
+
+              {/* ✅ Price */}
               <div className="col-12">
-                {/* Last name */}
                 <RHFInput
-                  name="serviceName"
-                  placeholder="Service Name *"
+                  name="price"
+                  placeholder="Enter Price *"
+                  type="number"
                   register={register}
                   errors={errors}
                 />
-                {/* {errors.email && (
-              <p className="text-danger mt-1">{errors.email.message}</p>
-              )} */}
               </div>
+
+              {/* ✅ Technician Dropdown */}
+              <div className="col-12">
+                <select
+                  {...register("technicianId", { required: "Select a stylist" })} // ✅ correct name
+                  className="form-select"
+                  defaultValue=""
+                >
+                  <option value="">Select stylist</option>
+                  {stylists.map((stylist) => (
+                    <option key={stylist._id} value={stylist._id}>
+                      {stylist.fullName || stylist.name || "Unnamed stylist"}
+                    </option>
+                  ))}
+                </select>
+                {errors.technicianId && (
+                  <p className="text-danger small">{errors.technicianId.message}</p>
+                )}
+              </div>
+
+              {/* ✅ Day Selector */}
               <div className="col-10">
                 <label className="mt-2">Including These Days</label>
-                <div className="d-flex my-2 justify-content-between flex-wrap" style={{ gap: 10 }}>
+                <div
+                  className="d-flex my-2 justify-content-between flex-wrap"
+                  style={{ gap: 10 }}
+                >
                   {daysList.map(({ short, full }) => (
                     <div className="calender_item" key={full}>
                       <input
@@ -139,6 +232,7 @@ const AddService = () => {
                   ))}
                 </div>
               </div>
+
               {/* ✅ Time Range */}
               <label className="mt-2">Time Range</label>
               <div className="cs-form time_picker d-flex gap-3 align-items-center ">
@@ -154,8 +248,9 @@ const AddService = () => {
                   className="classInput"
                 />
               </div>
+
+              {/* ✅ Description */}
               <div className="col-12">
-                {/* Last name */}
                 <RHFTextarea
                   name="description"
                   label="Description"
@@ -164,14 +259,18 @@ const AddService = () => {
                   register={register}
                   errors={errors}
                 />
-                {/* {errors.email && (
-              <p className="text-danger mt-1">{errors.email.message}</p>
-              )} */}
               </div>
+
+              {/* ✅ Submit Button */}
               <div className="col-md-4 text-start">
-                <button type="button" className="user-dashboard-box-btn">
-                  Add Now
-                </button>
+                {/* <button
+                  type="submit"
+                  className="user-dashboard-box-btn"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Now"}
+                </button> */}
+                 <Button isLoading={loading}>Add Now</Button>
               </div>
             </div>
           </form>

@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import "./style.css";
 import { FaCircleCheck } from "react-icons/fa6";
 import { RiEdit2Line } from "react-icons/ri";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const ProfileHeader = ({
   defaultCoverSrc,
@@ -13,22 +13,23 @@ const ProfileHeader = ({
   location,
   statusLabel = "Active",
   className,
+  profileChange
 }) => {
   const [coverSrc, setCoverSrc] = React.useState(defaultCoverSrc);
   const [avatarSrc, setAvatarSrc] = React.useState(defaultAvatarSrc);
   const router = useRouter();
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const coverInputRef = React.useRef(null);
   const avatarInputRef = React.useRef(null);
 
-  function handleCoverChange(e) {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setCoverSrc(url);
-    }
-  }
+  // function handleCoverChange(e) {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const url = URL.createObjectURL(file);
+  //     setCoverSrc(url);
+  //   }
+  // }
 
   function handleAvatarChange(e) {
     const file = e.target.files?.[0];
@@ -50,23 +51,6 @@ const ProfileHeader = ({
           />
         </div>
 
-        <div className="cover-actions">
-          <input
-            ref={coverInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden-input"
-            onChange={handleCoverChange}
-            aria-label="Change cover photo"
-          />
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => coverInputRef.current?.click()}
-          >
-            Change cover
-          </button>
-        </div>
-
         {/* Avatar */}
         <div className="avatar-container">
           <div className="avatar-wrapper-profile">
@@ -76,13 +60,15 @@ const ProfileHeader = ({
               className="avatar-image"
             />
             {/* Upload button with plus icon */}
-            <button
-              className="avatar-upload-btn"
-              onClick={() => avatarInputRef.current?.click()}
-              aria-label="Change profile photo"
-            >
-              <FaPlus className="plus-icon" />
-            </button>
+            {profileChange &&
+              <button
+                className="avatar-upload-btn"
+                onClick={() => avatarInputRef.current?.click()}
+                aria-label="Change profile photo"
+              >
+                <FaPlus className="plus-icon" />
+              </button>
+            }
           </div>
 
           <input
@@ -95,28 +81,30 @@ const ProfileHeader = ({
           />
         </div>
       </div>
-
-      {/* Info row */}
-      <div className="info-section">
-        <div className="user-info">
-          <h1 className="user-name d-flex align-items-center gap-3">
-            {name}{" "}
-            {!id && (
-              <button className="edit-button-container" onClick={() => router.push(`/dashboard/setting`)} >
-                <RiEdit2Line />
-              </button>
-            )}
-          </h1>
-          {location && <p className="user-location">{location}</p>}
-          {/* Status */}
-          <div className="status-container">
-            <FaCircleCheck className="status-indicator" />
-            <span className="status-label">{statusLabel}</span>
+      {!profileChange &&
+        <div className="info-section">
+          <div className="user-info">
+            <h1 className="user-name d-flex align-items-center gap-3">
+              {name}{" "}
+              {/* {!id && (
+            )} */}
+            <button className="edit-button-container">
+              <RiEdit2Line onClick={() => router.push(`/dashboard/setting`)} />
+            </button>
+            </h1>
+            {location && <p className="user-location">{location}</p>}
+            {/* Status */}
+            <div className="status-container">
+              <FaCircleCheck className="status-indicator" />
+              <span className="status-label">{statusLabel}</span>
+            </div>
           </div>
-        </div>
 
-        {/* Edit button on the right */}
-      </div>
+          {/* Edit button on the right */}
+        </div>
+      }
+      {/* Info row */}
+
     </div>
   );
 };

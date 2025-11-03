@@ -1,164 +1,136 @@
 "use client";
-import { UserProductCard } from "@/component/new/cards/product-card";
-import ReviewCard from "@/component/new/cards/review-card";
+import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { FiMessageSquare } from "react-icons/fi";
 import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
-import { userproducts } from "@/lib/products-data";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { FiMessageSquare } from "react-icons/fi";
+import ReviewCard from "@/component/new/cards/review-card";
+import api from "@/lib/api";
+import { toast } from "react-toastify";
 
-const reviews = [
-  {
-    id: 1,
-    userName: "John Doe",
-    date: "18 Oct 2023",
-    rating: 5,
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`,
-    avatar: "/images/review_img.jpg",
-  },
-  {
-    id: 2,
-    userName: "Jane Smith",
-    date: "15 Oct 2023",
-    rating: 4,
-    text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.`,
-    avatar: "/images/review_img.jpg",
-  },
-];
-
-const UserDashboardProductServiceDetails = () => {
+const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState("customers reviews");
-const router = useRouter();
-  const tabs = [
-    {
-      id: 1,
-      value: "customers reviews",
-      label: "Customers Reviews",
-    },
-  ];
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const pathname = usePathname(); // ✅ get full path
+  const id = pathname.split("/").pop(); // ✅ extract ID from URL
+
+  const tabs = [{ id: 1, value: "customers reviews", label: "Customers Reviews" }];
+
+  useEffect(() => {
+    if (id) fetchProductDetails(id);
+  }, [id]);
+
+  const fetchProductDetails = async (productId) => {
+    try {
+      setLoading(true);
+      const res = await api.get(`/getProductById?id=${productId}`);
+      if (res.data.success) {
+        setProduct(res.data.data);
+      } else {
+        toast.error("Failed to load product details.");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error loading product details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <p className="text-center text-white mt-5">Loading product details...</p>;
+  if (!product) return <p className="text-center text-white mt-5">No product found.</p>;
+
+
 
   return (
     <div className="userdashboard-product-details">
       <div className="row w-100">
+        {/* Left: Product Images */}
         <div className="col-md-4 d-flex flex-column gap-3">
-          {/* Main Image */}
           <div className="rounded-4 overflow-hidden shadow-sm">
             <img
-              src="/images/p_view_main.png"
-              alt="main product"
+              src={
+                product?.images?.length
+                  ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${product.images[0]}`
+                  : "/images/p_view_main.png"
+              }
+              alt={product?.productName || "product"}
               className="object-fit-cover w-100 rounded-4"
               style={{ height: "300px" }}
             />
           </div>
 
-          {/* Thumbnail Images */}
           <div className="d-flex flex-row gap-3 w-100">
-            <div
-              className="rounded-4 overflow-hidden shadow-sm cursor-pointer"
-              style={{ flex: 1 }}
-            >
-              <img
-                src="/images/p_view_1.png"
-                alt="product view 1"
-                className="object-fit-cover w-100 rounded-4"
-                style={{ height: "150px" }}
-              />
-            </div>
-            <div
-              className="rounded-4 overflow-hidden shadow-sm cursor-pointer"
-              style={{ flex: 1 }}
-            >
-              <img
-                src="/images/p_view_2.png"
-                alt="product view 2"
-                className="object-fit-cover w-100 rounded-4"
-                style={{ height: "150px" }}
-              />
-            </div>
+            {product?.images?.slice(1).map((img, i) => (
+              <div key={i} className="rounded-4 overflow-hidden shadow-sm cursor-pointer" style={{ flex: 1 }}>
+                <img
+                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}/${img}`}
+                  alt={`thumbnail-${i}`}
+                  className="object-fit-cover w-100 rounded-4"
+                  style={{ height: "150px" }}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Content Section */}
+        {/* Right: Product Details */}
         <div className="col-md-8 d-flex flex-column justify-content-start">
           <div className="ps-md-2 ps-0 pt-3 pt-md-0">
-            <div className="d-flex  justify-content-between gap-3 flex-wrap mb-4">
+            <div className="d-flex justify-content-between gap-3 flex-wrap mb-4">
               <div>
-                <h3 className="fw-bold  mb-3 text-white">Omni iste</h3>
+                <h3 className="fw-bold mb-3 text-white">{product?.productName}</h3>
                 <h4 className="fw-medium text-light mb-3">
-                  1609 Oak, St. (2km)
+                  {product?.salonId?.bAddress || "No address found"}
                 </h4>
-                <h5 className="fw-medium mb-3 text-white">About Omni iste</h5>
+                <h5 className="fw-medium mb-3 text-white">
+                  About {product?.salonId?.bName || "Salon"}
+                </h5>
               </div>
-              <div className="d-flex flex-column justify-content-between ">
+
+              <div className="d-flex flex-column justify-content-between">
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
-                  {/* <button
-                    className="d-flex text-light align-items-center gap-2 rounded-circle p-2"
-                    style={{
-                      backgroundColor: "#19CC89",
-                      border: "1px solid #19CC89",
-                    }}
+                  <button
+                    className="theme-btn2"
+                    onClick={() => router.push(`/dashboard/allproducts/edit/${product._id}`)}
                   >
-                    <FiMessageSquare size={28} />
-                  </button> */}
-                  <button className="theme-btn2" onClick={()=> router.push("/dashboard/allproducts/edit/1")}>Edit Now</button>
+                    Edit Now
+                  </button>
                 </div>
-                {/* <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
-                  <p className="text-light mb-0">Explore</p>
-                  <div className="rounded-4 overflow-hidden shadow-sm cursor-pointer">
-                    <img
-                      src="/images/p_map.png"
-                      alt="map"
-                      className="object-fit-cover w-100 rounded-4"
-                      style={{ height: "60px" }}
-                    />
-                  </div>
-                </div> */}
               </div>
             </div>
+
             <p className="text-light lh-lg mb-4 fw-light">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est
-              laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-              sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum.
+              {product?.description || "No description available."}
             </p>
+
+            <div className="text-light mt-2">
+              <p className="mb-1"><strong>Brand:</strong> {product?.brandName || "N/A"}</p>
+              <p className="mb-1"><strong>Model:</strong> {product?.modelName || "N/A"}</p>
+              <p className="mb-1"><strong>Price:</strong> ${product?.price || "0"}</p>
+              <p className="mb-1"><strong>Stock:</strong> {product?.stock || 0}</p>
+              <p className="mb-1"><strong>Category:</strong> {product?.categoryId?.categoryName || "N/A"}</p>
+              <p className="mb-1"><strong>Status:</strong> {product?.status || "N/A"}</p>
+            </div>
           </div>
         </div>
       </div>
-      {/* Tabs Card section */}
-      <div className="mt-4">
-        <BorderTabs
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          className="mb-3 apd"
-        />
 
-        {/* Tab Panels */}
+      {/* Tabs Section */}
+      <div className="mt-4">
+        <BorderTabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} className="mb-3 apd" />
+
         <div className="tab-content">
           <TabPanel value={activeTab} tabValue="customers reviews">
-            {reviews.map((review) => (
-              <ReviewCard
-                key={review.id}
-                {...review}
-                className="mb-4"
-                maxTextLength={150}
-              />
-            ))}
+            {product?.reviews?.length > 0 ? (
+              product.reviews.map((review) => (
+                <ReviewCard key={review.id} {...review} className="mb-4" maxTextLength={150} />
+              ))
+            ) : (
+              <p className="text-left text-white">No reviews for this product.</p>
+            )}
           </TabPanel>
         </div>
       </div>
@@ -166,4 +138,4 @@ const router = useRouter();
   );
 };
 
-export default UserDashboardProductServiceDetails;
+export default ProductDetails;

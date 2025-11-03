@@ -25,7 +25,7 @@ const RHFSelect = ({ name, label, options = [], register, errors, ...rest }) => 
                 ))}
             </select>
             {/* Display the error message */}
-            {isInvalid && <p className="text-danger mt-1">{isInvalid.message}</p>}
+            {isInvalid && <p className="text-danger mt-1 mb-0">{isInvalid.message}</p>}
         </div>
     );
 };

@@ -70,10 +70,9 @@ const OTP = () => {
     <div className="content align-self-center mw-600">
       <div className="auth_container otp_container">
         <div className="auth_head">
-          <h2 className="px-5">Verification Code</h2>
-          <p>We have sent the verification code to <b>{tempEmail}</b></p>
+          <h2>Verification Code</h2>
+          <p>Enter 4 digit code we sent to your email</p>
         </div>
-
         <form className="auth_otp" onSubmit={(e) => { e.preventDefault(); handleVerify(); }}>
           <OtpInput
             value={code}
@@ -95,8 +94,7 @@ const OTP = () => {
             )}
           // ... existing inputStyle and focusStyle
           />
-
-          <div className="text-center w-100 mt-3">
+          <div className="text-start w-100 mt-3">
             {/* Display verification error */}
             {otpStatus === 'failed' && otpError && <p style={{ color: "red" }}>{otpError}</p>}
 
@@ -106,13 +104,13 @@ const OTP = () => {
           </div>
         </form>
 
-        <div className="resend_code text-center mt-3">
+        <div className="resend_code d-flex align-items-center gap-2 mt-3">
           {/* Display resend success message */}
-          <p>Didn't receive the code?</p>
+          <p>Code Didn't Receive? </p>
           {/* Fallback to re-signup, replaced by a simple link */}
           <h5 className="mt-2">
             <Link href="signup" style={{ color: "#CD8A1A", cursor: "pointer" }}>
-              Pls sign up again
+              Resend
             </Link>
           </h5>
         </div>

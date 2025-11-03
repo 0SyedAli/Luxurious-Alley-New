@@ -70,9 +70,8 @@ function ConversationList({ items, activeId, onSelect }) {
             >
               <button
                 onClick={() => onSelect(c.id)}
-                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 ${
-                  c.id === activeId ? "active" : ""
-                }`}
+                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 ${c.id === activeId ? "active" : ""
+                  }`}
                 style={{
                   backgroundColor:
                     c.id === activeId ? "rgba(18, 12, 49, 0.5)" : "transparent",
@@ -156,9 +155,8 @@ function MessageBubble({ message }) {
           <p className="mb-0 small lh-sm">{message.text}</p>
         </div>
         <small
-          className={`text-light d-block mt-1 ${
-            isOut ? "text-end" : "text-start"
-          }`}
+          className={`text-light d-block mt-1 ${isOut ? "text-end" : "text-start"
+            }`}
         >
           {message.time}
         </small>
@@ -227,12 +225,12 @@ function ChatInput({ onSend }) {
       </div>
 
       <style jsx>{`
-        .form-control::placeholder {
+         .chat-section  .form-control::placeholder {
           color: #ffffff !important;
           opacity: 0.8;
         }
 
-        .form-control:focus {
+         .chat-section .form-control:focus {
           border-color: transparent !important;
           outline: none !important;
           box-shadow: none !important;
@@ -433,9 +431,8 @@ const Inbox = () => {
                       setMessages([
                         {
                           id: "m1",
-                          text: `Hi there! This is a new conversation with ${
-                            conversations.find((c) => c.id === id)?.name
-                          }`,
+                          text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
+                            }`,
                           time: new Date().toLocaleTimeString([], {
                             hour: "numeric",
                             minute: "2-digit",
@@ -462,9 +459,8 @@ const Inbox = () => {
                     setMessages([
                       {
                         id: "m1",
-                        text: `Hi there! This is a new conversation with ${
-                          conversations.find((c) => c.id === id)?.name
-                        }`,
+                        text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
+                          }`,
                         time: new Date().toLocaleTimeString([], {
                           hour: "numeric",
                           minute: "2-digit",

@@ -225,12 +225,12 @@ function ChatInput({ onSend }) {
       </div>
 
       <style jsx>{`
-        .form-control::placeholder {
+        .chat-section .form-control::placeholder {
           color: #ffffff !important;
           opacity: 0.8;
         }
 
-        .form-control:focus {
+        .chat-section .form-control:focus {
           border-color: transparent !important;
           outline: none !important;
           box-shadow: none !important;
@@ -403,7 +403,7 @@ const Inbox = () => {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
   return (
-    <main className="h-100 w-100 bg-transparent">
+    <main className="h-100 w-100 bg-transparent chat-section">
       {isRefreshing ? (
         <div className="h-100 d-flex align-items-center justify-content-center  text-center p-4">
           <div>
