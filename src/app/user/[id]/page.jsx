@@ -4,9 +4,11 @@ import ReviewCard from "@/component/new/cards/review-card";
 import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
 import { userproducts } from "@/lib/products-data";
+import { setActiveVendorId, setCurrentUser } from "@/redux/features/chat/chatSlice";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
+import { useDispatch } from "react-redux";
 
 const reviews = [
   {
@@ -36,6 +38,7 @@ const reviews = [
 const UserDashboardProductServiceDetails = () => {
   const [activeTab, setActiveTab] = useState("products");
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const tabs = [
     {
@@ -54,6 +57,25 @@ const UserDashboardProductServiceDetails = () => {
       label: "Customers Reviews",
     },
   ];
+
+   const handleChatClick = () => {
+    // Set current user (replace with your actual user from auth)
+    const userData = {
+      id: "68ed9c864236c9662a1ac69c", // User ID from your DB
+      name: "Faraz Tariq",
+      email: "faraz@example.com",
+      role: "user",
+      avatar: "1760484156598-image.jpg"
+    };
+    
+    dispatch(setCurrentUser(userData));
+    
+    // Store vendorId in Redux
+    dispatch(setActiveVendorId('68efdfa53cb294e3c05e1f9d'));
+    
+    // Navigate to inbox page
+    router.push('/user/inbox');
+  };
 
   return (
     <div className="userdashboard-product-details">
@@ -115,6 +137,7 @@ const UserDashboardProductServiceDetails = () => {
                       backgroundColor: "#19CC89",
                       border: "1px solid #19CC89",
                     }}
+                    onClick={handleChatClick}
                   >
                     <FiMessageSquare size={28} />
                   </button>

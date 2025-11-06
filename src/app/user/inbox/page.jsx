@@ -1,5 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  FirebaseChatProvider,
+  useFirebaseChat,
+} from "@/contexts/FirebaseChatContext";
 import Image from "next/image";
 import { BiArrowBack } from "react-icons/bi";
 import { MdOutlineEmojiEmotions } from "react-icons/md";
@@ -9,8 +14,14 @@ import { IoSend } from "react-icons/io5";
 import "./inbox.css";
 
 import AVATARUSERONE from "@/images/chat_avatar.png";
+import { resetChatState } from "@/redux/features/chat/chatSlice";
+
+// Default avatar constant
+const DEFAULT_AVATAR = "/images/chat_avatar.jpg";
 
 function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
+  const avatarSrc = src || DEFAULT_AVATAR;
+
   return (
     <div
       className="d-flex align-items-center justify-content-center rounded-circle overflow-hidden flex-shrink-0"
@@ -21,47 +32,88 @@ function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
         border: "3px solid #AA822A",
       }}
     >
-      {src ? (
-        <Image
-          src={src}
-          alt={alt}
-          width={size}
-          height={size}
-          style={{ objectFit: "cover" }}
-          priority={true}
-          // quality={true}
-          unoptimized={true}
-        />
-      ) : (
-        <BsPersonCircle size={24} color="#000000" />
-      )}
+      <Image
+        src={avatarSrc}
+        alt={alt}
+        width={size}
+        height={size}
+        style={{ objectFit: "cover" }}
+        priority={true}
+        unoptimized={true}
+        onError={(e) => {
+          if (avatarSrc !== DEFAULT_AVATAR) {
+            e.target.src = DEFAULT_AVATAR;
+          }
+        }}
+      />
     </div>
   );
 }
 
-function ConversationList({ items, activeId, onSelect }) {
+function ConversationList({ items, activeId, onSelect, loading }) {
   const [query, setQuery] = useState("");
 
   const filtered = items.filter(
     (c) =>
-      c.name.toLowerCase().includes(query.trim().toLowerCase()) ||
-      c.lastMessage.toLowerCase().includes(query.trim().toLowerCase())
+      c.salonName?.toLowerCase().includes(query.trim().toLowerCase()) ||
+      c.lastMessage?.toLowerCase().includes(query.trim().toLowerCase())
   );
+
+  const getLastMessageTime = (timestamp) => {
+    if (!timestamp) return "";
+
+    let date;
+    if (timestamp instanceof Date) {
+      date = timestamp;
+    } else if (timestamp && typeof timestamp === "object" && timestamp.toDate) {
+      date = timestamp.toDate();
+    } else if (typeof timestamp === "string" || typeof timestamp === "number") {
+      date = new Date(timestamp);
+    } else {
+      return "";
+    }
+
+    if (isNaN(date.getTime())) {
+      return "";
+    }
+
+    const now = new Date();
+    const diffInHours = (now - date) / (1000 * 60 * 60);
+
+    if (diffInHours < 24) {
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else if (diffInHours < 48) {
+      return "Yesterday";
+    } else {
+      return date.toLocaleDateString();
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="card h-100 d-flex flex-column overflow-hidden rounded-0 bg-transparent border-0">
+        <div className="p-3 bg-transparent">
+          <p className="conversation_heading">Inbox</p>
+        </div>
+        <div className="d-flex justify-content-center align-items-center flex-grow-1">
+          <div className="spinner-border text-light" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="card h-100 d-flex flex-column overflow-hidden rounded-0 bg-transparent border-0">
       <div className="p-3 bg-transparent">
         <p className="conversation_heading">Inbox</p>
-        {/* <input
-          type="text"
-          className="form-control"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search..."
-        /> */}
       </div>
       <div className="overflow-auto flex-grow-1 bg-transparent custom-scrollbar">
-        <div className="list-group list-group-flush me-3">
+        <div className="list-group list-group-flush">
           {filtered.map((c, idx) => (
             <div
               key={c.id}
@@ -69,116 +121,187 @@ function ConversationList({ items, activeId, onSelect }) {
               style={{ borderBottom: "1px solid #573D1A" }}
             >
               <button
-                onClick={() => onSelect(c.id)}
-                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 ${c.id === activeId ? "active" : ""
-                  }`}
+                onClick={() => onSelect(c)}
+                className={`list-group-item list-group-item-action border-0 py-3 px-3 d-flex align-items-start gap-3 w-100 ${
+                  c.id === activeId ? "active" : ""
+                }`}
                 style={{
                   backgroundColor:
                     c.id === activeId ? "rgba(18, 12, 49, 0.5)" : "transparent",
                 }}
               >
-                <div className="position-relative">
-                  <AvatarImage size={50} src={c.avatar || ""} alt={c.name} />
+                <div className="position-relative flex-shrink-0">
+                  <AvatarImage
+                    size={50}
+                    src={c.avatar}
+                    alt={c.salonName}
+                  />
                   <span className="position-absolute bottom-0 end-0 translate-middle badge bg-success border border-white rounded-circle p-1"></span>
                 </div>
-                <div className="flex-grow-1 min-w-0">
+                <div
+                  className="flex-grow-1 min-w-0"
+                  style={{ width: "calc(100% - 70px)" }}
+                >
                   <div className="d-flex align-items-center justify-content-between gap-2 mb-1">
-                    <span className="fw-semibold text-dark text-truncate small txt_color">
-                      {c.name}
+                    <span
+                      className="fw-semibold text-truncate small txt_color"
+                      style={{
+                        display: "block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      title={c.salonName}
+                    >
+                      {c.salonName}
+                    </span>
+                    <span
+                      className="text-xs text-gray-500 flex-shrink-0"
+                      style={{ 
+                        minWidth: "fit-content",
+                        fontSize: "0.75rem"
+                      }}
+                    >
+                      {getLastMessageTime(c.lastMessageAt)}
                     </span>
                   </div>
-                  <p className="text-light text-truncate small mb-0">
+                  <p
+                    className="text-light text-truncate small mb-1"
+                    style={{
+                      display: "block",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    title={c.lastMessage}
+                  >
                     {c.lastMessage}
                   </p>
                 </div>
               </button>
             </div>
           ))}
+
+          {filtered.length === 0 && (
+            <div className="text-center p-4 text-light">
+              <RiMessengerLine size={32} className="mb-2 opacity-50" />
+              <p>No conversations yet</p>
+              <small className="text-muted">
+                Start a chat with a vendor to see conversations here
+              </small>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function ChatHeader({ name, subtitle, avatar, onBack, showBack }) {
+function ChatHeader({ chat, onBack, showBack }) {
+  if (!chat) return null;
+
   return (
     <div
-      className="py-3 px-3 d-flex align-items-center gap-3 mx-3"
+      className="py-3 px-3 d-flex align-items-center gap-3"
       style={{
         backgroundColor: "#120C31",
-        borderRadius: "11px 11px 0 0",
+        borderRadius: "0",
       }}
     >
       {showBack && (
         <button
           onClick={onBack}
-          className="btn btn-link p-0 border-0 text-dark"
+          className="btn btn-link p-0 border-0 text-light flex-shrink-0"
           aria-label="Back to conversations"
         >
           <BiArrowBack size={20} />
         </button>
       )}
-      <AvatarImage size={45} src={avatar || ""} alt={name} />
+      <AvatarImage size={45} src={chat?.avatar} alt={chat.salonName} />
       <div className="flex-grow-1 min-w-0">
-        <h6 className="fw-bold text-truncate mb-0 txt_color">{name}</h6>
-        <small className="text-light text-truncate">{subtitle}</small>
+        <h6 className="fw-bold text-truncate mb-0 txt_color">
+          {chat.salonName}
+        </h6>
       </div>
     </div>
   );
 }
 
-function MessageBubble({ message }) {
-  const isOut = message.direction === "out";
+function MessageBubble({ message, currentUserId }) {
+  const isOut =
+    message.senderRole === "user" || message.senderId === currentUserId;
+  const displayText = message.content || message.text;
+
+  const getTime = () => {
+    if (!message.timestamp) return "";
+
+    let date;
+    if (message.timestamp instanceof Date) {
+      date = message.timestamp;
+    } else if (
+      message.timestamp &&
+      typeof message.timestamp === "object" &&
+      message.timestamp.toDate
+    ) {
+      date = message.timestamp.toDate();
+    } else if (
+      typeof message.timestamp === "string" ||
+      typeof message.timestamp === "number"
+    ) {
+      date = new Date(message.timestamp);
+    } else {
+      return message.time || "";
+    }
+
+    if (isNaN(date.getTime())) {
+      return message.time || "";
+    }
+
+    return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+  };
 
   return (
     <div
-      className={`d-flex align-items-center mb-3 `}
-      style={{ justifyContent: isOut ? "flex-end" : "flex-start" }}
+      className={`d-flex mb-3 px-2`}
+      style={{ 
+        justifyContent: isOut ? "flex-end" : "flex-start",
+        maxWidth: "100%"
+      }}
     >
-      {/* {!isOut && (
-        <AvatarImage size={28} src={message.avatar || ""} alt="sender" />
-      )} */}
-
-      <div
-        className={isOut ? "d-none" : "d-block"}
-        style={{ width: "28px" }}
-      ></div>
-
-      <div className="flex-grow-0" style={{ maxWidth: "70%" }}>
+      <div className="flex-grow-0" style={{ 
+        maxWidth: "85%",
+        width: "fit-content"
+      }}>
         <div
-          className={`p-3 ${isOut ? "text-light" : "text-light"}`}
+          className={`p-3 text-light`}
           style={{
             backgroundColor: isOut ? "#120C31" : "#C78015",
             borderRadius: isOut ? "11px 11px 0 11px" : "11px 11px 11px 0",
+            wordWrap: "break-word",
+            overflowWrap: "break-word"
           }}
         >
-          <p className="mb-0 small lh-sm">{message.text}</p>
+          <p className="mb-0 small lh-sm" style={{ 
+            wordBreak: "break-word",
+            maxWidth: "100%"
+          }}>
+            {displayText}
+          </p>
         </div>
         <small
-          className={`text-light d-block mt-1 ${isOut ? "text-end" : "text-start"
-            }`}
+          className={`text-light d-block mt-1 px-1 ${
+            isOut ? "text-end" : "text-start"
+          }`}
+          style={{color: '#F1F1F1'}}
         >
-          {message.time}
+          {getTime()}
         </small>
       </div>
-
-      <div
-        className={isOut ? "d-block" : "d-none"}
-        style={{ width: "28px" }}
-      ></div>
-
-      {/* {isOut && (
-        <AvatarImage
-          size={28}
-          src="/placeholder.svg?height=56&width=56"
-          alt="you"
-        />
-      )} */}
     </div>
   );
 }
 
-function ChatInput({ onSend }) {
+function ChatInput({ onSend, disabled }) {
   const [value, setValue] = useState("");
 
   const handleSend = () => {
@@ -190,22 +313,20 @@ function ChatInput({ onSend }) {
 
   return (
     <div
-      className="card rounded-pill px-3 py-2"
+      className="rounded-pill px-3 py-2 mx-2 mb-2"
       style={{
         border: "1px solid #FFFFFF",
         backgroundColor: "#120C31",
       }}
     >
       <div className="d-flex align-items-center gap-2">
-        <button className="btn btn-link p-0 border-0">
-          <MdOutlineEmojiEmotions size={24} color="#FFFFFF" />
-        </button>
         <input
           type="text"
           className="form-control border-0 flex-grow-1"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Type message..."
+          placeholder="Type your message..."
+          disabled={disabled}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -217,181 +338,80 @@ function ChatInput({ onSend }) {
             color: "#FFFFFF",
             outline: "none",
             boxShadow: "none",
+            fontSize: "14px"
           }}
         />
-        <button className="btn btn-link p-0 border-0" onClick={handleSend}>
-          <IoSend size={22} color="#FFFFFF" />
+        <button
+          className="btn btn-link p-0 border-0 flex-shrink-0"
+          onClick={handleSend}
+          disabled={disabled || !value.trim()}
+          style={{ minWidth: "30px" }}
+        >
+          <IoSend size={20} color={disabled ? "#666666" : "#FFFFFF"} />
         </button>
       </div>
-
-      <style jsx>{`
-         .chat-section  .form-control::placeholder {
-          color: #ffffff !important;
-          opacity: 0.8;
-        }
-
-         .chat-section .form-control:focus {
-          border-color: transparent !important;
-          outline: none !important;
-          box-shadow: none !important;
-          background-color: #120c31 !important;
-        }
-      `}</style>
     </div>
   );
 }
 
 const Inbox = () => {
-  const [isRefreshing, setIsRefreshing] = useState(true);
-  const [activeId, setActiveId] = useState("1");
-  const [messages, setMessages] = useState([]);
   const [showListOnMobile, setShowListOnMobile] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(0);
   const messagesEndRef = useRef(null);
+  const dispatch = useDispatch();
 
-  const conversations = [
-    {
-      id: "1",
-      name: "Alex Johnson",
-      lastMessage: "Seller will respond as soon as...",
-      time: "4:36 PM",
-      unread: 2,
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "2",
-      name: "Sarah Williams",
-      lastMessage: "Let me check and get back...",
-      time: "3:11 PM",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "3",
-      name: "Michael Brown",
-      lastMessage: "Sure, we can ship by next...",
-      time: "Yesterday",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "4",
-      name: "Emily Davis",
-      lastMessage: "Thank you!",
-      time: "Yesterday",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "5",
-      name: "David Wilson",
-      lastMessage: "Sharing the invoice now...",
-      time: "Tue",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "6",
-      name: "Jessica Martinez",
-      lastMessage: "Happy to help.",
-      time: "Mon",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "7",
-      name: "Daniel Anderson",
-      lastMessage: "In stock in 2 colors.",
-      time: "Sun",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "8",
-      name: "Olivia Taylor",
-      lastMessage: "Welcome!",
-      time: "Fri",
-      avatar: AVATARUSERONE.src,
-    },
-    // {
-    //   id: "9",
-    //   name: "James Thomas",
-    //   lastMessage: "Your order has shipped!",
-    //   time: "Thu",
-    //   avatar: AVATARUSERONE.src,
-    // },
-  ];
+  const { conversations, activeChat, messages, loading, currentUser } =
+    useSelector((state) => state.chat);
+  const { sendMessage, setActiveChat } = useFirebaseChat();
 
-  const initialMessages = [
-    {
-      id: "m1",
-      text: "Hi! I saw your product about the handmade candles. They look amazing! Can I get more details?",
-      time: "4:35 PM",
-      direction: "in",
-      avatar: AVATARUSERONE.src,
-    },
-    {
-      id: "m2",
-      text: "Hello! Thank you for your interest. Our handmade candles are made from 100% soy wax and cotton wicks.",
-      time: "4:36 PM",
-      direction: "out",
-    },
-    {
-      id: "m3",
-      text: "They're poured in reusable glass containers and come with recyclable packaging.",
-      time: "4:36 PM",
-      direction: "out",
-    },
-    {
-      id: "m4",
-      text: "Nice! I love the lavender scent option.",
-      time: "4:39 PM",
-      direction: "in",
-      avatar: AVATARUSERONE.src,
-    },
-  ];
-
+  // Handle window resize for responsive behavior
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsRefreshing(false);
-      setMessages(initialMessages);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const activeConversation =
-    conversations.find((c) => c.id === activeId) || conversations[0];
-
-  const handleSend = (text) => {
-    const msg = {
-      id: Math.random().toString(36).slice(2),
-      text,
-      time: new Date().toLocaleTimeString([], {
-        hour: "numeric",
-        minute: "2-digit",
-      }),
-      direction: "out",
+    const handleResize = () => {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      
+      // On medium screens and above (≥768px), always show both panels
+      if (width >= 768) {
+        setShowListOnMobile(true);
+      }
+      // On small screens and below (<768px), show only conversation list by default
+      else {
+        // Only reset to conversation list if we're not currently in a chat
+        if (!activeChat) {
+          setShowListOnMobile(true);
+        }
+      }
     };
-    setMessages((prev) => [...prev, msg]);
 
-    setTimeout(() => {
-      scrollToBottom();
-    }, 0);
+    // Set initial width
+    setWindowWidth(window.innerWidth);
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeChat]);
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Math.random().toString(36).slice(2),
-          text: "Thanks for your message! We will get back to you shortly.",
-          time: new Date().toLocaleTimeString([], {
-            hour: "numeric",
-            minute: "2-digit",
-          }),
-          direction: "in",
-          avatar: activeConversation.avatar,
-        },
-      ]);
-    }, 1000);
+  const handleSelectConversation = (conversation) => {
+    setActiveChat(conversation);
+    // On small screens (<768px), hide conversation list and show chat
+    if (windowWidth < 768) {
+      setShowListOnMobile(false);
+    }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const handleBackToList = () => {
+    setShowListOnMobile(true);
+  };
+
+  const handleSendMessage = async (text) => {
+    try {
+      await sendMessage(text);
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollTo({
@@ -400,126 +420,110 @@ const Inbox = () => {
     });
   };
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Reset chat state when component unmounts
+  useEffect(() => {
+    return () => {
+      dispatch(resetChatState());
+    };
+  }, [dispatch]);
+
+  const isSmallScreen = windowWidth < 768;
 
   return (
     <main className="vh-100 w-100 bg-transparent">
-      {isRefreshing ? (
-        <div className="vh-100 d-flex align-items-center justify-content-center  text-center p-4">
-          <div>
-            <RiMessengerLine size={64} className="mb-3 text-light" />
-            <h1 className="h3 fw-bold mb-2 text-light">Your Messages</h1>
-            <p className="mb-3 text-light">Loading your conversations...</p>
-            <div className="spinner-border text-light" role="status">
-              <span className="visually-hidden">Loading...</span>
+      <div className="container-fluid h-100 p-0 bg-transparent">
+        <div className="row g-0 h-100 bg-transparent m-0">
+          {/* Conversation List - Always visible on md+, conditionally on sm/xs */}
+          {(!isSmallScreen || showListOnMobile) && (
+            <div 
+              className={`h-100 bg-transparent ${isSmallScreen ? 'col-12' : 'col-md-4'}`}
+              style={!isSmallScreen ? { borderRight: "1px solid #573D1A" } : {}}
+            >
+              <ConversationList
+                items={conversations}
+                activeId={activeChat?.id}
+                onSelect={handleSelectConversation}
+                loading={loading}
+              />
             </div>
-          </div>
-        </div>
-      ) : (
-        <div className="container-fluid h-100 p-0 bg-transparent">
-          <div className="row g-0 h-100 bg-transparent">
-            {/* Sidebar */}
-            {isMobile ? (
-              showListOnMobile && (
-                <div className="col-12 h-100 bg-transparent">
-                  <ConversationList
-                    items={conversations}
-                    activeId={activeId}
-                    onSelect={(id) => {
-                      setActiveId(id);
-                      setShowListOnMobile(false);
-                      setMessages([
-                        {
-                          id: "m1",
-                          text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
-                            }`,
-                          time: new Date().toLocaleTimeString([], {
-                            hour: "numeric",
-                            minute: "2-digit",
-                          }),
-                          direction: "in",
-                          avatar: conversations.find((c) => c.id === id)
-                            ?.avatar,
-                        },
-                      ]);
-                    }}
-                  />
-                </div>
-              )
-            ) : (
-              <div
-                className="col-md-4 h-100 bg-transparent"
-                style={{ borderRight: "1px solid #573D1A" }}
-              >
-                <ConversationList
-                  items={conversations}
-                  activeId={activeId}
-                  onSelect={(id) => {
-                    setActiveId(id);
-                    setMessages([
-                      {
-                        id: "m1",
-                        text: `Hi there! This is a new conversation with ${conversations.find((c) => c.id === id)?.name
-                          }`,
-                        time: new Date().toLocaleTimeString([], {
-                          hour: "numeric",
-                          minute: "2-digit",
-                        }),
-                        direction: "in",
-                        avatar: conversations.find((c) => c.id === id)?.avatar,
-                      },
-                    ]);
-                  }}
-                />
-              </div>
-            )}
+          )}
 
-            {/* Chat Panel */}
-            {(!isMobile || !showListOnMobile) && (
-              <div className="col-md-8 h-100 bg-transparent">
-                <div className="card h-100 d-flex flex-column overflow-hidden bg-transparent border-0 rounded-0">
-                  <ChatHeader
-                    name={activeConversation?.name || "Name of Seller"}
-                    subtitle="Active · Online 3 minutes ago"
-                    avatar={activeConversation?.avatar}
-                    onBack={() => setShowListOnMobile(true)}
-                    showBack={isMobile}
-                  />
+          {/* Chat Panel - Always visible on md+, conditionally on sm/xs */}
+          {(!isSmallScreen || !showListOnMobile) && (
+            <div className={`h-100 bg-transparent ${isSmallScreen ? 'col-12' : 'col-md-8'}`}>
+              <div className="card h-100 d-flex flex-column overflow-hidden bg-transparent border-0 rounded-0">
+                {activeChat ? (
+                  <>
+                    <ChatHeader
+                      chat={activeChat}
+                      onBack={handleBackToList}
+                      showBack={isSmallScreen}
+                    />
 
-                  {/* Messages */}
-                  <div
-                    ref={messagesEndRef}
-                    className="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-3 bg-transparent custom-scrollbar"
-                  >
-                    <div className="text-center mb-2">
-                      <span className="badge bg-light text-dark border rounded-pill px-3 py-2 small">
-                        Today
-                      </span>
+                    {/* Messages Area */}
+                    <div
+                      ref={messagesEndRef}
+                      className="flex-grow-1 overflow-auto p-2 p-md-3 d-flex flex-column bg-transparent custom-scrollbar"
+                      style={{ minHeight: 0 }}
+                    >
+                      <div className="text-center my-2">
+                        <span className="badge bg-light text-dark border rounded-pill px-3 py-2 small">
+                          Chat with {activeChat.salonName}
+                        </span>
+                      </div>
+
+                      {messages.map((m) => (
+                        <MessageBubble
+                          key={m.id}
+                          message={m}
+                          currentUserId={currentUser?.id}
+                        />
+                      ))}
                     </div>
 
-                    {messages.map((m) => (
-                      <MessageBubble key={m.id} message={m} />
-                    ))}
-                  </div>
-
-                  {/* Composer */}
-                  <div className="p-3 bg-transparent">
-                    <ChatInput onSend={handleSend} />
-                  </div>
-                </div>
+                    {/* Message Input */}
+                    <div className="bg-transparent pt-2">
+                      <ChatInput
+                        onSend={handleSendMessage}
+                        disabled={loading}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  // Empty state when no chat is selected (only visible on md+ screens)
+                  !isSmallScreen && (
+                    <div className="d-flex justify-content-center align-items-center h-100 p-3">
+                      <div className="text-center text-light">
+                        <RiMessengerLine size={48} className="mb-3 opacity-50" />
+                        <h5 className="mb-2">Welcome to Messages</h5>
+                        <p className="mb-2 small">
+                          Select a conversation from the list to start chatting
+                        </p>
+                        <small className="text-muted">
+                          All your conversations with vendors will appear here
+                        </small>
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      )}
-
-      <style jsx>{`
-        .min-w-0 {
-          min-width: 0;
-        }
-      `}</style>
+      </div>
     </main>
   );
 };
 
-export default Inbox;
+// Wrap with providers
+export default function InboxWithProvider() {
+  return (
+    <FirebaseChatProvider>
+      <Inbox />
+    </FirebaseChatProvider>
+  );
+}
