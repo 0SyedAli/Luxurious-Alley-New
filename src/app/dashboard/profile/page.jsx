@@ -91,10 +91,21 @@ const UserProfile = () => {
 
         {/* Tab Content */}
         <div className="tab-content">
-          {status === "loading" ? (
+          {/* {status === "loading" ? (
             <p>Loading appointments...</p>
           ) : status === "failed" ? (
             <p className="text-danger">{error}</p>
+          ) : filteredAppointments.length === 0 ? (
+            <p>No appointments found in this tab.</p>
+          ) : ( */}
+          {status === "loading" ? (
+            <p>Loading appointments...</p>
+          ) : status === "failed" ? (
+            error === "No bookings found for this salon" ? (
+              <p>No appointments found.</p>
+            ) : (
+              <p className="text-danger">{error}</p>
+            )
           ) : filteredAppointments.length === 0 ? (
             <p>No appointments found in this tab.</p>
           ) : (

@@ -94,7 +94,7 @@ const Signin = () => {
                     <div className="">
                         {/* Note: Checkbox logic should be handled separately if needed, 
                            but not required for basic API call/validation. */}
-                        <div className="remember form-check">
+                        {/* <div className="remember form-check">
                             <input
                                 type="checkbox"
                                 className="form-check-input  mt-0"
@@ -103,7 +103,7 @@ const Signin = () => {
                             <label className="form-check-label" htmlFor="exampleCheck1">
                                 Remember me
                             </label>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div className="text-start">
