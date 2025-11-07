@@ -9,6 +9,7 @@ import { loginSchema } from "@/validation/loginSchema"; // Import the login sche
 import { useDispatch, useSelector } from "react-redux";
 import { signInAdmin } from "@/redux/features/auth/authSlice"; // Import the thunk
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
+import Button from '@/component/MyButton';
 
 const Signin = () => {
     const router = useRouter();
@@ -35,7 +36,7 @@ const Signin = () => {
         // Check if the login was successful (fulfilled)
         if (signInAdmin.fulfilled.match(resultAction)) {
             // Success: Redirect to the dashboard
-            showSuccessToast("Login Successfull")
+            showSuccessToast("Login successful")
 
             router.push("/dashboard");
         } else {
@@ -53,25 +54,33 @@ const Signin = () => {
                     <h2>Getting Started</h2>
                     <p>Elevate your salon with a seamless setup, styled for success.</p>
                 </div>
-                
+
                 {/* Use handleSubmit on form submission */}
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-                    
-                    {/* Email Input (Mapped to your "fake_user" placeholder) */}
+                    {/* hidden dummy inputs — fool Chrome autofill */}
+                    <input type="text" name="fakeusernameremembered" style={{ display: "none" }} />
+                    <input type="password" name="fakepasswordremembered" style={{ display: "none" }} />
+
+                    {/* Email Input */}
                     <input
-                        type="email"
+                        type="text" // 👈 use "text" instead of "email"
                         placeholder="Enter email address"
-                        {...register("email")} // Register as 'email'
-                        className={errors.email ? 'input-error' : ''}
+                        {...register("email")}
+                        name="email"
+                        autoComplete="new-email" // 👈 uncommon value so Chrome won’t match it
+                        inputMode="email" // 👈 still shows email keyboard on mobile
+                        className={errors.email ? "input-error" : ""}
                     />
                     {errors.email && <p className="text-danger mt-1">{errors.email.message}</p>}
 
-                    {/* Password Input (Mapped to your "fake_pass" placeholder) */}
+                    {/* Password Input */}
                     <input
                         type="password"
                         placeholder="Password"
-                        {...register("password")} // Register as 'password'
-                        className={errors.password ? 'input-error' : ''}
+                        {...register("password")}
+                        name="password"
+                        autoComplete="new-password" // 👈 use "new-password"
+                        className={errors.password ? "input-error" : ""}
                     />
                     {errors.password && <p className="text-danger mt-1">{errors.password.message}</p>}
 
@@ -88,7 +97,7 @@ const Signin = () => {
                         <div className="remember form-check">
                             <input
                                 type="checkbox"
-                                className="form-check-input"
+                                className="form-check-input  mt-0"
                                 id="exampleCheck1"
                             />
                             <label className="form-check-label" htmlFor="exampleCheck1">
@@ -96,13 +105,14 @@ const Signin = () => {
                             </label>
                         </div>
                     </div>
-                    
-                    <div className="text-center">
+
+                    <div className="text-start">
                         {/* Use a button of type submit */}
-                        <button type="submit" className="theme-btn2" disabled={isSubmitting}>
+                        {/* <button type="submit" className="theme-btn2" disabled={isSubmitting}>
                             {isSubmitting ? 'Signing In...' : 'Sign in'}
-                        </button>
-                        
+                        </button> */}
+                        <Button isLoading={isSubmitting}>Sign in</Button>
+
                         <div className="register_link">
                             <h5>
                                 Don't have an account?

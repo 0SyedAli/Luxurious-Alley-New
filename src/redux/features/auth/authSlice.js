@@ -212,7 +212,7 @@ const authSlice = createSlice({
         state.user = data;
 
         sessionStorage.setItem('authToken', token);
-        sessionStorage.setItem('adminId', data._id);
+        sessionStorage.setItem('s_u_adminId', data._id);
 
         state.tempToken = null;
         state.tempEmail = null;
@@ -228,11 +228,24 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(signInAdmin.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-        // Assuming your API response has an 'adminId' field
-        state.adminId = action.payload.adminId;
-        state.error = null;
+        // state.status = 'succeeded';
+        // state.user = action.payload;
+        // // Assuming your API response has an 'adminId' field
+        // state.adminId = action.payload.adminId;
+        // state.error = null;
+         const { token, data } = action.payload;
+
+        state.status = 'authenticated';
+        state.otpStatus = 'succeeded';
+        state.token = token;
+        state.adminId = data._id;
+        state.user = data;
+
+        sessionStorage.setItem('authToken', token);
+        sessionStorage.setItem('adminId', data._id);
+
+        state.tempToken = null;
+        state.tempEmail = null;
       })
       .addCase(signInAdmin.rejected, (state, action) => {
         state.status = 'failed';
@@ -289,5 +302,5 @@ const authSlice = createSlice({
       });
   },
 });
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

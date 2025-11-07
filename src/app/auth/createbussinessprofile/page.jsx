@@ -21,7 +21,7 @@ const createBussinessProfile = () => {
   const [fileError, setFileError] = useState("");
 
   const storedAdminId =
-    typeof window !== "undefined" ? sessionStorage.getItem("adminId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("s_u_adminId") : null;
   const { status, error, adminId: reduxAdminId } = useSelector(
     (state) => state.auth
   );
@@ -105,19 +105,19 @@ const createBussinessProfile = () => {
       showSuccessToast("Business profile has been created successfully!");
       router.push("createbussinessprofile2");
     } else {
-      showErrorToast(resultAction.payload  || "Failed to create profile.");
+      showErrorToast(resultAction.payload || "Failed to create profile.");
     }
   };
 
   if (!adminId && (status === "awaitingOTP" || status === "loading")) {
     return (
-      <div className="content align-self-center mw-800 text-center p-5">
+      <div className="content  mw-800 text-center p-5">
         <h2>Loading Profile Setup...</h2>
       </div>
     );
   }
   return (
-    <div className="content align-self-center mw-800">
+    <div className="content  mw-800">
       <div className='auth_container'>
         <div className='auth_head'>
           <h2>Create a business profile</h2>

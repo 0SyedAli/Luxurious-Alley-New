@@ -25,7 +25,7 @@ const CreateBusinessProfileStep3 = () => {
 
   const { adminId: reduxAdminId, status } = useSelector((state) => state.auth);
   const storedAdminId =
-    typeof window !== "undefined" ? sessionStorage.getItem("adminId") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("s_u_adminId") : null;
   const adminId = reduxAdminId || storedAdminId;
 
   const [selectedDays, setSelectedDays] = useState(["Monday"]);
@@ -128,7 +128,7 @@ const CreateBusinessProfileStep3 = () => {
   };
 
   return (
-    <div className="content align-self-center mw-500">
+    <div className="content align-self-start mw-500">
       <div className="auth_container">
         <div className="auth_head">
           <h2>Create a business profile</h2>

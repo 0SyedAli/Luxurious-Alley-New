@@ -16,6 +16,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    // ✅ Automatically handle multipart requests
+    if (config.data instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
+    }
+
     return config;
   },
   (error) => {
@@ -36,7 +41,7 @@ api.interceptors.response.use(
       error.response = response; // Attach the full response for context
       return Promise.reject(error);
     }
-    
+
     // If success is true or the success field is not present, proceed normally
     return response;
   },

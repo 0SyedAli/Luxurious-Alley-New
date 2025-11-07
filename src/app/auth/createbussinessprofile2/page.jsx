@@ -1,4 +1,3 @@
-// app/auth/createbussinessprofile2/page.js
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -12,36 +11,47 @@ import { createBusinessProfile } from "@/redux/features/auth/authSlice";
 import { createBussiness2Schema } from "@/validation/loginSchema";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import MultiSelect from "react-multi-select-component";
-
-const categories = [
-  { value: "6850659a42574e73b13e4090", label: "Blow drys" },
-  { value: "685afb96a44654ec3a8f3d74", label: "Hair Color" },
-  { value: "6850659a42574e73b13e9999", label: "Beard Trim" },
-];
+import { fetchCategories } from "@/redux/features/category/categorySlice";
 
 const CreateBusinessProfile = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const storedAdminId =
-    typeof window !== "undefined" ? sessionStorage.getItem("adminId") : null;
+  // ✅ Category state
+  const { categories, status: categoryStatus } = useSelector(
+    (state) => state.category
+  );
 
-  const { status, adminId: reduxAdminId } = useSelector((state) => state.auth);
+  // ✅ Auth state
+  const { status: authStatus, adminId: reduxAdminId } = useSelector(
+    (state) => state.auth
+  );
+
+  const storedAdminId =
+    typeof window !== "undefined" ? sessionStorage.getItem("s_u_adminId") : null;
+
   const adminId = reduxAdminId || storedAdminId;
 
-  const [selectedCategories, setSelectedCategories] = useState([]); // ✅ state for multi-select
+  // ✅ Fetch categories only once
+  useEffect(() => {
+    if (categoryStatus === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categoryStatus]);
 
+  // ✅ Protect route
   useEffect(() => {
     if (
-      (status === "authenticated" ||
-        status === "succeeded" ||
-        status === "failed") &&
+      (authStatus === "authenticated" ||
+        authStatus === "succeeded" ||
+        authStatus === "failed") &&
       !adminId
     ) {
       router.replace("/auth/signin");
     }
-  }, [adminId, status, router]);
+  }, [adminId, authStatus, router]);
 
+  // ✅ Form setup
   const {
     register,
     handleSubmit,
@@ -53,6 +63,16 @@ const CreateBusinessProfile = () => {
     },
   });
 
+  // ✅ MultiSelect state
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  // ✅ Convert categories to MultiSelect format
+  const formattedCategories = categories.map((cat) => ({
+    label: cat.categoryName,
+    value: cat._id,
+  }));
+
+  // ✅ Form submission
   const onSubmit = async (data) => {
     if (!adminId) {
       showErrorToast("Session expired or missing ID. Please log in again.");
@@ -84,7 +104,7 @@ const CreateBusinessProfile = () => {
   };
 
   return (
-    <div className="content align-self-center mw-800">
+    <div className="content  mw-800">
       <div className="auth_container">
         <div className="auth_head">
           <h2>Create a business profile</h2>
@@ -93,13 +113,14 @@ const CreateBusinessProfile = () => {
         <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
           <div className="form-group mt-3 avail_serv position-relative">
             <MultiSelect
-              options={categories}
+              options={formattedCategories}
               value={selectedCategories}
               onChange={setSelectedCategories}
               labelledBy="Select Services"
               className="multi-select-custom"
             />
           </div>
+
           <RHFTextarea
             name="businessDetails"
             label="Business Details"
@@ -108,9 +129,6 @@ const CreateBusinessProfile = () => {
             register={register}
             errors={errors}
           />
-
-          {/* Multi-Select for Services */}
-
 
           <div className="text-start mt-3">
             <Button isLoading={isSubmitting}>Next</Button>

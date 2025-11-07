@@ -6,6 +6,7 @@ import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
 import api from "@/lib/api";
 import { userproducts } from "@/lib/products-data";
+import { setActiveVendorId, setCurrentUser } from "@/redux/features/chat/chatSlice";
 import { setBooking } from "@/redux/features/booking/bookingSlice";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";

@@ -28,7 +28,7 @@ const CreateProfile = () => {
     const [fileError, setFileError] = useState("");
 
     const storedAdminId =
-        typeof window !== "undefined" ? sessionStorage.getItem("adminId") : null;
+        typeof window !== "undefined" ? sessionStorage.getItem("s_u_adminId") : null;
     const { status, error, adminId: reduxAdminId } = useSelector(
         (state) => state.auth
     );
@@ -120,17 +120,17 @@ const CreateProfile = () => {
 
     if (!adminId && (status === "awaitingOTP" || status === "loading")) {
         return (
-            <div className="content align-self-center mw-800 text-center p-5">
+            <div className="content  mw-800 text-center p-5">
                 <h2>Loading Profile Setup...</h2>
             </div>
         );
     }
 
     return (
-        <div className="content align-self-center mw-800">
+        <div className="content  mw-800">
             <div className="auth_container">
                 <div className="auth_head">
-                    <h2>Create a business profile</h2>
+                    <h2>Create profile</h2>
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
@@ -238,7 +238,7 @@ const CreateProfile = () => {
                             <div className="remember form-check">
                                 <input
                                     type="checkbox"
-                                    className="form-check-input"
+                                    className="form-check-input mt-0"
                                     id="agreementCheck"
                                 />
                                 <label className="form-check-label" htmlFor="agreementCheck">
@@ -248,7 +248,7 @@ const CreateProfile = () => {
                         </div>
 
                         <div className="col-12 text-center">
-                            <Button isLoading={isSubmitting}>Save and Continue</Button>
+                            <Button isLoading={isSubmitting}>Next</Button>
                         </div>
                     </div>
                 </form>

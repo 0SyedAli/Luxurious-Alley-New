@@ -2,20 +2,31 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage
 import { persistReducer, persistStore } from "redux-persist";
-import authReducer from "./features/auth/authSlice";
-import bookingReducer from "./features/booking/bookingSlice";
+import authReducer from "@/redux/features/auth/authSlice";
+import appointmentsReducer from "@/redux/features/appointments/appointmentsSlice";
+import productsReducer from "@/redux/features/products/productsSlice";
+import servicesReducer from "@/redux/features/services/servicesSlice";
+import categoryReducer from "@/redux/features/category/categorySlice";
+import revenueReducer from "@/redux/features/revenue/revenueSlice";
+import chatReducer from "@/redux/features/chat/chatSlice";
 
 // Combine reducers (in case you have more later)
 const rootReducer = combineReducers({
   auth: authReducer,
-  booking: bookingReducer
+  appointments: appointmentsReducer,
+  products: productsReducer,
+  services: servicesReducer,
+  category: categoryReducer,
+  revenue: revenueReducer,
+  chat: chatReducer
+
 });
 
 // Configure persist
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "booking"], // Only persist auth slice
+  whitelist: ["auth", "revenue","chat"], // Only persist auth slice
 };
 
 // Wrap reducer with persist capabilities

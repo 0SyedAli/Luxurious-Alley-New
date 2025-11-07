@@ -1,130 +1,125 @@
 "use client";
-import { useState } from "react";
-import ProfileHeader from "@/component/profile-header";
-import BorderTabs from "@/component/user/tabs/border-tabs";
-import RatingCard from "@/component/user/cards/rating-card";
-import TabPanel from "@/component/user/tabs/tab-panel";
+import { useEffect, useState } from "react";
+import ProfileHeader from "@/component/new/vendor-profile-header";
+import OrderCard from "@/component/dashboard/order-card";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAppointments } from "@/redux/features/appointments/appointmentsSlice";
 
 const UserProfile = () => {
-  const [activeTab, setActiveTab] = useState("in-progress");
+  const [activeTab, setActiveTab] = useState("Accepted");
+  const dispatch = useDispatch();
 
+  // ✅ Appointments data
+  const { data: appointments, status, error } = useSelector(
+    (state) => state.appointments
+  );
+
+  // ✅ Logged-in user data
+  const user = useSelector((state) => state.auth.user);
+
+  // ✅ Fetch appointments once
+  useEffect(() => {
+    dispatch(fetchAppointments());
+  }, [dispatch]);
+
+  // ✅ Filtered appointments by tab
+  const filteredAppointments =
+    appointments?.filter((item) => item.status === activeTab) || [];
+
+  // ✅ Image fallbacks
+  const defaultCover = "/images/profile_cover.png";
+  const defaultAvatar = "/images/profile_demo.jpg";
+
+  // ✅ Dynamic images from API
+  const profileCover = user?.bCover
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${user.bCover}`
+    : defaultCover;
+
+  const profileAvatar = user?.image
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${user.image}`
+    : defaultAvatar;
+
+  // ✅ User info
+  const fullName = user?.fullName || "Unknown User";
+  const location = user?.bAddress || user?.city || "Location not provided";
+  // const statusLabel = user?.is_active ? "Active" : "Inactive";
+
+  // ✅ Extract active working day
+  const activeWorkingDay = user?.workingDays?.find((d) => d.isActive);
+
+  const workingTime = activeWorkingDay
+    ? `${activeWorkingDay.startTime || "N/A"} - ${activeWorkingDay.endTime || "N/A"}`
+    : "No active working hours";
+
+  // ✅ Tabs
   const tabs = [
-    {
-      id: 1,
-      value: "in-progress",
-      label: "In-progress",
-    },
-    {
-      id: 2,
-      value: "completed",
-      label: "Completed",
-    },
-    {
-      id: 3,
-      value: "delivered",
-      label: "Delivered",
-    },
-    {
-      id: 4,
-      value: "history",
-      label: "History",
-    },
+    { id: 1, value: "Accepted", label: "Ongoing" },
+    { id: 2, value: "Completed", label: "Completed" },
   ];
+
   return (
     <div className="w-100">
+      {/* ✅ Profile Header */}
       <ProfileHeader
-        defaultCoverSrc="/images/profile_cover.png"
-        defaultAvatarSrc="/images/profile_demo.jpg"
-        name="Sarah J."
-        location="47 Hennepard Street, San Diego (92139)"
-        statusLabel="Active"
+        defaultCoverSrc={profileCover}
+        defaultAvatarSrc={profileAvatar}
+        name={fullName}
+        location={location}
+        // statusLabel={statusLabel}
+        workingTime={workingTime} // 🕒 show time range if header supports it
       />
-      {/* Tabs Card section */}
-      <div className="mt-4">
-        <h3 className="txt_color mb-3">My Bookings</h3>
-        <BorderTabs
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          className="mb-3"
-        />
 
-        {/* Tab Panels */}
+      {/* ✅ Appointments Section */}
+      <section className="mt-4">
+        <h5 className="mb-3 text-white allproducts_title">My Appointments</h5>
+
+        {/* Tabs */}
+        <ul className="nav nav-pills nav-pills-tabs gap-2 mb-3" role="tablist">
+          {tabs.map((t) => (
+            <li className="nav-item nav-item-tabs" key={t.id}>
+              <button
+                className={`nav-link ${activeTab === t.value ? "active" : ""}`}
+                onClick={() => setActiveTab(t.value)}
+                type="button"
+                role="tab"
+              >
+                {t.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        {/* Tab Content */}
         <div className="tab-content">
-          <TabPanel value={activeTab} tabValue="in-progress">
-            <div className="row g-3 g-lg-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <RatingCard
-                    productName="Omni Este"
-                    subTitle="1609 Oak, St. (2km)"
-                    label={activeTab}
-                    date="18.10.2023"
-                    rating="4.8"
-                    image="/images/cart.jpg"
-                    onShopClick={() => console.log("Add to cart")}
-                    onCardClick={() => console.log("Card clicked")}
+          {status === "loading" ? (
+            <p>Loading appointments...</p>
+          ) : status === "failed" ? (
+            <p className="text-danger">{error}</p>
+          ) : filteredAppointments.length === 0 ? (
+            <p>No appointments found in this tab.</p>
+          ) : (
+            <div className="row g-3">
+              {filteredAppointments.map((item) => (
+                <div key={item._id} className="col-12 col-sm-6 col-lg-3">
+                  <OrderCard
+                    bookingId={item._id}
+                    title={item?.serviceId?.serviceName || "Unknown Service"}
+                    time={`${item?.time || "N/A"} | ${item?.date || "N/A"}`}
+                    image={
+                      item?.serviceId?.images?.length > 0
+                        ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${item.serviceId.images[0]}`
+                        : "/images/order-prof.png"
+                    }
+                    price={`$${item?.totalAmount || 0}`}
+                    technician={item?.technicianId?.fullName || "N/A"}
+                    status={item?.status}
                   />
                 </div>
               ))}
             </div>
-          </TabPanel>
-          <TabPanel value={activeTab} tabValue="completed">
-            <div className="row g-3 g-lg-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                  <RatingCard
-                    productName="Premium Office Chair"
-                    subTitle="Ergonomic Design"
-                    label={activeTab}
-                    date="15 Dec 2023"
-                    rating="4.8"
-                    image="/images/cart.jpg"
-                    onShopClick={() => console.log("Add to cart")}
-                    onCardClick={() => console.log("Card clicked")}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-          <TabPanel value={activeTab} tabValue="delivered">
-            <div className="row g-3 g-lg-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                   <RatingCard
-                    productName="Premium Office Chair"
-                    subTitle="Ergonomic Design"
-                    label={activeTab}
-                    date="15 Dec 2023"
-                    rating="4.8"
-                    image="/images/cart.jpg"
-                    onShopClick={() => console.log("Add to cart")}
-                    onCardClick={() => console.log("Card clicked")}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
-          <TabPanel value={activeTab} tabValue="history">
-            <div className="row g-3 g-lg-4">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="col-12 col-sm-6 col-md-4 col-lg-3">
-                   <RatingCard
-                    productName="Premium Office Chair"
-                    subTitle="Ergonomic Design"
-                    label={activeTab}
-                    date="15 Dec 2023"
-                    rating="4.8"
-                    image="/images/cart.jpg"
-                    onShopClick={() => console.log("Add to cart")}
-                    onCardClick={() => console.log("Card clicked")}
-                  />
-                </div>
-              ))}
-            </div>
-          </TabPanel>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

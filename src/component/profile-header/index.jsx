@@ -102,8 +102,8 @@ const ProfileHeader = ({
           <h1 className="user-name d-flex align-items-center gap-3">
             {name}{" "}
             {!id && (
-              <button className="edit-button-container">
-                <RiEdit2Line onClick={() => router.push(`/dashboard/profile/1`)} />
+              <button className="edit-button-container" onClick={() => router.push(`/dashboard/setting`)} >
+                <RiEdit2Line />
               </button>
             )}
           </h1>

@@ -1,76 +1,112 @@
 "use client";
 
 import RHFInput from "@/component/forms/RHFInput";
-import RHFSelect from "@/component/forms/RHFSelect";
 import RHFTextarea from "@/component/forms/RHFTextarea";
 import ImageUploader2 from "@/component/ImageUploader2";
-import ImageRadio from "@/component/user/image-radio";
+import { addProduct } from "@/validation/loginSchema";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify"; // Optional: for notifications
+import { fetchCategories } from "@/redux/features/category/categorySlice";
+import Button from "@/component/MyButton";
 const EditProduct = () => {
   const router = useRouter();
+  const [images, setImages] = useState([]); // store uploaded image(s)
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const [selectedDays, setSelectedDays] = useState(["Monday"]);
-  // Initialize React Hook Form
+  const { categories, status } = useSelector((state) => state.category);
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, status]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm({
-    // resolver: zodResolver(loginSchema), // Use Zod resolver
+    resolver: zodResolver(addProduct),
     defaultValues: {
-      email: "",
-      password: "",
+      productName: "",
+      category: "",
+      modelName: "",
+      brandName: "",
+      enterAmount: "",
+      stockQuantity: "",
+      description: "",
     },
   });
 
   const onSubmit = async (data) => {
-    // Dispatch the login thunk
-    const resultAction = await dispatch(signInAdmin(data));
+    console.log(data);
 
-    // Check if the login was successful (fulfilled)
-    // if (signInAdmin.fulfilled.match(resultAction)) {
-    // Success: Redirect to the dashboard
-    //   router.push("/dashboard");
-    // }
-    // Error handling is managed by the error state
+    try {
+      setLoading(true);
+
+      const token = sessionStorage.getItem("token");
+      const salonId = sessionStorage.getItem("adminId");
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append("salonId", salonId);
+      formData.append("productName", data.productName);
+      formData.append("price", data.enterAmount);
+      formData.append("description", data.description);
+      formData.append("categoryId", data.category);
+      formData.append("modelName", data.modelName);
+      formData.append("brandName", data.brandName);
+      formData.append("stock", data.stockQuantity);
+
+      // Append each file
+      images.forEach((imgObj) => {
+        formData.append("images", imgObj.file); // the key name 'images' must match backend
+      });
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/createProduct`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.data.success) {
+        toast.success("Product created successfully!");
+        reset();
+        router.push("/dashboard/allproducts");
+      } else {
+        toast.error(res.data.message || "Something went wrong!");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to create product.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  //   const isSubmitting = status === "loading";
-
-  const daysList = [
-    { short: "Mon", full: "Monday" },
-    { short: "Tue", full: "Tuesday" },
-    { short: "Wed", full: "Wednesday" },
-    { short: "Thu", full: "Thursday" },
-    { short: "Fri", full: "Friday" },
-    { short: "Sat", full: "Saturday" },
-    { short: "Sun", full: "Sunday" },
-  ];
-  const catOptions = [
-    { value: "hair", label: "Hair" },
-    { value: "skin", label: "Skin" },
-  ];
-  const toggleDay = (day) => {
-    setSelectedDays((prev) =>
-      prev.includes(day)
-        ? prev.filter((d) => d !== day)
-        : [...prev, day]
-    );
-  };
   return (
     <div className="auth_container">
-      <div className="row ">
+      <div className="row">
         <div className="col-sm-12 col-md-6">
-          <h4 className="txt_color mb-4 display-6 text-start">Add Product</h4>
+          <h4 className="h4 mb-4 allproducts_title">Add Product</h4>
+
           <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
             <div className="row g-3 calender_container text-start">
               <div className="col-12 d-flex align-items-center">
-                <ImageUploader2 />
+                <ImageUploader2 onChange={setImages} />
               </div>
+
               <div className="col-12">
                 <RHFInput
                   name="productName"
@@ -79,15 +115,25 @@ const EditProduct = () => {
                   errors={errors}
                 />
               </div>
+
               <div className="col-12">
-                <RHFSelect
-                  name="category"
-                  label="Select Category *"
-                  options={catOptions}
-                  register={register}
-                  errors={errors}
-                />
+                <select
+                  {...register("category")}
+                  className="form-select"
+                  defaultValue=""
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.categoryName}
+                    </option>
+                  ))}
+                </select>
+                {errors.category && (
+                  <p className="text-danger small">{errors.category.message}</p>
+                )}
               </div>
+
               <div className="col-12">
                 <RHFInput
                   name="modelName"
@@ -96,6 +142,7 @@ const EditProduct = () => {
                   errors={errors}
                 />
               </div>
+
               <div className="col-12">
                 <RHFInput
                   name="brandName"
@@ -104,6 +151,7 @@ const EditProduct = () => {
                   errors={errors}
                 />
               </div>
+
               <div className="col-12">
                 <RHFInput
                   name="enterAmount"
@@ -113,6 +161,7 @@ const EditProduct = () => {
                   errors={errors}
                 />
               </div>
+
               <div className="col-12">
                 <RHFInput
                   name="stockQuantity"
@@ -122,8 +171,8 @@ const EditProduct = () => {
                   errors={errors}
                 />
               </div>
+
               <div className="col-12">
-                {/* Last name */}
                 <RHFTextarea
                   name="description"
                   label="Description"
@@ -132,14 +181,17 @@ const EditProduct = () => {
                   register={register}
                   errors={errors}
                 />
-                {/* {errors.email && (
-              <p className="text-danger mt-1">{errors.email.message}</p>
-              )} */}
               </div>
+
               <div className="col-md-4 text-start">
-                <button type="button" className="user-dashboard-box-btn">
-                  Add Now
-                </button>
+                {/* <button
+                  type="submit"
+                  className="user-dashboard-box-btn"
+                  disabled={loading}
+                >
+                  {loading ? "Adding..." : "Add Now"}
+                </button> */}
+                 <Button isLoading={loading}>Add Now</Button>
               </div>
             </div>
           </form>
