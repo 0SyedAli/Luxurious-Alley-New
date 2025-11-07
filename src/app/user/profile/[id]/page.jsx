@@ -13,7 +13,7 @@ const UserEditProfile = () => {
   const getUser = async () => {
     try {
       const { data } = await api.get(
-        `/getUserById?userId=68f11c79f180d3689c7ca111`
+        `/getUserById?userId=68ed9c864236c9662a1ac69c`
       );
       if (data.success) {
         setUserData(data.data);
@@ -32,7 +32,7 @@ const UserEditProfile = () => {
 
   const handleUpdatePicture = async (file) => {
     const formData = new FormData();
-    formData.append("userId", "68f11c79f180d3689c7ca111");
+    formData.append("userId", "68ed9c864236c9662a1ac69c");
     formData.append("image", file);
 
     try {
@@ -64,8 +64,8 @@ const UserEditProfile = () => {
         <ProfileHeader
           defaultCoverSrc="/images/profile_cover.png"
           defaultAvatarSrc={getAvatarSrc()}
-          name="Sarah J."
-          location="47 Hennepard Street, San Diego (92139)"
+          name={userData?.username || "N/A"}
+          location={userData?.locationName || "N/A"}
           statusLabel="Active"
           handleUpdatePicture={handleUpdatePicture}
           loading={loading}

@@ -58,7 +58,7 @@ const UserDashboardProductServiceDetails = () => {
 
   // These would typically come from your app context or props
 
-  const userId = "68f11c79f180d3689c7ca111";
+  const userId = "68ed9c864236c9662a1ac69c";
 
   const getOneSalon = async () => {
     try {

@@ -9,6 +9,7 @@ import servicesReducer from "@/redux/features/services/servicesSlice";
 import categoryReducer from "@/redux/features/category/categorySlice";
 import revenueReducer from "@/redux/features/revenue/revenueSlice";
 import chatReducer from "@/redux/features/chat/chatSlice";
+import bookingReducer from "@/redux/features/booking/bookingSlice";
 
 // Combine reducers (in case you have more later)
 const rootReducer = combineReducers({
@@ -18,8 +19,8 @@ const rootReducer = combineReducers({
   services: servicesReducer,
   category: categoryReducer,
   revenue: revenueReducer,
-  chat: chatReducer
-
+  chat: chatReducer,
+  booking: bookingReducer
 });
 
 // Configure persist

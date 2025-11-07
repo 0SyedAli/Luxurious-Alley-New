@@ -10,7 +10,8 @@ import {
 } from '@/redux/features/chat/chatSlice';
 import {
   collection, query, orderBy, onSnapshot,
-  addDoc, doc, updateDoc, serverTimestamp
+  addDoc, doc, updateDoc, serverTimestamp,
+  where, or, and
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 
@@ -26,62 +27,68 @@ export function useVendorChat() {
 
 export function VendorChatProvider({ children, vendorId }) {
   const dispatch = useDispatch();
-  const { activeChat } = useSelector(state => state.chat);
+  const { chat, auth } = useSelector(state => state);
+
+  const activeChat = chat.activeChat
+  const vendor = auth?.user || ''
 
   // Set vendor as current user
   useEffect(() => {
     const vendorUser = {
       id: vendorId,
-      name: "Salon Owner", // This should come from your auth system
-      email: "vendor@salon.com",
+      name: vendor.ownerName,
+      email: vendor.email,
       role: "vendor",
-      avatar: "" // Add vendor avatar if available
+      avatar: vendor?.image
     };
     dispatch(setCurrentUser(vendorUser));
-  }, [vendorId, dispatch]);
+  }, [vendorId, dispatch, vendor]);
 
-  // Fetch vendor's conversations - manual filtering
+  // Fetch vendor's conversations - FIXED VERSION
   useEffect(() => {
     if (!vendorId) return;
 
-    // Simple query without composite index requirements
-    const chatsQuery = query(collection(db, 'chats'));
+    console.log('Fetching conversations for vendor:', vendorId);
+
+    // Better approach: Use Firestore query with arrayContains
+    const chatsQuery = query(
+      collection(db, 'chats'),
+      where('participants', 'array-contains', vendorId)
+    );
 
     const unsubscribe = onSnapshot(chatsQuery,
       (snapshot) => {
-        const allChats = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          lastMessageTime: doc.data().lastMessageTime?.toDate() || new Date()
-        }));
-
-        // Manual filtering for vendor conversations
-        const vendorConversations = allChats.filter(chat => {
-          // Check if chat ID ends with vendor ID (userId_vendorId format)
-          return chat.id.endsWith(vendorId);
-        });
-
-        // Transform to match your UI structure
-        const transformedConversations = vendorConversations.map(chat => {
-          // Extract user ID from chat ID (userId_vendorId)
-          const userId = chat.id.split('_')[0];
+        console.log('Raw chats snapshot:', snapshot.docs.length, 'chats found');
+        
+        const vendorConversations = snapshot.docs.map(doc => {
+          const chatData = doc.data();
+          console.log('Processing chat:', doc.id, chatData);
+          
+          // Find the other participant (not the vendor)
+          const otherParticipants = chatData.participants?.filter(participantId => participantId !== vendorId) || [];
+          const userId = otherParticipants[0] || 'unknown';
           
           return {
-            id: chat.id,
-            userName: chat.participantNames?.[userId] || 'Customer',
-            salonName: chat.participantNames?.[vendorId] || 'Salon',
-            lastMessage: chat.lastMessage || 'No messages yet',
-            lastMessageAt: chat.lastMessageTime,
-            avatar: chat.participantImages?.[userId] || '',
+            id: doc.id,
+            userName: chatData.participantNames?.[userId] || 'Customer',
+            salonName: chatData.participantNames?.[vendorId] || 'Salon',
+            lastMessage: chatData.lastMessage || 'No messages yet',
+            lastMessageAt: chatData.lastMessageTime?.toDate() || chatData.updatedAt?.toDate() || new Date(0),
+            avatar: chatData.participantImages?.[userId] || '',
             vendorId: vendorId,
-            userId: userId
+            userId: userId,
+            // Include all participants for debugging
+            participants: chatData.participants || [],
+            participantNames: chatData.participantNames || {}
           };
         });
 
-        // Manual sorting by last message
-        transformedConversations.sort((a, b) => b.lastMessageAt - a.lastMessageAt);
-
-        dispatch(setConversations(transformedConversations));
+        console.log('Transformed conversations:', vendorConversations);
+        
+        // Sort by last message time
+        vendorConversations.sort((a, b) => b.lastMessageAt - a.lastMessageAt);
+        
+        dispatch(setConversations(vendorConversations));
       },
       (error) => {
         console.error('Error fetching vendor conversations:', error);
@@ -91,9 +98,84 @@ export function VendorChatProvider({ children, vendorId }) {
     return () => unsubscribe();
   }, [vendorId, dispatch]);
 
+  // Alternative approach if above doesn't work - using multiple where clauses
+  useEffect(() => {
+    if (!vendorId) return;
+
+    // If the first approach doesn't work, try this alternative
+    const fetchAllChatsAndFilter = () => {
+      const chatsQuery = query(collection(db, 'chats'));
+
+      const unsubscribe = onSnapshot(chatsQuery,
+        (snapshot) => {
+          const allChats = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+
+          console.log('All chats:', allChats);
+
+          // Multiple ways a vendor could be part of a chat
+          const vendorConversations = allChats.filter(chat => {
+            // Method 1: Check participants array
+            if (chat.participants?.includes(vendorId)) {
+              return true;
+            }
+            
+            // Method 2: Check participantNames keys
+            if (chat.participantNames && chat.participantNames[vendorId]) {
+              return true;
+            }
+            
+            // Method 3: Check if vendorId appears in chat ID
+            if (chat.id.includes(vendorId)) {
+              return true;
+            }
+            
+            return false;
+          });
+
+          console.log('Filtered vendor conversations:', vendorConversations);
+
+          const transformedConversations = vendorConversations.map(chat => {
+            // Find the user ID (not vendor)
+            const participants = chat.participants || Object.keys(chat.participantNames || {});
+            const userId = participants.find(id => id !== vendorId) || 'unknown';
+            
+            return {
+              id: chat.id,
+              userName: chat.participantNames?.[userId] || 'Customer',
+              salonName: chat.participantNames?.[vendorId] || 'Salon',
+              lastMessage: chat.lastMessage || 'No messages yet',
+              lastMessageAt: chat.lastMessageTime?.toDate() || chat.updatedAt?.toDate() || new Date(0),
+              avatar: chat.participantImages?.[userId] || '',
+              vendorId: vendorId,
+              userId: userId,
+              // Debug info
+              rawData: chat
+            };
+          });
+
+          transformedConversations.sort((a, b) => b.lastMessageAt - a.lastMessageAt);
+          dispatch(setConversations(transformedConversations));
+        },
+        (error) => {
+          console.error('Error fetching all chats:', error);
+        }
+      );
+
+      return unsubscribe;
+    };
+
+    // Uncomment this if the first approach doesn't work
+    // return fetchAllChatsAndFilter();
+  }, [vendorId, dispatch]);
+
   // Load messages for active chat
   useEffect(() => {
     if (!activeChat?.id) return;
+
+    console.log('Loading messages for chat:', activeChat.id);
 
     const messagesQuery = query(
       collection(db, 'chats', activeChat.id, 'messages'),
@@ -105,7 +187,7 @@ export function VendorChatProvider({ children, vendorId }) {
         const messagesData = snapshot.docs.map(doc => {
           const messageData = doc.data();
           return {
-            id: doc.id, // Auto-generated Firebase ID
+            id: doc.id,
             content: messageData.text,
             senderId: messageData.senderId,
             senderRole: messageData.senderId === vendorId ? 'vendor' : 'user',
@@ -114,6 +196,7 @@ export function VendorChatProvider({ children, vendorId }) {
             read: messageData.seen
           };
         });
+        console.log('Loaded messages:', messagesData.length);
         dispatch(setMessages(messagesData));
       },
       (error) => {
@@ -124,14 +207,13 @@ export function VendorChatProvider({ children, vendorId }) {
     return () => unsubscribe();
   }, [activeChat, vendorId, dispatch]);
 
-  // Send message as vendor with auto-generated ID
+  // Send message as vendor
   const sendMessage = async (content, messageType = 'text') => {
     if (!activeChat || !content.trim() || !vendorId) {
       throw new Error('Cannot send message: Missing required data');
     }
 
     try {
-      // Get vendor data
       const vendorData = await getVendorData(vendorId);
 
       const messageData = {
@@ -146,10 +228,8 @@ export function VendorChatProvider({ children, vendorId }) {
         createdAt: serverTimestamp()
       };
 
-      // Use addDoc for auto-generated message ID
       await addDoc(collection(db, 'chats', activeChat.id, 'messages'), messageData);
 
-      // Update chat last message
       await updateDoc(doc(db, 'chats', activeChat.id), {
         lastMessage: content,
         lastMessageTime: serverTimestamp(),
@@ -162,18 +242,18 @@ export function VendorChatProvider({ children, vendorId }) {
     }
   };
 
-  // Get vendor data (replace with your API call)
+  // Get vendor data
   const getVendorData = async (vendorId) => {
-    // Mock data - replace with actual API call
     return {
       id: vendorId,
-      name: "HairCraft Lounge",
-      avatar: "1760552476408-salon.png"
+      name: vendor?.ownerName,
+      avatar: vendor?.image
     };
   };
 
   // Set active chat
   const setActiveChatDirectly = (chat) => {
+    console.log('Setting active chat:', chat);
     dispatch(setActiveChat(chat));
   };
 

@@ -19,7 +19,7 @@ const DEFAULT_AVATAR = "/images/chat_avatar.jpg";
 
 function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
   // Use default avatar if no src provided or if src is empty
-  const avatarSrc = src || DEFAULT_AVATAR;
+  const avatarSrc = src ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${src}`: DEFAULT_AVATAR;
 
   return (
     <div
@@ -546,9 +546,9 @@ const VendorInbox = ({ vendorId }) => {
 
 // Wrap with vendor provider
 export default function VendorInboxWithProvider() {
-  const state = useSelector((state) => state);
-  console.log({state})
-  const vendorId = "68efdfa53cb294e3c05e1f9d";
+  const state = useSelector((state) => state.auth);
+  // console.log({ state });
+  const vendorId = state?.adminId || "68efdfa53cb294e3c05e1f9d";
   return (
     <VendorChatProvider vendorId={vendorId}>
       <VendorInbox vendorId={vendorId} />
