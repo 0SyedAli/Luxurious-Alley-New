@@ -7,12 +7,12 @@ export default function Topbar() {
   const router = useRouter()
   // ✅ Logged-in user data
   const user = useSelector((state) => state.auth.user);
-  const profileAvatar = user?.image
-    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${user.image}`
+  const profileAvatar = user?.bImage
+    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${user.bImage}`
     : defaultAvatar;
 
   // ✅ User info
-  const fullName = user?.fullName || "Unknown User";
+  const fullName = user?.bName || "Unknown User";
   const location = user?.bAddress.slice(0, 20) || user?.city || "Location not provided";
   return (
     <div className="dash_top_header my-4 ">

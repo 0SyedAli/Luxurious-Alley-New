@@ -234,7 +234,7 @@ const CreateProfile = () => {
                             </div>
                         )}
 
-                        <div className="col-12">
+                        {/* <div className="col-12">
                             <div className="remember form-check">
                                 <input
                                     type="checkbox"
@@ -245,9 +245,9 @@ const CreateProfile = () => {
                                     I agree to the terms and conditions
                                 </label>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="col-12 text-center">
+                        <div className="col-12 ">
                             <Button isLoading={isSubmitting}>Next</Button>
                         </div>
                     </div>

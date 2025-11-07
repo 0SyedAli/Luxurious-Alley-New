@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { fetchCategories } from "@/redux/features/category/categorySlice";
 import api from "@/lib/api";
@@ -67,8 +66,6 @@ const AddService = () => {
       price: "",
       description: "",
       technicianId: "",
-      startTime: "",
-      endTime: "",
     },
   });
 
@@ -94,11 +91,7 @@ const AddService = () => {
       formData.append("price", data.price);
       formData.append("description", data.description);
       formData.append("technicianId", JSON.stringify([data.technicianId]));
-
       formData.append("categoryId", data.category);
-      formData.append("days", JSON.stringify(selectedDays));
-      formData.append("startTime", data.startTime);
-      formData.append("endTime", data.endTime);
 
       images.forEach((imgObj) => {
         formData.append("images", imgObj.file);
@@ -212,7 +205,7 @@ const AddService = () => {
               </div>
 
               {/* ✅ Day Selector */}
-              <div className="col-10">
+              {/* <div className="col-10">
                 <label className="mt-2">Including These Days</label>
                 <div
                   className="d-flex my-2 justify-content-between flex-wrap"
@@ -231,10 +224,10 @@ const AddService = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* ✅ Time Range */}
-              <label className="mt-2">Time Range</label>
+              {/* <label className="mt-2">Time Range</label>
               <div className="cs-form time_picker d-flex gap-3 align-items-center ">
                 <input
                   type="time"
@@ -247,7 +240,7 @@ const AddService = () => {
                   {...register("endTime", { required: true })}
                   className="classInput"
                 />
-              </div>
+              </div> */}
 
               {/* ✅ Description */}
               <div className="col-12">
@@ -262,7 +255,7 @@ const AddService = () => {
               </div>
 
               {/* ✅ Submit Button */}
-              <div className="col-md-4 text-start">
+              <div className="col-md-12 text-start">
                 {/* <button
                   type="submit"
                   className="user-dashboard-box-btn"

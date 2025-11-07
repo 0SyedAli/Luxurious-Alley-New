@@ -184,7 +184,7 @@ export default function Dashboard() {
                     { name: "Revenue", data: revenues, color: "#4e79a7" },
                   ]}
                   height={360}
-                  // yLabel="Price ($)"
+                // yLabel="Price ($)"
                 />
               ) : (
                 <p>Loading chart data...</p>
@@ -232,7 +232,11 @@ export default function Dashboard() {
           {status === "loading" ? (
             <p>Loading appointments...</p>
           ) : status === "failed" ? (
-            <p className="text-danger">{error}</p>
+            error === "No bookings found for this salon" ? (
+              <p>No appointments found.</p>
+            ) : (
+              <p className="text-danger">{error}</p>
+            )
           ) : filteredAppointments.length === 0 ? (
             <p>No appointments found in this tab.</p>
           ) : (

@@ -162,11 +162,12 @@ function ConversationList({ items, activeId, onSelect, loading }) {
                       {c.userName}
                     </span>
                     <span
-                      className="text-xs text-gray-500 flex-shrink-0"
+                      className="text-xs text-gray-200 flex-shrink-0"
                       style={{
                         minWidth: "fit-content",
                         textAlign: "right",
                         fontSize: "0.75rem",
+                        color:"#ccc"
                       }}
                     >
                       {getLastMessageTime(c.lastMessageAt)}
@@ -334,7 +335,7 @@ function ChatInput({ onSend, disabled }) {
         backgroundColor: "#120C31",
       }}
     >
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-2 myInboxs">
         <input
           type="text"
           className="form-control border-0 flex-grow-1"
@@ -450,7 +451,7 @@ const VendorInbox = ({ vendorId }) => {
   const isSmallScreen = windowWidth < 768;
 
   return (
-    <main className="vh-100 w-100 bg-transparent">
+    <main className="h-100 w-100 bg-transparent">
       <div className="container-fluid h-100 p-0 bg-transparent">
         <div className="row g-0 h-100 bg-transparent m-0">
           {/* Conversation List - Always visible on md+, conditionally on sm/xs */}

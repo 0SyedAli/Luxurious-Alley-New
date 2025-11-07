@@ -2,11 +2,12 @@
 import Topbar from '@/component/Topbar';
 import SidebarDash from '@/component/SidebarDash';
 import '../dashboard_main.css';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
+  const pathname = usePathname(); // add this
   const token = typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
   const adminId = typeof window !== "undefined" ? sessionStorage.getItem("adminId") : null;
 
@@ -22,7 +23,12 @@ export default function DashboardLayout({ children }) {
       <div className="main-content main-dashboard">
         <div className='dash_bg_image'></div>
         <Topbar />
-        <div className="content">{children}</div>
+
+        {/* check if current path is /dashboard/inbox */}
+        <div className={`content ${pathname === "/dashboard/inbox" ? "chat_content" : ""}`}>
+          {children}
+        </div>
+
       </div>
     </div>
   );

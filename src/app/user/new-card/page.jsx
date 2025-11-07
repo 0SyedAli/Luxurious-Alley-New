@@ -113,7 +113,7 @@ const AddNewCard = () => {
               <p className="text-danger mt-1">{errors.email.message}</p>
               )} */}
               </div>
-              <div className="col-md-4 text-start">
+              <div className="col-md-12 text-start">
                 <button type="submit" className="user-dashboard-box-btn">
                   Save Card
                 </button>

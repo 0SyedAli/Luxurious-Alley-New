@@ -121,7 +121,7 @@ const CreateBusinessProfileStep3 = () => {
 
     if (createBusinessProfile.fulfilled.match(resultAction)) {
       showSuccessToast("Business profile updated successfully!");
-      router.push("/dashboard");
+      router.push("/auth/signin");
     } else {
       showErrorToast(resultAction.payload || "Failed to update profile.");
     }

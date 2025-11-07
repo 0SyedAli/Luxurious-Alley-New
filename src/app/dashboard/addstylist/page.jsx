@@ -256,7 +256,7 @@ const AddStylist = () => {
               </div>
 
               {/* ✅ Submit Button */}
-              <div className="col-md-4 text-start">
+              <div className="col-md-12 text-start">
                 <Button isLoading={loading}>Add Now</Button>
               </div>
             </div>

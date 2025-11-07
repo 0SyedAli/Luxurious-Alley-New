@@ -241,7 +241,7 @@ const UserEditProfile = () => {
                 </div>
 
                 {/* ✅ Working Days Section */}
-                <div className="calender_container text-start col-md-8">
+                <div className="calender_container text-start col-12 col-xxl-8">
                   <label className="pb-1">Select Working Days</label>
                   <div className="d-flex my-2 justify-content-between flex-wrap" style={{ gap: 10 }}>
                     {daysList.map(({ short, full }) => (

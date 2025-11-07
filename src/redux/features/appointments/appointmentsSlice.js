@@ -11,7 +11,7 @@ export const fetchAppointments = createAsyncThunk(
 
       if (!token || !adminId) throw new Error("Authentication required");
 
-      const response = await api.get(`/getBookingsBySalonId?salonId=${"68ee7ede382fb808717dff8d"}`, {
+      const response = await api.get(`/getBookingsBySalonId?salonId=${adminId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -250,7 +250,7 @@ const EditProduct = () => {
                 />
               </div>
 
-              <div className="col-md-4 text-start">
+              <div className="col-md-12 text-start">
                 <button
                   type="submit"
                   className="user-dashboard-box-btn"

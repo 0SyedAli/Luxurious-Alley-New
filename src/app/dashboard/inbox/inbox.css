@@ -1,4 +1,3 @@
-
 .conversation_heading {
     font-size: 28px;
     margin: 0;
@@ -21,7 +20,13 @@
     color: transparent;
 }
 
+.myInboxs input {
+    color: #FFF;
+}
 
+.myInboxs input::placeholder {
+    color: #Ccc;
+}
 
 /* Conversation custom scroll UI  */
 .custom-scrollbar {
