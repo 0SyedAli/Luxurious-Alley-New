@@ -6,7 +6,10 @@ import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
 import api from "@/lib/api";
 import { userproducts } from "@/lib/products-data";
-import { setActiveVendorId, setCurrentUser } from "@/redux/features/chat/chatSlice";
+import {
+  setActiveVendorId,
+  setCurrentUser,
+} from "@/redux/features/chat/chatSlice";
 import { setBooking } from "@/redux/features/booking/bookingSlice";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -105,6 +108,25 @@ const UserDashboardProductServiceDetails = () => {
     }
   };
 
+  const handleChatClick = () => {
+    // Set current user (replace with your actual user from auth)
+    const userData = {
+      id: "68ed9c864236c9662a1ac69c", // User ID from your DB
+      name: "Faraz Tariq",
+      email: "faraz@example.com",
+      role: "user",
+      avatar: "1760484156598-image.jpg",
+    };
+
+    dispatch(setCurrentUser(userData));
+
+    // Store vendorId in Redux
+    dispatch(setActiveVendorId("68efdfa53cb294e3c05e1f9d"));
+
+    // Navigate to inbox page
+    router.push("/user/inbox");
+  };
+
   useEffect(() => {
     getOneSalon();
   }, [id]);
@@ -190,6 +212,7 @@ const UserDashboardProductServiceDetails = () => {
                         backgroundColor: "#19CC89",
                         border: "1px solid #19CC89",
                       }}
+                      onClick={handleChatClick}
                     >
                       <FiMessageSquare size={28} />
                     </button>
@@ -369,7 +392,12 @@ const UserDashboardProductServiceDetails = () => {
                       title={item?.fullName}
                       subTitle={item?.designation}
                       onCardClick={() => {
-                        dispatch(setBooking({ technicianId: item?._id, isService: false }));
+                        dispatch(
+                          setBooking({
+                            technicianId: item?._id,
+                            isService: false,
+                          })
+                        );
                         router.push(`/user/all-services`);
                       }}
                     />
