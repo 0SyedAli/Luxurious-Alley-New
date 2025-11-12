@@ -1,71 +1,60 @@
 "use client";
+import { useEffect, useState } from "react";
 import UsersTable from "@/component/new/tables/users-table";
 import TextBox from "@/component/new/text-box";
-
-const users = [
-  {
-    name: "Emma Thompson",
-    email: "emma@email.com",
-    joinDate: "2024-01-15",
-    status: "Active",
-    totalSpent: 850,
-  },
-  {
-    name: "Sarah Johnson",
-    email: "sarah@email.com",
-    joinDate: "2024-02-20",
-    status: "Active",
-    totalSpent: 1200,
-  },
-  {
-    name: "Maria Garcia",
-    email: "maria@email.com",
-    joinDate: "2024-01-10",
-    status: "Active",
-    totalSpent: 950,
-  },
-  {
-    name: "Lisa Chen",
-    email: "lisa@email.com",
-    joinDate: "2024-03-05",
-    status: "Inactive",
-    totalSpent: 450,
-  },
-  {
-    name: "Anna Rodriguez",
-    email: "anna@email.com",
-    joinDate: "2024-02-28",
-    status: "Active",
-    totalSpent: 1150,
-  },
-  {
-    name: "Daniel Clark",
-    email: "daniel@email.com",
-    joinDate: "2024-04-10",
-    status: "Active",
-    totalSpent: 880,
-  },
-  {
-    name: "Sophia Lee",
-    email: "sophia@email.com",
-    joinDate: "2024-05-12",
-    status: "Inactive",
-    totalSpent: 540,
-  },
-  {
-    name: "James Brown",
-    email: "james@email.com",
-    joinDate: "2024-06-20",
-    status: "Active",
-    totalSpent: 1250,
-  },
-];
+import api from "@/lib/api";
 
 const AdminAllUsers = () => {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const token =
+    typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/getAllUsers", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // api response = res.data.data
+
+      const formatted = res.data.data.map((u) => ({
+        name: u.username || "N/A",
+        email: u.email || "N/A",
+        joinDate: u.createdAt?.split("T")[0] || "N/A",
+        status: u.isDeleted ? "Inactive" : "Active",
+        totalSpent: u.totalSpent ?? 0,
+      }));
+
+      setUsers(formatted);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-100">
-      <TextBox title={"All Users"} description={"Complete list of registered users"}/>
-      <UsersTable data={users} rowsPerPage={10} />
+      <TextBox
+        title={"All Users"}
+        description={"Complete list of registered users"}
+      />
+      {loading ? (
+        <div className="text-center text-light py-4">
+          <div className="spinner-border" role="status"></div>
+          <p className="mt-2">Loading Users...</p>
+        </div>
+      ) : (
+        <UsersTable data={users} rowsPerPage={10} />
+      )}
     </div>
   );
 };

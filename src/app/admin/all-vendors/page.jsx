@@ -1,82 +1,66 @@
 "use client";
+import { useEffect, useState } from "react";
 import VendorsTable from "@/component/new/tables/vendors-table";
 import TextBox from "@/component/new/text-box";
-
-const vendors = [
-  {
-    name: "Beauty Supply Co.",
-    category: "Hair Products",
-    email: "emma@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Sarah Johnson",
-    category: "Hair Products",
-    email: "sarah@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Maria Garcia",
-    category: "Hair Products",
-    email: "maria@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Lisa Chen",
-    category: "Hair Products",
-    email: "lisa@email.com",
-    contactPerson: "John Smith",
-    status: "Inactive",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Anna Rodriguez",
-    category: "Hair Products",
-    email: "anna@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Daniel Clark",
-    category: "Hair Products",
-    email: "daniel@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "Sophia Lee",
-    category: "Hair Products",
-    email: "sophia@email.com",
-    contactPerson: "John Smith",
-    status: "Inactive",
-    lastOrder: "2024-10-05",
-  },
-  {
-    name: "James Brown",
-    category: "Hair Products",
-    email: "james@email.com",
-    contactPerson: "John Smith",
-    status: "Active",
-    lastOrder: "2024-10-05",
-  },
-];
+import api from "@/lib/api";
 
 const AdminAllVendors = () => {
+  const [vendors, setVendors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const token =
+    typeof window !== "undefined" ? sessionStorage.getItem("authToken") : null;
+
+  useEffect(() => {
+    fetchVendors();
+  }, []);
+
+  const fetchVendors = async () => {
+    try {
+      setLoading(true);
+
+      const res = await api.get("/getAllVendors", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // res.data.data is array of vendors
+      const formatted = res.data.data.map((v) => ({
+        name: v.ownerName || "Unknown User",
+        email: v.email || "N/A",
+        categories:
+          v.categoryId && v.categoryId.length > 0
+            ? v.categoryId.map((c) => c.name || "N/A").join(", ")
+            : "N/A",
+        joinDate: v.createdAt?.split("T")[0] || "N/A",
+        status: v.isDeleted ? "Inactive" : "Active",
+        // totalSpent: v.totalSpent ?? 0,
+      }));
+
+      setVendors(formatted);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-100">
       <TextBox
         title={"All Vendors"}
         description={"Complete list of vendor partners"}
       />
-      <VendorsTable data={vendors} rowsPerPage={10} />
+
+      {loading ? (
+        <div className="text-center text-light py-4">
+          <div className="spinner-border" role="status"></div>
+          <p className="mt-2">Loading Vendors...</p>
+        </div>
+      ) : (
+        <VendorsTable data={vendors} rowsPerPage={10} />
+      )}
     </div>
   );
 };

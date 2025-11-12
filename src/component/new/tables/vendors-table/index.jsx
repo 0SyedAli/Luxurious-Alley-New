@@ -9,8 +9,8 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
   // Filter by search
   const filteredData = data.filter(
     (item) =>
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.performance.toLowerCase().includes(search.toLowerCase())
+      item?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      item?.email?.toLowerCase().includes(search.toLowerCase())
   );
 
   // Pagination logic
@@ -42,11 +42,10 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
           <thead>
             <tr>
               <th>Vendor Name</th>
-              <th>Category</th>
-              <th>Contact Person</th>
               <th>Email</th>
+              <th>Category</th>
+              <th>Join Date</th>
               <th>Status</th>
-              <th>Last Order</th>
             </tr>
           </thead>
           <tbody>
@@ -54,9 +53,9 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
               visibleData.map((vendor, i) => (
                 <tr key={i}>
                   <td>{vendor.name}</td>
-                  <td>{vendor.category}</td>
-                  <td>{vendor.contactPerson}</td>
                   <td>{vendor.email}</td>
+                  <td>{vendor.catagories}</td>
+                  <td>{vendor.joinDate}</td>
                   <td>
                     <span
                       className={
@@ -68,21 +67,21 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
                       {vendor.status}
                     </span>
                   </td>
-                  <td>{vendor.lastOrder}</td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td colSpan="5" className="text-center text-secondary py-4">
-                  No users found
+                  No vendors found
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
 
-      {data?.lenght > 10 && (
+      {filteredData.length > rowsPerPage && (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <small className="text-light">
             Showing {startIndex + 1} to{" "}
@@ -101,9 +100,8 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i}
-                className={`btn btn-sm ${
-                  page === i + 1 ? "active-paginate" : "btn-outline-light"
-                } mx-1`}
+                className={`btn btn-sm ${page === i + 1 ? "active-paginate" : "btn-outline-light"
+                  } mx-1`}
                 onClick={() => setPage(i + 1)}
               >
                 {i + 1}
@@ -119,6 +117,7 @@ const VendorsTable = ({ data, title = "Vendors List", rowsPerPage = 5 }) => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

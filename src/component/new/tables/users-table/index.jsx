@@ -28,7 +28,7 @@ const UsersTable = ({ data, title = "Users List", rowsPerPage = 5 }) => {
         <input
           type="text"
           className="table-search"
-          placeholder="Search..."
+          placeholder="Search by name and email..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -80,7 +80,7 @@ const UsersTable = ({ data, title = "Users List", rowsPerPage = 5 }) => {
         </table>
       </div>
 
-      {data?.lenght > 10 && (
+      {filteredData.length > rowsPerPage && (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <small className="text-light">
             Showing {startIndex + 1} to{" "}
@@ -99,9 +99,8 @@ const UsersTable = ({ data, title = "Users List", rowsPerPage = 5 }) => {
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i}
-                className={`btn btn-sm ${
-                  page === i + 1 ? "active-paginate" : "btn-outline-light"
-                } mx-1`}
+                className={`btn btn-sm ${page === i + 1 ? "active-paginate" : "btn-outline-light"
+                  } mx-1`}
                 onClick={() => setPage(i + 1)}
               >
                 {i + 1}
@@ -117,6 +116,7 @@ const UsersTable = ({ data, title = "Users List", rowsPerPage = 5 }) => {
           </div>
         </div>
       )}
+
     </div>
   );
 };

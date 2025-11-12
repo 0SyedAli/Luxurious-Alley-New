@@ -57,3 +57,17 @@ export const addProduct = z.object({
   stockQuantity: z.string().nonempty("Stock quantity is required"),
   description: z.string().nonempty("Description is required"),
 });
+
+export const signupAdminSchema = z.object({
+  email: z.string().trim().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+  confirmPassword: z.string().min(6, 'Password must be at least 6 characters'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"], // Sets the error on the confirmPassword field
+});
+
+export const loginAdminSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
