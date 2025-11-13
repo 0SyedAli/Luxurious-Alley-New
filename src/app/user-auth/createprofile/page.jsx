@@ -9,7 +9,7 @@ import { createProfile } from "@/redux/features/auth/authSlice";
 import Button from "@/components/MyButton";
 import RHFInput from "@/components/forms/RHFInput";
 import RHFSelect from "@/components/forms/RHFSelect";
-import { createProfileSchema } from "@/validation/loginSchema";
+import { createProfileSchema, createUserProfileSchema } from "@/validation/loginSchema";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { FaPlus } from "react-icons/fa6";
 
@@ -69,7 +69,7 @@ const CreateProfile = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm({
-        resolver: zodResolver(createProfileSchema),
+        resolver: zodResolver(createUserProfileSchema),
         defaultValues: {
             fullName: "",
             gender: "",
@@ -77,8 +77,6 @@ const CreateProfile = () => {
             city: "",
             state: "",
             pinCode: "",
-            streetAddress: "",
-            phone: "",
         },
     });
 
@@ -103,16 +101,15 @@ const CreateProfile = () => {
         formData.append("city", data.city);
         formData.append("state", data.state);
         formData.append("pinCode", data.pinCode);
-        formData.append("path", "/auth/createbussinessprofile");
+        formData.append("path", "/user");
         // formData.append("streetAddress", data.streetAddress);
-        formData.append("phoneNumber", data.phone);
         formData.append("image", file); // <-- attach file directly
 
         const resultAction = await dispatch(createProfile(formData));
 
         if (createProfile.fulfilled.match(resultAction)) {
             showSuccessToast("Profile has been created successfully!");
-            router.push("createbussinessprofile");
+            router.push("/user");
         } else {
             showErrorToast(resultAction.payload);
         }
@@ -190,14 +187,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-12">
-                            <RHFInput
-                                name="streetAddress"
-                                placeholder="Street address *"
-                                register={register}
-                                errors={errors}
-                            />
-                        </div>
+                       
 
                         <div className="col-6">
                             <RHFInput
@@ -218,15 +208,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-6">
-                            <RHFInput
-                                name="phone"
-                                type="tel"
-                                placeholder="Phone *"
-                                register={register}
-                                errors={errors}
-                            />
-                        </div>
+                       
 
                         {status === "failed" && error && (
                             <div className="col-12 text-center text-danger mt-3">
@@ -247,8 +229,8 @@ const CreateProfile = () => {
                             </div>
                         </div>
 
-                        <div className="col-12 text-center">
-                            <Button isLoading={isSubmitting}>Next</Button>
+                        <div className="col-12 text-start">
+                            <Button isLoading={isSubmitting}>Submit</Button>
                         </div>
                     </div>
                 </form>

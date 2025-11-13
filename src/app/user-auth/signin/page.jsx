@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/validation/loginSchema"; // Import the login schema
 import { useDispatch, useSelector } from "react-redux";
-import { signInAdmin } from "@/redux/features/auth/authSlice"; // Import the thunk
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import Button from '@/component/MyButton';
+import { signInUser, signUpUser } from '@/redux/features/userAuth/userAuthSlice';
 
 const Signin = () => {
     const router = useRouter();
@@ -31,10 +31,10 @@ const Signin = () => {
 
     const onSubmit = async (data) => {
         // Dispatch the login thunk
-        const resultAction = await dispatch(signInAdmin(data));
+        const resultAction = await dispatch(signInUser(data));
 
         // Check if the login was successful (fulfilled)
-        if (signInAdmin.fulfilled.match(resultAction)) {
+        if (signInUser.fulfilled.match(resultAction)) {
             // Success: Redirect to the dashboard
             showSuccessToast("Login successful")
 
@@ -116,7 +116,7 @@ const Signin = () => {
                         <div className="register_link">
                             <h5>
                                 Don't have an account?
-                                <Link href="signup"> Sign Up</Link>
+                                <Link href="/user-auth/signup"> Sign Up</Link>
                             </h5>
                         </div>
                     </div>

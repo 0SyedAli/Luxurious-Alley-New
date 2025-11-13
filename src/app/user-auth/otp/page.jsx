@@ -20,7 +20,7 @@ const OTP = () => {
     tempToken,
     otpStatus, // 'loading', 'succeeded', 'failed'
     otpError,
-  } = useSelector((state) => state.auth);
+  } = useSelector((state) => state.userAuth);
   // ----------------------------------------
   console.log(tempEmail);
 
@@ -56,7 +56,7 @@ const OTP = () => {
 
     // Check if verification was successful (fulfilled)
     if (verifyOTP.fulfilled.match(resultAction)) {
-      router.push("createprofile"); // Redirect to next step in your flow
+      router.push("/user-auth/createprofile"); // Redirect to next step in your flow
       showSuccessToast("OTP has been verified successfully!");
     } else {
       // Failure is handled by otpError state

@@ -10,6 +10,7 @@ import categoryReducer from "@/redux/features/category/categorySlice";
 import revenueReducer from "@/redux/features/revenue/revenueSlice";
 import chatReducer from "@/redux/features/chat/chatSlice";
 import bookingReducer from "@/redux/features/booking/bookingSlice";
+import userAuthReducer from "@/redux/features/userAuth/userAuthSlice";
 
 // Combine reducers (in case you have more later)
 const rootReducer = combineReducers({
@@ -20,14 +21,15 @@ const rootReducer = combineReducers({
   category: categoryReducer,
   revenue: revenueReducer,
   chat: chatReducer,
-  booking: bookingReducer
+  booking: bookingReducer,
+  userAuth: userAuthReducer
 });
 
 // Configure persist
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "revenue","chat"], // Only persist auth slice
+  whitelist: ["auth", "revenue", "chat", "userAuth"], // Only persist auth slice
 };
 
 // Wrap reducer with persist capabilities

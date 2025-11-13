@@ -32,6 +32,20 @@ export const createProfileSchema = z.object({
   // File is optional/handled outside the main form data, but we'll include a placeholder validation for the field itself
   profilePicture: z.any().optional(),
 });
+export const createUserProfileSchema = z.object({
+  // Assuming "Username" is First Name and "Password" is Last Name based on typical form layout
+  fullName: z.string().trim().min(2, 'Full Name is required.'),
+  gender: z.enum(['male', 'female'], {
+    errorMap: () => ({ message: 'Please select a gender.' }),
+  }),
+  country: z.string().trim().min(2, 'Country/Region is required.'),
+  city: z.string().trim().min(2, 'City is required.'),
+  state: z.string().trim().min(2, 'State is required.'),
+  pinCode: z.string().trim().regex(/^\d+$/, 'PIN Code must be a number.').min(5, 'PIN Code is required.'),
+
+  // File is optional/handled outside the main form data, but we'll include a placeholder validation for the field itself
+  profilePicture: z.any().optional(),
+});
 
 export const createBussinessSchema = z.object({
   bname: z.string().trim().min(2, 'Full Name is required.'),

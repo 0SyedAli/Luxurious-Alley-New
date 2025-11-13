@@ -6,9 +6,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/validation/loginSchema";
 import { useDispatch, useSelector } from "react-redux";
-import { signUpAdmin } from "@/redux/features/auth/authSlice";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import Button from "@/component/MyButton";
+import { signUpUser } from "@/redux/features/userAuth/userAuthSlice";
 
 const Signup = () => {
   const router = useRouter();
@@ -30,11 +30,11 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     const { email, password } = data;
-    const resultAction = await dispatch(signUpAdmin({ email, password }));
+    const resultAction = await dispatch(signUpUser({ email, password }));
 
-    if (signUpAdmin.fulfilled.match(resultAction)) {
+    if (signUpUser.fulfilled.match(resultAction)) {
       showSuccessToast("Otp sent to email");
-      router.push("/auth/otp");
+      router.push("/user-auth/otp");
     } else {
       showErrorToast("Signup Failed");
     }
