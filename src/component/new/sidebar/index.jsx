@@ -1,13 +1,24 @@
+import { logout } from "@/redux/features/auth/authSlice";
+import { persistor } from "@/redux/store";
 import Image from "next/image";
 import Link from "next/link";
-import { HiOutlineSquares2X2 } from "react-icons/hi2";
-import { IoCalendarOutline } from "react-icons/io5";
-import { BiMessageSquareDots } from "react-icons/bi";
-import { MdDisplaySettings, MdMiscellaneousServices } from "react-icons/md";
-import { FaRegStar } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import { RiLogoutBoxLine } from "react-icons/ri";
+import { useDispatch } from "react-redux";
 
 export default function Sidebar({ links = [] }) {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const handleLogout = async () => {
+    // 1️⃣ clear redux state + session storage
+    dispatch(logout());
+
+    // 2️⃣ purge persisted data from localStorage
+    await persistor.purge();
+
+    // 3️⃣ redirect to login page
+    router.push("/auth/signin");
+  };
   return (
     <div className="sidebar sidebar2">
       <div className="logo">
@@ -36,7 +47,7 @@ export default function Sidebar({ links = [] }) {
             <span>
               <RiLogoutBoxLine />
             </span>
-            <Link href="/auth/signin">Logout</Link>
+            <Link href="/user-auth/signin" onClick={handleLogout}>Logout</Link>
           </li>
         </ul>
       </div>

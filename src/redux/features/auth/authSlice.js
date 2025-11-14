@@ -148,6 +148,42 @@ export const createBusinessProfile2 = createAsyncThunk(
   }
 );
 
+export const userLogin = createAsyncThunk(
+  "auth/userLogin",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/loginWitheEmailAndPassword", {
+        email,
+        password,
+      });
+
+      return response.data; // contains token + user
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "User login failed"
+      );
+    }
+  }
+);
+export const verifyUserOTP = createAsyncThunk(
+  "auth/verifyUserOTP",
+  async ({ otp, token }, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/VerifyOtpAndCreate", {
+        otp,
+        token,
+      });
+
+      return response.data; // contains token + user data
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "OTP verification failed"
+      );
+    }
+  }
+);
+
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -233,7 +269,7 @@ const authSlice = createSlice({
         // // Assuming your API response has an 'adminId' field
         // state.adminId = action.payload.adminId;
         // state.error = null;
-         const { token, data } = action.payload;
+        const { token, data } = action.payload;
 
         state.status = 'authenticated';
         state.otpStatus = 'succeeded';
@@ -300,6 +336,48 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       });
+    // user Portal Login
+    builder
+      .addCase(userLogin.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(userLogin.fulfilled, (state, action) => {
+        const { token, data } = action.payload;
+
+        state.status = "authenticated";
+        state.user = data;
+        state.token = token;
+
+        // save in sessionStorage also (optional)
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("admin", JSON.stringify(data));
+      })
+      .addCase(userLogin.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      });
+    // user Portal OTP
+    builder
+      .addCase(verifyUserOTP.pending, (state) => {
+        state.otpStatus = "loading";
+        state.otpError = null;
+      })
+      .addCase(verifyUserOTP.fulfilled, (state, action) => {
+        const { token, data } = action.payload;
+
+        state.status = "authenticated";
+        state.user = data;       // <-- SAVE USER PROFILE
+        state.token = token;     // <-- SAVE REAL TOKEN
+        state.otpStatus = "succeeded";
+
+        // Persisted automatically by redux-persist
+      })
+      .addCase(verifyUserOTP.rejected, (state, action) => {
+        state.otpStatus = "failed";
+        state.otpError = action.payload;
+      });
+
   },
 });
 export const { logout } = authSlice.actions;
