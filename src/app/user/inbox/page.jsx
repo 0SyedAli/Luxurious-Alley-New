@@ -16,11 +16,12 @@ import "./inbox.css";
 import AVATARUSERONE from "@/images/chat_avatar.png";
 import { resetChatState } from "@/redux/features/chat/chatSlice";
 
-// Default avatar constant
+// Default avatar path
 const DEFAULT_AVATAR = "/images/chat_avatar.jpg";
 
 function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
-  const avatarSrc = src || DEFAULT_AVATAR;
+  // Use default avatar if no src provided or if src is empty
+  const avatarSrc = src ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/${src}`: DEFAULT_AVATAR;
 
   return (
     <div
@@ -32,20 +33,23 @@ function AvatarImage({ size = 36, src = "", alt = "avatar" }) {
         border: "3px solid #AA822A",
       }}
     >
-      <Image
-        src={avatarSrc}
-        alt={alt}
-        width={size}
-        height={size}
-        style={{ objectFit: "cover" }}
-        priority={true}
-        unoptimized={true}
-        onError={(e) => {
-          if (avatarSrc !== DEFAULT_AVATAR) {
+      {avatarSrc ? (
+        <Image
+          src={avatarSrc}
+          alt={alt}
+          width={size}
+          height={size}
+          style={{ objectFit: "cover" }}
+          priority={true}
+          unoptimized={true}
+          onError={(e) => {
+            // If image fails to load, show default avatar
             e.target.src = DEFAULT_AVATAR;
-          }
-        }}
-      />
+          }}
+        />
+      ) : (
+        <BsPersonCircle size={24} color="#000000" />
+      )}
     </div>
   );
 }
@@ -159,7 +163,8 @@ function ConversationList({ items, activeId, onSelect, loading }) {
                       className="text-xs text-gray-500 flex-shrink-0"
                       style={{ 
                         minWidth: "fit-content",
-                        fontSize: "0.75rem"
+                        fontSize: "0.75rem",
+                        color:"#ccc"
                       }}
                     >
                       {getLastMessageTime(c.lastMessageAt)}
@@ -250,11 +255,11 @@ function MessageBubble({ message, currentUserId }) {
     ) {
       date = new Date(message.timestamp);
     } else {
-      return message.time || "";
+      return "";
     }
 
     if (isNaN(date.getTime())) {
-      return message.time || "";
+      return "";
     }
 
     return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -263,28 +268,34 @@ function MessageBubble({ message, currentUserId }) {
   return (
     <div
       className={`d-flex mb-3 px-2`}
-      style={{ 
+      style={{
         justifyContent: isOut ? "flex-end" : "flex-start",
-        maxWidth: "100%"
+        maxWidth: "100%",
       }}
     >
-      <div className="flex-grow-0" style={{ 
-        maxWidth: "85%",
-        width: "fit-content"
-      }}>
+      <div
+        className="flex-grow-0"
+        style={{
+          maxWidth: "85%",
+          width: "fit-content",
+        }}
+      >
         <div
           className={`p-3 text-light`}
           style={{
             backgroundColor: isOut ? "#120C31" : "#C78015",
             borderRadius: isOut ? "11px 11px 0 11px" : "11px 11px 11px 0",
             wordWrap: "break-word",
-            overflowWrap: "break-word"
+            overflowWrap: "break-word",
           }}
         >
-          <p className="mb-0 small lh-sm" style={{ 
-            wordBreak: "break-word",
-            maxWidth: "100%"
-          }}>
+          <p
+            className="mb-0 small lh-sm"
+            style={{
+              wordBreak: "break-word",
+              maxWidth: "100%",
+            }}
+          >
             {displayText}
           </p>
         </div>
@@ -292,9 +303,8 @@ function MessageBubble({ message, currentUserId }) {
           className={`text-light d-block mt-1 px-1 ${
             isOut ? "text-end" : "text-start"
           }`}
-          style={{color: '#F1F1F1'}}
         >
-          {getTime()}
+          <span style={{ color: "#F1F1F1" }}>{getTime()} </span>
         </small>
       </div>
     </div>
@@ -319,13 +329,13 @@ function ChatInput({ onSend, disabled }) {
         backgroundColor: "#120C31",
       }}
     >
-      <div className="d-flex align-items-center gap-2">
+      <div className="d-flex align-items-center gap-2 myInboxs">
         <input
           type="text"
           className="form-control border-0 flex-grow-1"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Type your message..."
+          placeholder="Type your reply..."
           disabled={disabled}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -338,7 +348,7 @@ function ChatInput({ onSend, disabled }) {
             color: "#FFFFFF",
             outline: "none",
             boxShadow: "none",
-            fontSize: "14px"
+            fontSize: "14px",
           }}
         />
         <button

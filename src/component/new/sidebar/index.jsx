@@ -17,7 +17,7 @@ export default function Sidebar({ links = [] }) {
     await persistor.purge();
 
     // 3️⃣ redirect to login page
-    router.push("/auth/signin");
+    router.push("/user-auth/signin");
   };
   return (
     <div className="sidebar sidebar2">

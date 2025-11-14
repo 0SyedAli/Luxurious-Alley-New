@@ -1,20 +1,28 @@
 "use client";
 import { useRouter } from "next/navigation";
 import ProfileHeader from "@/component/new/profile-header";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import {
+  collection,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { showErrorToast, showSuccessToast } from "@/lib/toast";
 
 const UserEditProfile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useSelector((state) => state.auth);
 
   const getUser = async () => {
     try {
-      const { data } = await api.get(
-        `/getUserById?userId=68ed9c864236c9662a1ac69c`
-      );
+      const { data } = await api.get(`/getUserById?userId=${user?._id || ""}`);
       if (data.success) {
         setUserData(data.data);
         console.log(data.data);
@@ -32,7 +40,7 @@ const UserEditProfile = () => {
 
   const handleUpdatePicture = async (file) => {
     const formData = new FormData();
-    formData.append("userId", "68ed9c864236c9662a1ac69c");
+    formData.append("userId", user?._id || "");
     formData.append("image", file);
 
     try {
@@ -41,12 +49,92 @@ const UserEditProfile = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+
       if (data.success) {
         console.log(data.data);
+
+        // Update Firebase chat with new profile picture
+        await updateFirebaseChatProfilePicture(user?._id, data.data.image);
+        showSuccessToast("Profile picture updated successfully");
         getUser();
       }
     } catch (error) {
-      console.log("Error fetching salons:", error);
+      showErrorToast(error?.message || "Failed to update profile picture");
+      console.log("Error updating profile picture:", error);
+    }
+  };
+
+  const updateFirebaseChatProfilePicture = async (userId, newImageUrl) => {
+    try {
+      // Get all chats where this user is a participant
+      const chatsQuery = query(collection(db, "chats"));
+
+      const snapshot = await getDocs(chatsQuery);
+      const updatePromises = [];
+
+      snapshot.docs.forEach((doc) => {
+        const chatData = doc.data();
+
+        // Check if user is a participant in this chat
+        if (chatData.participants && chatData.participants.includes(userId)) {
+          // Update the participantImages for this user
+          const updatedParticipantImages = {
+            ...chatData.participantImages,
+            [userId]: newImageUrl,
+          };
+
+          // Update the chat document
+          updatePromises.push(
+            updateDoc(doc.ref, {
+              participantImages: updatedParticipantImages,
+            })
+          );
+
+          // Also update all messages sent by this user in this chat
+          updateUserMessagesInChat(doc.id, userId, newImageUrl);
+        }
+      });
+
+      // Wait for all chat updates to complete
+      if (updatePromises.length > 0) {
+        await Promise.all(updatePromises);
+        console.log(
+          `Updated profile picture in ${updatePromises.length} chats`
+        );
+      }
+    } catch (error) {
+      console.error("Error updating Firebase chat profile picture:", error);
+    }
+  };
+
+  // Function to update user's messages in a specific chat
+  const updateUserMessagesInChat = async (chatId, userId, newImageUrl) => {
+    try {
+      const messagesQuery = query(
+        collection(db, "chats", chatId, "messages"),
+        where("senderId", "==", userId)
+      );
+
+      const snapshot = await getDocs(messagesQuery);
+      const updatePromises = [];
+
+      snapshot.docs.forEach((doc) => {
+        // Update senderImage in each message
+        updatePromises.push(
+          updateDoc(doc.ref, {
+            senderImage: newImageUrl,
+          })
+        );
+      });
+
+      if (updatePromises.length > 0) {
+        await Promise.all(updatePromises);
+        console.log(
+          `Updated ${updatePromises.length} messages in chat ${chatId}`
+        );
+      }
+    } catch (error) {
+      console.error("Error updating user messages:", error);
     }
   };
 

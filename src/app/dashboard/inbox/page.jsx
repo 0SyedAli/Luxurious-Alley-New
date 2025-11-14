@@ -379,6 +379,7 @@ const VendorInbox = ({ vendorId }) => {
   const { conversations, activeChat, messages, loading } = useSelector(
     (state) => state.chat
   );
+  
   const { sendMessage, setActiveChat } = useVendorChat();
 
   // Handle window resize for responsive behavior
@@ -549,7 +550,7 @@ const VendorInbox = ({ vendorId }) => {
 export default function VendorInboxWithProvider() {
   const state = useSelector((state) => state.auth);
   // console.log({ state });
-  const vendorId = state?.adminId || "68efdfa53cb294e3c05e1f9d";
+  const vendorId = state?.adminId || "";
   return (
     <VendorChatProvider vendorId={vendorId}>
       <VendorInbox vendorId={vendorId} />
