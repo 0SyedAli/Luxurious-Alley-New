@@ -126,7 +126,7 @@ const UserDashboardProductServiceDetails = () => {
               </div>
               <div className="d-flex flex-column justify-content-between">
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
-                  <button className="user-dashboard-box-btn" onClick={() => router.push(`/dashboard/allservices/edit/${id}`)}>Edit Now</button>
+                  <button className="user-dashboard-box-btn" onClick={() => router.push(`/dashboard/allservices/edit/${id}`)}>Edit</button>
                 </div>
               </div>
             </div>

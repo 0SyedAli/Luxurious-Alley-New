@@ -96,7 +96,7 @@ const ProductDetails = () => {
                     className="theme-btn2"
                     onClick={() => router.push(`/dashboard/allproducts/edit/${product._id}`)}
                   >
-                    Edit Now
+                    Edit
                   </button>
                 </div>
               </div>

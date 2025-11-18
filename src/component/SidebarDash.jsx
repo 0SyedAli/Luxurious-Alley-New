@@ -22,7 +22,7 @@ export default function SidebarDash() {
     { href: '/allservices', name: 'Services', icon: MdMiscellaneousServices },
     { href: '/addstylist', name: 'Add Stylist', icon: FaUserTie },
     { href: '/inbox', name: 'Inbox', icon: MdDisplaySettings },
-    { href: '/setting', name: 'Setting', icon: MdDisplaySettings },
+    { href: '/setting', name: 'Settings', icon: MdDisplaySettings },
   ];
   const handleLogout = async () => {
     // 1️⃣ clear redux state + session storage
@@ -30,7 +30,7 @@ export default function SidebarDash() {
 
     // 2️⃣ purge persisted data from localStorage
     await persistor.purge();
-
+    sessionStorage.clear();
     // 3️⃣ redirect to login page
     router.push("/auth/signin");
   };
@@ -39,7 +39,7 @@ export default function SidebarDash() {
       <div className="logo">
         <Image src={"/images/logo.png"} alt="Profile" width={353} height={190} />
       </div>
-      <div className="side_menu2">
+      <div className="side_menu2 side_menu2_top">
         <ul>
           {links.map((link, i) => (
             <li key={i}>
