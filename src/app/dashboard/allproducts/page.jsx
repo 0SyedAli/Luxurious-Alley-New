@@ -1,15 +1,24 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductsBySalon } from "@/redux/features/products/productsSlice";
+import {
+  deleteProduct,
+  fetchProductsBySalon,
+} from "@/redux/features/products/productsSlice";
 import { ProductCard } from "@/component/allproduct/product-card";
+import { showSuccessToast, showErrorToast } from "@/lib/toast";
 
 const AllProducts = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [deletingProductId, setDeletingProductId] = useState(null);
 
-  const { data: products, status, error } = useSelector((state) => state.products);
+  const {
+    data: products,
+    status,
+    error,
+  } = useSelector((state) => state.products);
 
   const salonId = sessionStorage.getItem("adminId");
 
@@ -21,6 +30,28 @@ const AllProducts = () => {
   const showNoProducts =
     (Array.isArray(products) && products.length === 0) ||
     error?.toLowerCase().includes("product not found");
+
+  const handleDeleteProduct = async (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      setDeletingProductId(productId);
+      try {
+        const resultAction = await dispatch(deleteProduct(productId));
+        
+        if (deleteProduct.fulfilled.match(resultAction)) {
+          showSuccessToast("Product deleted successfully");
+          // The product should be automatically removed from Redux state
+          // If not, you can refetch the products
+          // dispatch(fetchProductsBySalon(salonId));
+        } else {
+          showErrorToast(resultAction.payload || "Failed to delete product");
+        }
+      } catch (error) {
+        showErrorToast(error.message || "Failed to delete product");
+      } finally {
+        setDeletingProductId(null);
+      }
+    }
+  };
 
   return (
     <main className="allproducts_gradientBg w-100">
@@ -38,14 +69,15 @@ const AllProducts = () => {
       {/* grid */}
       {status === "loading" ? (
         <p>Loading products...</p>
-      ) : status === "failed" && !error?.toLowerCase().includes("product not found") ? (
+      ) : status === "failed" &&
+        !error?.toLowerCase().includes("product not found") ? (
         <p className="text-danger">{error}</p>
       ) : showNoProducts ? (
         <p>No products found.</p>
       ) : (
         <div className="row g-3 g-lg-4">
           {products.map((p) => (
-            <div key={p._id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+            <div key={p._id} className="col-12 col-sm-6 col-md-4 col-lg-3 ">
               <ProductCard
                 title={p.productName}
                 price={p.price}
@@ -62,9 +94,11 @@ const AllProducts = () => {
                 }
                 onAction={() => router.push(`/dashboard/allproducts/${p._id}`)}
                 onActionBtn={(e) => {
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   router.push(`/dashboard/allproducts/edit/${p._id}`);
                 }}
+                onDelete={() => handleDeleteProduct(p._id)}
+                isDeleting={deletingProductId === p._id}
               />
             </div>
           ))}

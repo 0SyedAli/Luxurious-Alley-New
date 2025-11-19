@@ -43,7 +43,7 @@ const AllServices = () => {
           {services.map((p) => (
             <div
               key={p._id}
-              className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2"
+              className="col-12 col-sm-6 col-md-4 col-lg-3 "
             >
               <ServiceCard
                 {...p}
