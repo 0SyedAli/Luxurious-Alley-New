@@ -1,0 +1,72 @@
+.productContainer {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top right, #4338ca 0%, #1e1b4b 50%, #0f172a 100%);
+  padding: 3rem 0;
+}
+
+.detailsSection {
+  color: #e5e7eb;
+}
+
+.productTitle {
+  color: #d97706;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.priceText {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.availabilityText {
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.attributeLabel {
+  color: #d97706;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.attributeValue {
+  color: #60a5fa;
+  margin-bottom: 0;
+}
+
+.descriptionTitle {
+  color: #d97706;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.descriptionText {
+  color: #9ca3af;
+  line-height: 1.7;
+}
+
+.reviewsTitle {
+  color: #d97706;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.editButton {
+  background-color: #d97706;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 2rem;
+  border-radius: 1.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.editButton:hover {
+  background-color: #b45309;
+}

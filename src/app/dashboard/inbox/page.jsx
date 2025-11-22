@@ -197,7 +197,7 @@ function ConversationList({ items, activeId, onSelect, loading }) {
             <div className="text-center p-4 text-light">
               <RiMessengerLine size={32} className="mb-2 opacity-50" />
               <p>No customer messages yet</p>
-              <small className="text-muted">
+              <small className="">
                 Customer conversations will appear here
               </small>
             </div>
@@ -529,7 +529,7 @@ const VendorInbox = ({ vendorId }) => {
                         <p className="mb-2 small">
                           Select a customer conversation to start chatting
                         </p>
-                        <small className="text-muted">
+                        <small className="">
                           All your customer conversations will appear here
                         </small>
                       </div>

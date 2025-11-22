@@ -161,7 +161,7 @@ export default function Dashboard() {
       </section>
 
       {/* Charts */}
-      <section className="row g-3 mb-4">
+      <section className="row g-3 mb-4 dash_charts">
         <div className="col-12 col-lg-9">
           <div className="card glass border-0 h-100">
             <div className="card-body">

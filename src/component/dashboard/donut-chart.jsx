@@ -11,7 +11,7 @@ export default function DonutChart({
   const center = size / 2
 
   return (
-    <div className="d-flex align-items-center justify-content-center h-100">
+    <div className="d-flex align-items-center justify-content-center h-lg-100">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Donut progress">
         <defs>
           <linearGradient id="donutGrad" x1="0" x2="1" y1="0" y2="1">

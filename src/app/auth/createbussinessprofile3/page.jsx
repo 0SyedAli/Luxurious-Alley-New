@@ -130,6 +130,9 @@ const CreateBusinessProfileStep3 = () => {
   return (
     <div className="content align-self-start mw-500">
       <div className="auth_container">
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className="auth_head">
           <h2>Create a business profile</h2>
         </div>
@@ -138,7 +141,7 @@ const CreateBusinessProfileStep3 = () => {
           {/* ✅ Working Days */}
           <div className="calender_container text-start">
             <label className="pb-1">Including These Days</label>
-            <div className="d-flex my-2 justify-content-between flex-wrap" style={{ gap: 10 }}>
+            <div className="d-flex my-2 justify-content-sm-between flex-wrap" style={{ gap: 10 }}>
               {daysList.map(({ short, full }) => (
                 <div className="calender_item" key={full}>
                   <input

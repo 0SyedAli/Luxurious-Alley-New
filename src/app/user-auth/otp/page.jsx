@@ -6,6 +6,7 @@ import Button from "@/component/MyButton";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import { useDispatch } from "react-redux";
 import { verifyUserOTP } from "@/redux/features/auth/authSlice";
+import Image from "next/image";
 const OTP = () => {
   const router = useRouter();
   const [code, setCode] = useState("");
@@ -81,6 +82,9 @@ const OTP = () => {
   return (
     <div className="content align-self-center mw-600">
       <div className="auth_container otp_container">
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className="auth_head">
           <h2>Verification Code</h2>
           <p>Enter 4 digit code we sent to your email</p>

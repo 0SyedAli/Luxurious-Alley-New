@@ -2169,6 +2169,7 @@ background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34,
     .side_menu2 ul {
         padding: 0 !important;
     }
+
     .side_menu2 ul li span {
         font-size: 15px;
         height: 30px;
@@ -2183,5 +2184,31 @@ background: linear-gradient(270deg, rgba(143, 108, 16, 1) 0%, rgba(162, 123, 34,
 
     .sidebar .logo img {
         width: 160px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .sidebar.sidebar2 {
+        width: 10%;
+        padding: 10px;
+        padding-top: 30px;
+    }
+
+    .sidebar .logo img {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .dth_content h2 {
+        font-size: 20px;
+    }
+
+    .dth_content h4 {
+        font-size: 17px;
+    }
+
+    .sidebar.sidebar2 {
+        width: 15%;
     }
 }

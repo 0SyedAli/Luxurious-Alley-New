@@ -140,7 +140,7 @@ const AddStylist = () => {
 
   return (
     <div className="auth_container">
-      <div className="row">
+      <div className="row w-100 gx-0">
         <div className="col-sm-12 col-md-6">
           <h4 className="h4 mb-4 allproducts_title">Add Stylist</h4>
 
@@ -201,7 +201,7 @@ const AddStylist = () => {
               <div className="col-10">
                 <label className="mt-2">Working Days</label>
                 <div
-                  className="d-flex my-2 justify-content-between flex-wrap"
+                  className="d-flex my-2 justify-content-start flex-wrap"
                   style={{ gap: 10 }}
                 >
                   {daysList.map(({ short, full }) => (
@@ -220,8 +220,8 @@ const AddStylist = () => {
               </div>
 
               {/* ✅ Time Range */}
-              <div className="col-12 d-flex align-items-center gap-3">
-                <div>
+              <div className="col-12 d-flex align-items-center flex-wrap flex-sm-nowrap gap-3">
+                <div className="w-100">
                   <label className="fw-semibold mb-2">Start Time</label>
                   <input
                     type="time"
@@ -231,7 +231,7 @@ const AddStylist = () => {
                     required
                   />
                 </div>
-                <div>
+                <div className="w-100">
                   <label className="fw-semibold mb-2">End Time</label>
                   <input
                     type="time"
@@ -256,8 +256,9 @@ const AddStylist = () => {
               </div>
 
               {/* ✅ Submit Button */}
-              <div className="col-md-12 text-start">
-                <Button isLoading={loading}>Add Now</Button>
+              <div className="col-md-12 text-start d-flex align-items-center flex-wrap gap-3">
+                <Button isLoading={loading} >Add Now</Button>
+                <Button onClick={() => router.back()} >Back</Button>
               </div>
             </div>
           </form>

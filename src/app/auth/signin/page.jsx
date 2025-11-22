@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { signInAdmin } from "@/redux/features/auth/authSlice"; // Import the thunk
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import Button from '@/component/MyButton';
+import Image from 'next/image';
 
 const Signin = () => {
     const router = useRouter();
@@ -50,6 +51,9 @@ const Signin = () => {
     return (
         <div className="content align-self-center mw-600">
             <div className='auth_container'>
+                <div className="logo d-block d-lg-none">
+                    <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+                </div>
                 <div className='auth_head'>
                     <h2>Getting Started</h2>
                     <p>Elevate your salon with a seamless setup, styled for success.</p>

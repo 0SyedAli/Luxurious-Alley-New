@@ -134,6 +134,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupUserSchema } from "@/validation/loginSchema";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
@@ -179,7 +180,11 @@ const Signup = () => {
 
   return (
     <div className="content align-self-center mw-600">
+
       <div className="auth_container mw-600">
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className="auth_head">
           <h2>Enter Your Details Below</h2>
           <p>Let's make your hair attractive</p>
@@ -251,7 +256,6 @@ const Signup = () => {
               </h5>
             </div>
           </div>
-
         </form>
       </div>
     </div>

@@ -16,7 +16,7 @@ export default function Topbar() {
   const location = user?.bAddress.slice(0, 20) || user?.city || "Location not provided";
   return (
     <div className="dash_top_header my-4 ">
-      <header className="d-flex align-items-center justify-content-between dth_content">
+      <header className="d-flex align-items-center justify-content-center text-center text-sm-start justify-content-sm-between flex-column flex-sm-row  gap-4 dth_content flex-wrap">
         <div>
           <h2 className="display-6 fw-semibold text-balance text-brand-primary mb-1">Hi Hair Affair,</h2>
           <p className="text-white small mb-0">A reason to dye</p>

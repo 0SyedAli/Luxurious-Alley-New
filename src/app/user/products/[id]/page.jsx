@@ -130,9 +130,8 @@ const UserProductDetails = () => {
                 {getProduct.images.map((image, index) => (
                   <div
                     key={index}
-                    className={`rounded-4 overflow-hidden shadow-sm cursor-pointer ${
-                      selectedImageIndex === index ? "border border-dark" : ""
-                    }`}
+                    className={`rounded-4 overflow-hidden shadow-sm cursor-pointer ${selectedImageIndex === index ? "border border-dark" : ""
+                      }`}
                     style={{ flex: 1 }}
                     onClick={() => setSelectedImageIndex(index)}
                   >
@@ -183,16 +182,16 @@ const UserProductDetails = () => {
                   <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
                     <button
                       className="inc-dec-btn rounded-circle"
-                      onClick={handleIncrement}
+                      onClick={handleDecrement}
                     >
-                      +
+                      -
                     </button>
                     <span className="inc-dec-count">{count}</span>
                     <button
                       className="inc-dec-btn rounded-circle"
-                      onClick={handleDecrement}
+                      onClick={handleIncrement}
                     >
-                      -
+                      +
                     </button>
                   </div>
                 </div>

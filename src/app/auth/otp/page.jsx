@@ -8,6 +8,7 @@ import { verifyOTP } from "@/redux/features/auth/authSlice"; // Import thunks
 import Button from "@/components/MyButton"; // Use your reusable Button component
 import Link from "next/link";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import Image from "next/image";
 // Assuming you have Toast functions (showErrorToast, showSuccessToast)
 
 const OTP = () => {
@@ -69,6 +70,9 @@ const OTP = () => {
   return (
     <div className="content align-self-center mw-600">
       <div className="auth_container otp_container">
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className="auth_head">
           <h2>Verification Code</h2>
           <p>Enter 4 digit code we sent to your email</p>

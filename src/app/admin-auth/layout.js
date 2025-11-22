@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/component/sadmin/SideBar';
 import { useEffect } from 'react';
+import Image from 'next/image';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();

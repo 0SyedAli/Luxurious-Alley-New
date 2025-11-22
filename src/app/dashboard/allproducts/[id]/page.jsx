@@ -7,6 +7,7 @@ import TabPanel from "@/component/new/tabs/tab-panel";
 import ReviewCard from "@/component/new/cards/review-card";
 import api from "@/lib/api";
 import { toast } from "react-toastify";
+import { AiFillEdit } from "react-icons/ai";
 
 const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState("customers reviews");
@@ -46,7 +47,7 @@ const ProductDetails = () => {
 
   return (
     <div className="userdashboard-product-details">
-      <div className="row w-100">
+      <div className="row w-100 gx-0 gx-sm-4">
         {/* Left: Product Images */}
         <div className="col-md-4 d-flex flex-column gap-3">
           <div className="rounded-4 overflow-hidden shadow-sm">
@@ -79,13 +80,13 @@ const ProductDetails = () => {
         {/* Right: Product Details */}
         <div className="col-md-8 d-flex flex-column justify-content-start">
           <div className="ps-md-2 ps-0 pt-3 pt-md-0">
-            <div className="d-flex justify-content-between gap-3 flex-wrap mb-4">
+            <div className="d-flex justify-content-between gap-3 mb-4">
               <div>
                 <h3 className="fw-bold mb-3 text-white">{product?.productName}</h3>
                 <h4 className="fw-medium text-light mb-3">
                   {product?.salonId?.bAddress || "No address found"}
                 </h4>
-                <h5 className="fw-medium mb-3 text-white">
+                <h5 className="fw-medium text-white mb-0">
                   About {product?.salonId?.bName || "Salon"}
                 </h5>
               </div>
@@ -93,10 +94,13 @@ const ProductDetails = () => {
               <div className="d-flex flex-column justify-content-between">
                 <div className="d-flex flex-row gap-3 align-items-center justify-content-end">
                   <button
-                    className="theme-btn2"
+                    className="theme-btn2 theme-btn2-edit"
                     onClick={() => router.push(`/dashboard/allproducts/edit/${product._id}`)}
                   >
-                    Edit Now
+                    <div className="d-none d-lg-block">
+                      Edit Now
+                    </div>
+                    <span className="fs-4 d-flex align-items-center justify-content-center d-block d-lg-none"><AiFillEdit /></span>
                   </button>
                 </div>
               </div>

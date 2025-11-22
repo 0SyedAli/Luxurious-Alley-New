@@ -12,6 +12,7 @@ import { createBussiness2Schema } from "@/validation/loginSchema";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import MultiSelect from "react-multi-select-component";
 import { fetchCategories } from "@/redux/features/category/categorySlice";
+import Image from "next/image";
 
 const CreateBusinessProfile = () => {
   const dispatch = useDispatch();
@@ -106,6 +107,9 @@ const CreateBusinessProfile = () => {
   return (
     <div className="content  mw-800">
       <div className="auth_container">
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className="auth_head">
           <h2>Create a business profile</h2>
         </div>

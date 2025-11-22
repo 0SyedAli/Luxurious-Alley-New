@@ -7,6 +7,13 @@
 .userdashboard-product-details p {
     white-space: wrap;
 }
+
+.userdashboard-product-details h4,
+.userdashboard-product-details h5 {
+    font-size: 17px;
+}
+
+
 .user-dashboard-box {
     border: 2px solid #E0B659;
     border-radius: 11px;
@@ -208,7 +215,7 @@ p {
     background: linear-gradient(90deg, rgba(35, 20, 122, 1) 0%, rgba(7, 22, 46, 1) 100%);
     color: #E0B659;
     font-size: 24px;
-    display: flex  ;
+    display: flex;
     justify-content: center;
     align-items: center;
 }

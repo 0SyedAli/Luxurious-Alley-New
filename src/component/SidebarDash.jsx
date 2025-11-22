@@ -11,16 +11,18 @@ import { useDispatch } from "react-redux";
 import { logout } from "@/redux/features/auth/authSlice";
 import { persistor } from "@/redux/store"; // import persistor
 import { useRouter } from "next/navigation";
+import { useState } from 'react';
 
 export default function SidebarDash() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const links = [
     { href: '/', name: 'Dashboard', icon: HiOutlineSquares2X2 },
     { href: '/myappointments', name: 'My Appointments', icon: IoCalendarOutline },
     { href: '/allproducts', name: 'Products', icon: BiMessageSquareDots },
     { href: '/allservices', name: 'Services', icon: MdMiscellaneousServices },
-    { href: '/addstylist', name: 'Add Stylist', icon: FaUserTie },
+    { href: '/allstylist', name: 'Stylists', icon: FaUserTie },
     { href: '/inbox', name: 'Inbox', icon: MdDisplaySettings },
     { href: '/setting', name: 'Setting', icon: MdDisplaySettings },
   ];
@@ -38,18 +40,40 @@ export default function SidebarDash() {
     <div className="sidebar sidebar2">
       <div className="logo">
         <Image src={"/images/logo.png"} alt="Profile" width={353} height={190} />
+        <button
+          className="hamburger"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          ☰
+        </button>
       </div>
-      <div className="side_menu2">
+      <div className={`side_menu2 ${isOpen ? "open" : ""}`}>
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} alt="Profile" width={353} height={190} />
+        </div>
+        <button className="hamburger" onClick={() => setIsOpen(!isOpen)} style={{ margin: "20px auto 0px" }}>
+          x
+        </button>
         <ul>
           {links.map((link, i) => (
-            <li key={i}>
+            <li key={i} onClick={() => setIsOpen(false)}>
               <span>{link.icon && <link.icon />}</span>
-              <Link href={`/dashboard${link.href}`} prefetch={true}>{link.name}</Link>
+              <Link
+                href={`/dashboard${link.href}`}
+                prefetch={true}
+              >
+                {link.name}
+              </Link>
             </li>
           ))}
+
+          <li className="d-flex d-lg-none" onClick={() => setIsOpen(false)}>
+            <span><RiLogoutBoxLine /></span>
+            <Link href="/auth/signin" onClick={handleLogout}>Logout</Link>
+          </li>
         </ul>
       </div>
-      <div className="side_menu2 sm2-end mb-5">
+      <div className="side_menu2 sm2-end mb-5 d-none d-lg-block">
         <ul className='pt-0 m-0'>
           <li className='pt-0 m-0'>
             <span><RiLogoutBoxLine /></span>
@@ -60,35 +84,3 @@ export default function SidebarDash() {
     </div>
   );
 }
-{/* <li>
-            <span><IoCalendarOutline /></span>
-            <Link href="/dashboard/appointments">Appointments</Link>
-          </li>
-          <li>
-            <span><BiMessageSquareDots /></span>
-            <Link href="/dashboard/messages">Messages</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/account-setting">Account Settings</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/clients-profile">Clients Profiles</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/employees">Employees</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/services">Services</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/marketing">Marketing</Link>
-          </li>
-          <li>
-            <span><MdDisplaySettings /></span>
-            <Link href="/dashboard/refer-friend">Refer a Friend</Link>
-          </li> */}

@@ -121,8 +121,8 @@ const UserEditProfile = () => {
       </div>
 
       <div className="auth_container pt-4">
-        <div className="row justify-content-between">
-          <div className="col-sm-12 col-md-7">
+        <div className="row justify-content-between gy-4 gx-0 gx-lg-4 w-100">
+          <div className="col-sm-12 col-lg-8 col-xl-7">
             <h4 className="txt_color mb-4 text-start">Edit Profile</h4>
             <form autoComplete="off">
               <div className="row g-3">
@@ -241,9 +241,9 @@ const UserEditProfile = () => {
                 </div>
 
                 {/* ✅ Working Days Section */}
-                <div className="calender_container text-start col-12 col-xxl-8">
+                {/* <div className="calender_container text-start col-12 col-xxl-8">
                   <label className="pb-1">Select Working Days</label>
-                  <div className="d-flex my-2 justify-content-between flex-wrap" style={{ gap: 10 }}>
+                  <div className="d-flex my-2 justify-content-start flex-wrap" style={{ gap: 10 }}>
                     {daysList.map(({ short, full }) => (
                       <div className="calender_item" key={full}>
                         <input
@@ -260,7 +260,7 @@ const UserEditProfile = () => {
                   </div>
 
                   <label className="mt-2">Time Range</label>
-                  <div className="d-flex gap-3 align-items-center py-2">
+                  <div className="d-flex gap-3 align-items-center py-2 flex-wrap flex-sm-nowrap">
                     <input
                       type="time"
                       value={startTime}
@@ -273,7 +273,7 @@ const UserEditProfile = () => {
                       onChange={(e) => setEndTime(e.target.value)}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 <div className="col-12">
                   <textarea
@@ -300,7 +300,7 @@ const UserEditProfile = () => {
             </form>
           </div>
 
-          <div className="col-sm-12 col-md-4 text-start">
+          <div className="col-sm-12 col-lg-4 text-start">
             <h4 className="txt_color mb-4">Set up your location</h4>
             <input
               type="text"

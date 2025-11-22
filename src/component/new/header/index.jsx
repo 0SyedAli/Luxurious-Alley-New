@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <div className="dash_top_header my-4 ">
       <header
-        className="d-flex align-items-center justify-content-between dth_content pb-4"
+        className="d-flex align-items-center justify-content-center text-center text-sm-start justify-content-sm-between flex-column flex-sm-row  gap-4 dth_content flex-wrap pb-4"
         style={{
           borderBottom: "1px solid #573D1A",
         }}

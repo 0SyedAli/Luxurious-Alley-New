@@ -3,11 +3,11 @@
 
 import React from 'react';
 const loadingSvg = "/images/tube-spinner.svg";
-const MyButton = ({ children, type = 'submit', className = 'theme-btn2', disabled, isLoading, onClick }) => {
+const MyButton = ({ children, type = 'submit', className, disabled, isLoading, onClick }) => {
     return (
         <button
             type={type}
-            className={className}
+            className={`${className} theme-btn2`}
             disabled={disabled || isLoading}
             onClick={onClick}
         >

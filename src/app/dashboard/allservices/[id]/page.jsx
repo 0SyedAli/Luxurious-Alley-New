@@ -115,7 +115,7 @@ const UserDashboardProductServiceDetails = () => {
         {/* Right Content Section */}
         <div className="col-md-8 d-flex flex-column justify-content-start">
           <div className="ps-md-2 ps-0 pt-3 pt-md-0">
-            <div className="d-flex justify-content-between gap-3 flex-wrap mb-4">
+            <div className="d-flex justify-content-between gap-3 mb-4">
               <div>
                 <h3 className="fw-bold mb-3 txt_color">{serviceName}</h3>
                 <h5 className="fw-medium text-light mb-3">

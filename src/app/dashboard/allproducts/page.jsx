@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductsBySalon } from "@/redux/features/products/productsSlice";
 import { ProductCard } from "@/component/allproduct/product-card";
+import api from "@/lib/api";
 
 const AllProducts = () => {
   const router = useRouter();
@@ -21,6 +22,18 @@ const AllProducts = () => {
   const showNoProducts =
     (Array.isArray(products) && products.length === 0) ||
     error?.toLowerCase().includes("product not found");
+    
+  // ========== Delete Product ==========
+  const handleDeleteProduct = async (id) => {
+    try {
+      await api.post("/deleteProduct", { id });
+
+      // Remove deleted product from UI
+      dispatch(fetchProductsBySalon(salonId));
+    } catch (error) {
+      console.error("Delete product failed:", error);
+    }
+  };
 
   return (
     <main className="allproducts_gradientBg w-100">
@@ -45,7 +58,7 @@ const AllProducts = () => {
       ) : (
         <div className="row g-3 g-lg-4">
           {products.map((p) => (
-            <div key={p._id} className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+            <div key={p._id} className="col-sm-6 col-md-4 col-xl-3">
               <ProductCard
                 title={p.productName}
                 price={p.price}
@@ -64,6 +77,11 @@ const AllProducts = () => {
                 onActionBtn={(e) => {
                   e.stopPropagation();
                   router.push(`/dashboard/allproducts/edit/${p._id}`);
+                }}
+                onDelete={() => {
+                  if (confirm(`Are you sure you want to delete this product?`)) {
+                    handleDeleteProduct(p._id);
+                  }
                 }}
               />
             </div>

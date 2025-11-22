@@ -129,6 +129,9 @@ const CreateProfile = () => {
     return (
         <div className="content  mw-800">
             <div className="auth_container">
+                <div className="logo d-block d-lg-none">
+                    <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+                </div>
                 <div className="auth_head">
                     <h2>Create profile</h2>
                 </div>
@@ -159,7 +162,7 @@ const CreateProfile = () => {
                             {fileError && <p className="text-danger text-start mt-2">{fileError}</p>}
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput
                                 name="fullName"
                                 placeholder="Full Name *"
@@ -168,7 +171,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFSelect
                                 name="gender"
                                 label="Select Gender *"
@@ -177,11 +180,11 @@ const CreateProfile = () => {
                                 errors={errors}
                             />
                         </div>
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput name="city" placeholder="City *" register={register} errors={errors} />
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput
                                 name="country"
                                 placeholder="Country / Region *"
@@ -199,7 +202,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput
                                 name="pinCode"
                                 type="number"
@@ -209,7 +212,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput
                                 name="state"
                                 placeholder="State *"
@@ -218,7 +221,7 @@ const CreateProfile = () => {
                             />
                         </div>
 
-                        <div className="col-6">
+                        <div className="col-sm-6">
                             <RHFInput
                                 name="phone"
                                 type="tel"

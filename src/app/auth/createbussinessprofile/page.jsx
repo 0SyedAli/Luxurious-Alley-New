@@ -119,6 +119,9 @@ const createBussinessProfile = () => {
   return (
     <div className="content  mw-800">
       <div className='auth_container'>
+        <div className="logo d-block d-lg-none">
+          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+        </div>
         <div className='auth_head'>
           <h2>Create a business profile</h2>
         </div>
@@ -146,7 +149,7 @@ const createBussinessProfile = () => {
                 </div>
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="bname"
                 placeholder="Business Name *"
@@ -154,7 +157,7 @@ const createBussinessProfile = () => {
                 errors={errors}
               />
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="ownerName"
                 placeholder="Owner Name *"
@@ -162,7 +165,7 @@ const createBussinessProfile = () => {
                 errors={errors}
               />
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="country"
                 placeholder="Country / Region *"
@@ -171,7 +174,7 @@ const createBussinessProfile = () => {
               />
 
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="pinCode"
                 type="number"
@@ -188,7 +191,7 @@ const createBussinessProfile = () => {
                 errors={errors}
               />
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="state"
                 placeholder="State *"
@@ -196,7 +199,7 @@ const createBussinessProfile = () => {
                 errors={errors}
               />
             </div>
-            <div className="col-6">
+            <div className="col-sm-6">
               <RHFInput
                 name="phone"
                 type="tel"
