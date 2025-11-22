@@ -6,12 +6,16 @@ import BorderTabs from "@/component/new/tabs/border-tabs";
 import TabPanel from "@/component/new/tabs/tab-panel";
 import api from "@/lib/api";
 import { userproducts } from "@/lib/products-data";
-import { setActiveVendorId, setCurrentUser } from "@/redux/features/chat/chatSlice";
+import {
+  setActiveVendorData,
+  setActiveVendorId,
+  setCurrentUser,
+} from "@/redux/features/chat/chatSlice";
 import { setBooking } from "@/redux/features/booking/bookingSlice";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FiMessageSquare } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const tabs = [
   {
@@ -55,10 +59,8 @@ const UserDashboardProductServiceDetails = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-
+  const { user } = useSelector((state) => state.auth);
   // These would typically come from your app context or props
-
-  const userId = "68ed9c864236c9662a1ac69c";
 
   const getOneSalon = async () => {
     try {
@@ -104,6 +106,35 @@ const UserDashboardProductServiceDetails = () => {
       setIsSubmitting(false);
     }
   };
+  
+ const handleChatClick = () => {
+  // Set current user
+  const userData = {
+    id: user?._id || "",
+    name: user?.username || "",
+    email: user?.email || "",
+    role: "user",
+    avatar: user?.image || "1760484156598-image.jpg", // Use actual user image if available
+  };
+
+  dispatch(setCurrentUser(userData));
+
+  // Store vendorId AND vendor data in Redux
+  dispatch(setActiveVendorId(getSalon?.salon?._id || ""));
+  
+  // ADD THIS: Store complete vendor/salon data
+  dispatch(setActiveVendorData({
+    id: getSalon?.salon?._id || "",
+    name: getSalon?.salon?.bName || "",
+    salonName: getSalon?.salon?.bName || "",
+    avatar: getSalon?.salon?.bImage || "",
+    location: getSalon?.salon?.bLocationName || "",
+    details: getSalon?.salon?.bDetails || ""
+  }));
+
+  // Navigate to inbox page
+  router.push("/user/inbox");
+};
 
   useEffect(() => {
     getOneSalon();
@@ -190,6 +221,7 @@ const UserDashboardProductServiceDetails = () => {
                         backgroundColor: "#19CC89",
                         border: "1px solid #19CC89",
                       }}
+                      onClick={handleChatClick}
                     >
                       <FiMessageSquare size={28} />
                     </button>
@@ -369,7 +401,12 @@ const UserDashboardProductServiceDetails = () => {
                       title={item?.fullName}
                       subTitle={item?.designation}
                       onCardClick={() => {
-                        dispatch(setBooking({ technicianId: item?._id, isService: false }));
+                        dispatch(
+                          setBooking({
+                            technicianId: item?._id,
+                            isService: false,
+                          })
+                        );
                         router.push(`/user/all-services`);
                       }}
                     />
@@ -426,7 +463,7 @@ const UserDashboardProductServiceDetails = () => {
         onHide={() => setOpen(false)}
         onSubmit={handleSubmitReview}
         salonId={id}
-        userId={userId}
+        userId={user?._id}
         isLoading={isSubmitting}
       />
     </div>

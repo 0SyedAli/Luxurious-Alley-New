@@ -15,7 +15,7 @@ const userLinks = [
   { href: "/user", name: "Location", icon: IoCalendarOutline },
   { href: "/user/salons", name: "Salons", icon: BiMessageSquareDots },
   { href: "/user/inbox", name: "Inbox", icon: MdDisplaySettings },
-  { href: "/user", name: "Settings", icon: MdDisplaySettings },
+  { href: "/user/profile", name: "Settings", icon: MdDisplaySettings },
 ];
 
 export default function UserDashboardLayout({ children }) {

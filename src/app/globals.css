@@ -1146,7 +1146,22 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 @media (max-height:630px) {
-  /* .content {
+  .content {
     padding-top: 0;
-  } */
+  }
 }
+
+@media (max-height:599px) {
+  .side_menu2.side_menu2_top ul {
+    height: 265px;
+    overflow-y: auto;
+  }
+}
+@media (max-height:549px) {
+  .side_menu2.side_menu2_top ul {
+    height: 250px;
+    overflow-y: auto;
+  }
+}
+
+/* @media (max-width:630px) { */

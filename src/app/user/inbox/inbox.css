@@ -20,7 +20,13 @@
     color: transparent;
 }
 
+.myInboxs input {
+    color: #FFF;
+}
 
+.myInboxs input::placeholder {
+    color: #Ccc;
+}
 
 /* Conversation custom scroll UI  */
 .custom-scrollbar {

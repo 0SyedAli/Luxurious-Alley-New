@@ -71,7 +71,10 @@ export function ProductCard({
             className="btn btn-dark btn-sm rounded-circle d-inline-flex align-items-center justify-content-center"
             aria-label="Edit"
             style={{ width: 32, height: 32, fontSize: "20px" }}
-            onClick={onActionBtn}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent triggering the card's onClick
+              onActionBtn?.();
+            }}
           >
             <AiOutlineEdit color="#D49621" />
           </button>

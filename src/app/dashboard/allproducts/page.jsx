@@ -1,16 +1,24 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductsBySalon } from "@/redux/features/products/productsSlice";
+import {
+  deleteProduct,
+  fetchProductsBySalon,
+} from "@/redux/features/products/productsSlice";
 import { ProductCard } from "@/component/allproduct/product-card";
 import api from "@/lib/api";
 
 const AllProducts = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [deletingProductId, setDeletingProductId] = useState(null);
 
-  const { data: products, status, error } = useSelector((state) => state.products);
+  const {
+    data: products,
+    status,
+    error,
+  } = useSelector((state) => state.products);
 
   const salonId = sessionStorage.getItem("adminId");
 
@@ -51,7 +59,8 @@ const AllProducts = () => {
       {/* grid */}
       {status === "loading" ? (
         <p>Loading products...</p>
-      ) : status === "failed" && !error?.toLowerCase().includes("product not found") ? (
+      ) : status === "failed" &&
+        !error?.toLowerCase().includes("product not found") ? (
         <p className="text-danger">{error}</p>
       ) : showNoProducts ? (
         <p>No products found.</p>
@@ -75,7 +84,7 @@ const AllProducts = () => {
                 }
                 onAction={() => router.push(`/dashboard/allproducts/${p._id}`)}
                 onActionBtn={(e) => {
-                  e.stopPropagation();
+                  e?.stopPropagation();
                   router.push(`/dashboard/allproducts/edit/${p._id}`);
                 }}
                 onDelete={() => {
