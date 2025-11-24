@@ -184,7 +184,19 @@ const UserEditProfile = () => {
       setLoading(false);
     }
   };
-
+  const fieldConfig = {
+    fullName: { label: "Full Name", placeholder: "Enter your full name" },
+    country: { label: "Country", placeholder: "Enter your country" },
+    city: { label: "City", placeholder: "Enter your city" },
+    state: { label: "State", placeholder: "Enter your state" },
+    address: { label: "Address", placeholder: "Enter your address" },
+    pinCode: { label: "Postal Code", placeholder: "Enter your postal code" },
+    phoneNumber: { label: "Phone Number", placeholder: "Enter phone number" },
+    bName: { label: "Business Name", placeholder: "Enter your business name" },
+    ownerName: { label: "Owner Name", placeholder: "Enter owner name" },
+    bCountry: { label: "Business Country", placeholder: "Enter business country" },
+    bPinCode: { label: "Business Postal Code", placeholder: "Enter business postal code" },
+  };
   return (
     <div className="w-100">
       <div className="mb-5">
@@ -218,24 +230,14 @@ const UserEditProfile = () => {
             <form autoComplete="off" className="settings_form">
               <div className="row g-3">
                 {/* Inputs */}
-                {[
-                  "fullName",
-                  "country",
-                  "city",
-                  "state",
-                  "address",
-                  "pinCode",
-                  "phoneNumber",
-                  "bName",
-                  "ownerName",
-                  "bCountry",
-                  "bPinCode",
-                ].map((field) => (
+
+                {Object.keys(fieldConfig).map((field) => (
                   <div className="col-md-6" key={field}>
-                    <label>{field}</label>
+                    <label>{fieldConfig[field].label}</label>
                     <input
                       type="text"
                       name={field}
+                      placeholder={fieldConfig[field].placeholder}
                       value={formData[field]}
                       onChange={handleChange}
                     />
@@ -336,8 +338,8 @@ const UserEditProfile = () => {
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18..."
                 width="100%"
-                height="450"
-                style={{ border: 0 }}
+                height="300"
+                style={{ border: 0, borderRadius: "15px" }}
                 allowFullScreen
                 loading="lazy"
               ></iframe>

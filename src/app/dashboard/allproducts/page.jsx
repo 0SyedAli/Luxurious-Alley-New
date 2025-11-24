@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { BsThreeDotsVertical } from "react-icons/bs";
+
 import {
   deleteProduct,
   fetchProductsBySalon,
@@ -134,40 +136,48 @@ const AllProducts = () => {
 
                     <td className="text-white ">{status}</td>
 
-                    <td style={{ width: "200px" }}>
-                      <div className="d-flex gap-2">
-                        <button
-                          className="btn btn-sm btn-outline-warning fw-bold px-2"
-                          style={{ fontSize: "12px" }}
-                          onClick={() =>
-                            router.push(`/dashboard/allproducts/edit/${p._id}`)
-                          }
-                        >
-                          Edit
+                    <td style={{ width: "100px" }}>
+                      <div className="dropdown product_action">
+                        <button className="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <BsThreeDotsVertical />
                         </button>
+                        <ul className="dropdown-menu">
+                          <div className="d-flex gap-2">
+                            <button
+                              className="btn btn-sm btn-outline-warning fw-bold px-2"
+                              style={{ fontSize: "12px" }}
+                              onClick={() =>
+                                router.push(`/dashboard/allproducts/edit/${p._id}`)
+                              }
+                            >
+                              Edit
+                            </button>
 
-                        <button
-                          className="btn btn-sm btn-outline-info fw-bold  px-2"
-                          style={{ fontSize: "12px" }}
-                          onClick={() =>
-                            router.push(`/dashboard/allproducts/${p._id}`)
-                          }
-                        >
-                          View
-                        </button>
+                            <button
+                              className="btn btn-sm btn-outline-info fw-bold  px-2"
+                              style={{ fontSize: "12px" }}
+                              onClick={() =>
+                                router.push(`/dashboard/allproducts/${p._id}`)
+                              }
+                            >
+                              View
+                            </button>
 
-                        <button
-                          className="btn btn-sm btn-outline-danger fw-bold  px-2"
-                          style={{ fontSize: "12px" }}
-                          onClick={() => {
-                            if (confirm("Are you sure you want to delete this product?")) {
-                              handleDeleteProduct(p._id);
-                            }
-                          }}
-                        >
-                          Delete
-                        </button>
+                            <button
+                              className="btn btn-sm btn-outline-danger fw-bold  px-2"
+                              style={{ fontSize: "12px" }}
+                              onClick={() => {
+                                if (confirm("Are you sure you want to delete this product?")) {
+                                  handleDeleteProduct(p._id);
+                                }
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </ul>
                       </div>
+
                     </td>
                   </tr>
                 );

@@ -105,7 +105,7 @@ const CreateBusinessProfile = () => {
   };
 
   return (
-    <div className="content  mw-800">
+    <div className="content  mw-500 align-self-center">
       <div className="auth_container">
         <div className="logo d-block d-lg-none">
           <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />

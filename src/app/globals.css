@@ -206,7 +206,7 @@ textarea {
 }
 
 .mw-600 {
-  width: 600px;
+  width: 500px;
 }
 
 .mw-800 {
@@ -401,7 +401,7 @@ textarea {
   text-align: left;
   padding: 30px;
   z-index: 1;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .content.chat_content {
@@ -417,7 +417,7 @@ textarea {
   flex-direction: column;
   align-items: start;
   text-align: start;
-  width: 100%;
+  /* width: 100%; */
   gap: 30px;
 }
 
@@ -537,6 +537,8 @@ textarea {
   color: #ccc !important;
   font-weight: 400;
   text-transform: capitalize;
+  font-size: 14px;
+  font-family: var(--font-epilogue);
 }
 
 .auth_container input::placeholder,
@@ -903,6 +905,20 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 .product_table td {
   font-weight: 400 !important;
 }
+.product_action {
+  background-color: transparent;
+}
+.product_action .dropdown-toggle {
+  border: 1px solid #C78015;
+  color: #FFF;
+}
+
+.product_action .dropdown-toggle::after {
+  display: none;
+}
+.product_action .dropdown-menu {
+  padding: 10px;
+}
 
 .auth_otp div {
   gap: 15px;
@@ -1211,8 +1227,18 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 @media (max-width:576px) {
   .content {
     padding: 20px;
+    width: 100%;
   }
 
+  .auth_container {
+    width: 100%;
+  }
+
+  .calender_container input[type="time"] {
+    max-width: 100px;
+    padding: 10px;
+    font-size: 11px;
+  }
 }
 
 @media (max-height:800px) {
