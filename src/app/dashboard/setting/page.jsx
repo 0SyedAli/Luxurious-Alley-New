@@ -245,8 +245,8 @@ const UserEditProfile = () => {
                 ))}
 
                 {/* Working Days */}
-                <div className="calender_container text-start col-12 col-xxl-8 mt-4">
-                  <label className="pb-2">Select Working Days</label>
+                <div className="calender_container text-start col-12 mt-4">
+                  <label className="pb-3">Select Working Days</label>
 
                   {daysList.map(({ short, full }) => (
                     <div
