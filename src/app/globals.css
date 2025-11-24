@@ -197,6 +197,9 @@ textarea {
 }
 
 
+.maxw-500 {
+  max-width: 500px;
+}
 
 .mw-500 {
   width: 500px;
@@ -364,6 +367,7 @@ textarea {
   /* height: 100vh; */
   overflow: auto;
   position: relative;
+  height: 100vh;
 }
 
 .mc_left_line {
@@ -372,8 +376,8 @@ textarea {
   background-color: #573D1A;
   position: absolute;
   top: 50%;
-  left: 0;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
 
 }
 
@@ -397,6 +401,7 @@ textarea {
   text-align: left;
   padding: 30px;
   z-index: 1;
+  width: 100%;
 }
 
 .content.chat_content {
@@ -501,12 +506,38 @@ textarea {
   font-size: 14px;
 }
 
+.calender_container table td,
+.calender_container table th {
+  background-color: transparent;
+  color: #FFF;
+  vertical-align: middle;
+}
+
+.calender_container table td:nth-child(2) input {
+  cursor: pointer;
+}
+
+
+.calender_container input[type="time"]:disabled {
+  background: #cccccc8f;
+}
+
+.calender_container input[type="time"] {
+  height: 40px;
+}
+
 /* .auth_container input:-webkit-autofill {
   background-color: transparent !important;
   -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
   -webkit-text-fill-color: #fff !important;
 } */
 
+.settings_form label {
+  padding-bottom: 10px;
+  color: #ccc !important;
+  font-weight: 400;
+  text-transform: capitalize;
+}
 
 .auth_container input::placeholder,
 .auth_container textarea::placeholder,
@@ -559,6 +590,12 @@ textarea {
   align-items: start;
   gap: 10px;
   flex-direction: column;
+  width: 100%;
+}
+
+.cp_upload_img img {
+  width: 100%;
+  height: auto;
 }
 
 .cp_upload_img input {
@@ -611,6 +648,24 @@ textarea {
 .calender_item input[type="checkbox"]:checked+label+.calender_spot {
   background-color: #CD8A1A;
 }
+
+.calender_item {
+  height: 40px;
+  width: 48px;
+}
+
+.calender_item label {
+  font-size: 12px;
+  padding: 0 !important;
+}
+
+.cover_image_change_btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.cover_image_change_btn button {}
 
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(100%) brightness(100%);
@@ -831,6 +886,22 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+.product_table th,
+.product_table td {
+  background-color: transparent;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.product_table th {
+  background-color: #C78015;
+  padding: 13px 12px;
+}
+
+.product_table td {
+  font-weight: 400 !important;
 }
 
 .auth_otp div {
@@ -1058,9 +1129,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   z-index: 99999 !important;
 }
 
-#deleteStylistModal + .modal-backdrop {
+#deleteStylistModal+.modal-backdrop {
   z-index: 99998 !important;
 }
+
 @media (max-width:1199px) {
   .auth_dashboard .sidebar {
     padding-left: 100px;
@@ -1122,6 +1194,10 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     height: 40px;
     padding: 0;
   }
+
+  .mc_left_line {
+    display: none;
+  }
 }
 
 @media (max-width:768px) {
@@ -1147,7 +1223,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 @media (max-height:630px) {
   .content {
-    padding-top: 0;
+    /* padding-top: 0; */
   }
 }
 
@@ -1157,6 +1233,7 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     overflow-y: auto;
   }
 }
+
 @media (max-height:549px) {
   .side_menu2.side_menu2_top ul {
     height: 250px;

@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import { AiOutlineEdit } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
 export function ServiceCard({
   serviceName,
@@ -10,6 +10,7 @@ export function ServiceCard({
   sellerAvatar = "/images/order-prof.png",
   onAction,
   onActionBtn,
+  onDelete,
 }) {
   // ✅ Fix: Safe image check with fallback
   const imageSrc =
@@ -40,6 +41,28 @@ export function ServiceCard({
           <img src={salonId?.image && `${process.env.NEXT_PUBLIC_IMAGE_URL}/${salonId?.image}` || "/images/dashboard-prof.png"} alt="" width={25} height={25} className="rounded-circle" />
           <small className="fw-bold text-white ">{salonId?.fullName || "N/A"}</small>
         </div>
+
+        {/* DELETE ICON (bottom-right) */}
+        <button
+          type="button"
+          className="btn btn-danger btn-sm rounded-circle position-absolute"
+          style={{
+            bottom: "10px",
+            right: "10px",
+            width: 32,
+            height: 32,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 5,
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+        >
+          <AiOutlineDelete size={16} />
+        </button>
       </div>
 
       {/* footer */}

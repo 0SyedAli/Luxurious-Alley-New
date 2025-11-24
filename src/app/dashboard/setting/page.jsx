@@ -1,15 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ProfileHeader from "@/component/new/vendor-profile-header";
 import api from "@/lib/api";
 import Button from "@/component/MyButton";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
+import axios from "axios";
+
 const UserEditProfile = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState(false);
+  const [coverUrl, setCoverUrl] = useState(false);
 
+  // DAYS LIST
   const daysList = [
     { short: "Mon", full: "Monday" },
     { short: "Tue", full: "Tuesday" },
@@ -20,12 +25,20 @@ const UserEditProfile = () => {
     { short: "Sun", full: "Sunday" },
   ];
 
-  const [selectedDays, setSelectedDays] = useState([]);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const salonId = sessionStorage.getItem("adminId")
+  const salonId = sessionStorage.getItem("adminId");
+
+  const [workingDays, setWorkingDays] = useState({
+    Monday: { isActive: false, openingTime: "", closeingTime: "" },
+    Tuesday: { isActive: false, openingTime: "", closeingTime: "" },
+    Wednesday: { isActive: false, openingTime: "", closeingTime: "" },
+    Thursday: { isActive: false, openingTime: "", closeingTime: "" },
+    Friday: { isActive: false, openingTime: "", closeingTime: "" },
+    Saturday: { isActive: false, openingTime: "", closeingTime: "" },
+    Sunday: { isActive: false, openingTime: "", closeingTime: "" },
+  });
+
+  // Form State
   const [formData, setFormData] = useState({
-    id: salonId,
     fullName: "",
     country: "",
     city: "",
@@ -37,64 +50,130 @@ const UserEditProfile = () => {
     ownerName: "",
     bCountry: "",
     bPinCode: "",
-    workingDays: [],
     bDetails: "",
   });
 
-  // ✅ Toggle days
-  const toggleDay = (day) => {
-    setSelectedDays((prev) =>
-      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
-    );
-  };
+  // Store initial fetch values to detect changes
+  const [initialData, setInitialData] = useState({});
 
-  // ✅ Handle field change
+  // Avatar / Cover File
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+
+  // Handle Inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Update profile
+  // Fetch Profile
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!salonId) return;
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/getAdminById?salonId=${salonId}`
+        );
+
+        const result = await res.json();
+        if (!result.success) return;
+
+        const data = result.data.salon;
+        setAvatarUrl(data.bImage ? data.bImage : "/images/profile_demo.jpg");
+        setCoverUrl(data.bCover ? data.bCover : "/images/profile_cover.png");
+        const loadedData = {
+          fullName: data.fullName || "",
+          country: data.country || "",
+          city: data.city || "",
+          address: data.bAddress || "",
+          pinCode: data.pinCode || "",
+          state: data.state || "",
+          phoneNumber: data.phoneNumber || "",
+          bName: data.bName || "",
+          ownerName: data.ownerName || "",
+          bCountry: data.bCountry || "",
+          bPinCode: data.bPinCode || "",
+          bDetails: data.bDetails || "",
+        };
+
+        setFormData(loadedData);
+        setInitialData(loadedData);
+
+        // Working Days Load
+        const formattedDays = {};
+        data.workingDays.forEach((d) => {
+          formattedDays[d.day] = {
+            isActive: d.isActive,
+            openingTime: d.startTime || "",
+            closeingTime: d.endTime || "",
+          };
+        });
+
+        setWorkingDays((prev) => ({ ...prev, ...formattedDays }));
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        showErrorToast("Failed to load profile data.");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Update Profile
   const handleUpdate = async () => {
     setLoading(true);
+
     try {
       const token = sessionStorage.getItem("token");
 
+      // Prepare Changed Fields
+      const changedData = {};
+
+      Object.keys(formData).forEach((key) => {
+        if (formData[key] !== initialData[key]) {
+          changedData[key] = formData[key];
+        }
+      });
+
+      // Working days structure
       const workingDaysData = daysList.map((d) => ({
         day: d.full,
-        isActive: selectedDays.includes(d.full),
-        startTime,
-        endTime,
+        isActive: workingDays[d.full].isActive,
+        startTime: workingDays[d.full].openingTime,
+        endTime: workingDays[d.full].closeingTime,
       }));
 
-      // Remove empty fields
-      const cleanedData = Object.fromEntries(
-        Object.entries(formData).filter(([_, value]) => value !== "")
-      );
+      changedData.workingDays = JSON.stringify(workingDaysData);
 
-      // ✅ Stringify workingDays if API expects JSON string
-      const finalData = {
-        ...cleanedData,
-        workingDays: JSON.stringify(workingDaysData),
-      };
+      // Prepare MULTIPART FormData
+      const formBody = new FormData();
 
-      const res = await api.post(
+      Object.keys(changedData).forEach((key) => {
+        formBody.append(key, changedData[key]);
+      });
+
+      // Add avatar + cover
+      formBody.append("id", salonId);
+      if (avatarFile) formBody.append("bImage", avatarFile);
+      if (coverFile) formBody.append("bCover", coverFile);
+
+      // API CALL
+      // const res = await api.post(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/updateAdminProfile`,
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/updateAdminProfile`,
-        finalData,
+        formBody,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       if (res.data.success) {
         showSuccessToast("Profile updated successfully!");
-        // router.push("/user/new-card");
       } else {
         showErrorToast(res.data.message || "Failed to update profile.");
       }
@@ -106,17 +185,28 @@ const UserEditProfile = () => {
     }
   };
 
-
   return (
     <div className="w-100">
       <div className="mb-5">
-        <ProfileHeader
+        {/* <ProfileHeader
           defaultCoverSrc="/images/profile_cover.png"
           defaultAvatarSrc="/images/profile_demo.jpg"
           name="Sarah J."
           location="47 Hennepard Street, San Diego (92139)"
           statusLabel="Active"
           profileChange={true}
+          onAvatarChange={(file) => setAvatarFile(file)}
+          onCoverChange={(file) => setCoverFile(file)}
+        /> */}
+        <ProfileHeader
+          defaultCoverSrc={coverUrl && coverUrl}
+          defaultAvatarSrc={avatarUrl && avatarUrl}
+          name="Sarah J."
+          location="47 Hennepard Street, San Diego (92139)"
+          statusLabel="Active"
+          profileChange={true}
+          onAvatarChange={(file) => setAvatarFile(file)}
+          onCoverChange={(file) => setCoverFile(file)}
         />
       </div>
 
@@ -124,177 +214,116 @@ const UserEditProfile = () => {
         <div className="row justify-content-between gy-4 gx-0 gx-lg-4 w-100">
           <div className="col-sm-12 col-lg-8 col-xl-7">
             <h4 className="txt_color mb-4 text-start">Edit Profile</h4>
-            <form autoComplete="off">
+
+            <form autoComplete="off" className="settings_form">
               <div className="row g-3">
-                {/* Personal Info */}
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Full Name"
-                    value={formData.fullName}
-                    onChange={handleChange}
-                  />
-                </div>
+                {/* Inputs */}
+                {[
+                  "fullName",
+                  "country",
+                  "city",
+                  "state",
+                  "address",
+                  "pinCode",
+                  "phoneNumber",
+                  "bName",
+                  "ownerName",
+                  "bCountry",
+                  "bPinCode",
+                ].map((field) => (
+                  <div className="col-md-6" key={field}>
+                    <label>{field}</label>
+                    <input
+                      type="text"
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                    />
+                  </div>
+                ))}
 
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="country"
-                    placeholder="Country"
-                    value={formData.country}
-                    onChange={handleChange}
-                  />
-                </div>
+                {/* Working Days */}
+                <div className="calender_container text-start col-12 col-xxl-8 mt-4">
+                  <label className="pb-2">Select Working Days</label>
 
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="city"
-                    placeholder="City"
-                    value={formData.city}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="state"
-                    placeholder="State"
-                    value={formData.state}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-12">
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Street Address"
-                    value={formData.address}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="pinCode"
-                    placeholder="PIN Code"
-                    value={formData.pinCode}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="number"
-                    name="phoneNumber"
-                    placeholder="Phone Number"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* Business Info */}
-                <h4 className="txt_color mt-4 mb-2 text-start">Business Profile</h4>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="bName"
-                    placeholder="Business Name"
-                    value={formData.bName}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="ownerName"
-                    placeholder="Owner Name"
-                    value={formData.ownerName}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="bCountry"
-                    placeholder="Business Country"
-                    value={formData.bCountry}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="col-md-6">
-                  <input
-                    type="text"
-                    name="bPinCode"
-                    placeholder="Business PIN Code"
-                    value={formData.bPinCode}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                {/* ✅ Working Days Section */}
-                {/* <div className="calender_container text-start col-12 col-xxl-8">
-                  <label className="pb-1">Select Working Days</label>
-                  <div className="d-flex my-2 justify-content-start flex-wrap" style={{ gap: 10 }}>
-                    {daysList.map(({ short, full }) => (
-                      <div className="calender_item" key={full}>
+                  {daysList.map(({ short, full }) => (
+                    <div
+                      key={full}
+                      className="d-flex align-items-center mb-3 gap-3 flex-wrap"
+                    >
+                      {/* Toggle Checkbox */}
+                      <div className="calender_item">
                         <input
                           type="checkbox"
-                          id={`checkbox-${short}`}
-                          checked={selectedDays.includes(full)}
-                          onChange={() => toggleDay(full)}
+                          checked={workingDays[full]?.isActive}
+                          onChange={() =>
+                            setWorkingDays((prev) => ({
+                              ...prev,
+                              [full]: {
+                                ...prev[full],
+                                isActive: !prev[full].isActive,
+                              },
+                            }))
+                          }
                         />
-                        <label htmlFor={`checkbox-${short}`}>{short}</label>
-
+                        <label>{short}</label>
                         <div className="calender_spot"></div>
                       </div>
-                    ))}
-                  </div>
 
-                  <label className="mt-2">Time Range</label>
-                  <div className="d-flex gap-3 align-items-center py-2 flex-wrap flex-sm-nowrap">
-                    <input
-                      type="time"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                    />
-                    <span className="text-white">to</span>
-                    <input
-                      type="time"
-                      value={endTime}
-                      onChange={(e) => setEndTime(e.target.value)}
-                    />
-                  </div>
-                </div> */}
+                      {/* Time Inputs */}
+                      <div className="d-flex gap-2 align-items-center">
+                        <input
+                          type="time"
+                          disabled={!workingDays[full]?.isActive}
+                          value={workingDays[full]?.openingTime}
+                          onChange={(e) =>
+                            setWorkingDays((prev) => ({
+                              ...prev,
+                              [full]: {
+                                ...prev[full],
+                                openingTime: e.target.value,
+                              },
+                            }))
+                          }
+                        />
 
+                        <span className="text-white">to</span>
+
+                        <input
+                          type="time"
+                          disabled={!workingDays[full]?.isActive}
+                          value={workingDays[full]?.closeingTime}
+                          onChange={(e) =>
+                            setWorkingDays((prev) => ({
+                              ...prev,
+                              [full]: {
+                                ...prev[full],
+                                closeingTime: e.target.value,
+                              },
+                            }))
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Business Details */}
                 <div className="col-12">
+                  <label>Business Details</label>
                   <textarea
                     name="bDetails"
-                    placeholder="Business Details"
                     value={formData.bDetails}
                     onChange={handleChange}
                     rows={5}
                   ></textarea>
                 </div>
 
-                <div className="col-md-12 text-start">
-                  {/* <button
-                    type="button"
-                    className="user-dashboard-box-btn px-5"
-                    disabled={loading}
-                    onClick={handleUpdate}
-                  >
-                    {loading ? "Updating..." : "Update"}
-                  </button> */}
-                  <Button isLoading={loading} onClick={handleUpdate}>Sign in</Button>
+                {/* Submit */}
+                <div className="col-12 text-start">
+                  <Button isLoading={loading} onClick={handleUpdate}>
+                    Update
+                  </Button>
                 </div>
               </div>
             </form>
@@ -302,14 +331,7 @@ const UserEditProfile = () => {
 
           <div className="col-sm-12 col-lg-4 text-start">
             <h4 className="txt_color mb-4">Set up your location</h4>
-            <input
-              type="text"
-              name="location"
-              placeholder="Add Location"
-              // value={formData.location}
-              // onChange={handleChange}
-              className="mb-3"
-            />
+            <input type="text" placeholder="Add Location" className="mb-3" />
             <div className="map-wrapper">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18..."
@@ -318,19 +340,7 @@ const UserEditProfile = () => {
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
-                title="Location Map"
-                className="new-york-iframe"
               ></iframe>
-              {/* <Map setLocationData={setLocationData} /> */}
-              {/* <div className="mt-3">
-                {error && <div className="text-danger mb-2">{error}</div>}
-                <AuthBtn
-                  title={isLoading ? "Saving..." : "Confirm"}
-                  type="button"
-                  disabled={isLoading}
-                  onClick={handleNext}
-                />
-              </div> */}
             </div>
           </div>
         </div>

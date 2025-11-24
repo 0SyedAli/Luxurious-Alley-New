@@ -20,8 +20,8 @@ export default function DashboardLayout({ children }) {
       <Sidebar />
       <div className="dash_bg_image">
       </div>
+      <div className="mc_left_line"></div>
       <div className="main-content">
-        <div className="mc_left_line"></div>
         {children}
       </div>
     </div>

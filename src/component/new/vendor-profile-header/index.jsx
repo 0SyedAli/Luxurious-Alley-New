@@ -1,10 +1,15 @@
 "use client";
+
 import * as React from "react";
 import { FaPlus } from "react-icons/fa";
 import "./style.css";
 import { FaCircleCheck } from "react-icons/fa6";
 import { RiEdit2Line } from "react-icons/ri";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
+import Image from "next/image";
 
 const ProfileHeader = ({
   defaultCoverSrc,
@@ -13,62 +18,110 @@ const ProfileHeader = ({
   location,
   statusLabel = "Active",
   className,
-  profileChange
+  profileChange,
+  onAvatarChange,
+  onCoverChange,
 }) => {
-  const [coverSrc, setCoverSrc] = React.useState(defaultCoverSrc);
-  const [avatarSrc, setAvatarSrc] = React.useState(defaultAvatarSrc);
+  console.log("propImage", defaultCoverSrc);
+
+  const [coverSrc, setCoverSrc] = useState(defaultCoverSrc);
+  const [avatarSrc, setAvatarSrc] = useState(defaultAvatarSrc);
   const router = useRouter();
-  // const { id } = useParams();
+  useEffect(() => {
+    setCoverSrc(defaultCoverSrc);
+  }, [defaultCoverSrc]);
 
-  const coverInputRef = React.useRef(null);
-  const avatarInputRef = React.useRef(null);
+  useEffect(() => {
+    setAvatarSrc(defaultAvatarSrc);
+  }, [defaultAvatarSrc]);
 
-  // function handleCoverChange(e) {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const url = URL.createObjectURL(file);
-  //     setCoverSrc(url);
-  //   }
-  // }
+
+
+  const coverInputRef = useRef(null);
+  const avatarInputRef = useRef(null);
+
+  function handleCoverChange(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setCoverSrc(url);
+      onCoverChange?.(file);
+    }
+  }
 
   function handleAvatarChange(e) {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setAvatarSrc(url);
+      onAvatarChange?.(file);
     }
   }
+  console.log("stateImage", coverSrc);
+  const getImageSrc = (img) => {
+    if (!img) return "/images/profile_cover.png";
 
+    // If blob URL, return directly
+    if (img.startsWith("blob:") || img.startsWith("data:")) {
+      return img;
+    }
+
+    // Otherwise, prepend server URL
+    return `${process.env.NEXT_PUBLIC_IMAGE_URL}/${img}`;
+  };
   return (
     <div className={`profile-header ${className}`}>
       {/* Cover */}
       <div className="cover-container">
-        <div className="cover-image-container">
-          <img
-            src={coverSrc || "/placeholder.svg"}
+        <div className="cover-image-container position-relative">
+          <Image
+            src={getImageSrc(coverSrc)}
+            width={1000}
+            height={300}
             alt="Profile cover"
             className="cover-image"
           />
+          <div className="cover_image_change_btn">
+
+            {/* Cover Upload */}
+            {profileChange && (
+              <button className="avatar-upload-btn"
+                onClick={() => coverInputRef.current?.click()}
+              >
+                <FaPlus color="white" />
+              </button>
+            )}
+
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden-input"
+              onChange={handleCoverChange}
+            />
+          </div>
+
         </div>
 
         {/* Avatar */}
         <div className="avatar-container">
           <div className="avatar-wrapper-profile">
-            <img
-              src={avatarSrc || "/placeholder.svg"}
-              alt={`${name} profile photo`}
+            <Image
+              src={getImageSrc(avatarSrc)}
+              width={150}
+              height={150}
+              alt="Profile photo"
               className="avatar-image"
             />
-            {/* Upload button with plus icon */}
-            {profileChange &&
+            {/* Avatar Upload */}
+            {profileChange && (
               <button
                 className="avatar-upload-btn"
                 onClick={() => avatarInputRef.current?.click()}
-                aria-label="Change profile photo"
               >
-                <FaPlus className="plus-icon" />
+                <FaPlus />
               </button>
-            }
+            )}
           </div>
 
           <input
@@ -77,34 +130,29 @@ const ProfileHeader = ({
             accept="image/*"
             className="hidden-input"
             onChange={handleAvatarChange}
-            aria-label="Change profile photo"
           />
         </div>
       </div>
-      {!profileChange &&
+
+      {!profileChange && (
         <div className="info-section">
           <div className="user-info">
             <h1 className="user-name d-flex align-items-center gap-3">
-              {name}{" "}
-              {/* {!id && (
-            )} */}
-            <button className="edit-button-container">
-              <RiEdit2Line onClick={() => router.push(`/dashboard/setting`)} />
-            </button>
+              {name}
+              <button className="edit-button-container">
+                <RiEdit2Line onClick={() => router.push(`/dashboard/setting`)} />
+              </button>
             </h1>
+
             {location && <p className="user-location">{location}</p>}
-            {/* Status */}
+
             <div className="status-container">
               <FaCircleCheck className="status-indicator" />
               <span className="status-label">{statusLabel}</span>
             </div>
           </div>
-
-          {/* Edit button on the right */}
         </div>
-      }
-      {/* Info row */}
-
+      )}
     </div>
   );
 };

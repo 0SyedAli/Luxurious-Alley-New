@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchServicesBySalon } from "@/redux/features/services/servicesSlice";
+import api from "@/lib/api";
 
 const AllServices = () => {
   const router = useRouter();
@@ -17,10 +18,20 @@ const AllServices = () => {
     if (salonId) dispatch(fetchServicesBySalon(salonId));
   }, [dispatch, salonId]);
 
-  // ✅ Handle "no products" and "product not found" both as empty state
+  // ✅ Handle "no service" and "service not found" both as empty state
   const showNoServices =
     (Array.isArray(services) && services.length === 0) ||
-    error?.toLowerCase().includes("product not found");
+    error?.toLowerCase().includes("service not found");
+  const handleDeleteService = async (id) => {
+    try {
+      await api.post("/deleteService", { id });
+
+      // Remove deleted Service from UI
+      dispatch(fetchServicesBySalon(salonId));
+    } catch (error) {
+      console.error("Delete service failed:", error);
+    }
+  };
 
   return (
     <main className="allproducts_gradientBg w-100">
@@ -51,6 +62,11 @@ const AllServices = () => {
                 onActionBtn={(e) => {
                   e.stopPropagation(); // ✅ Prevent parent click
                   router.push(`/dashboard/allservices/edit/${p._id}`); // ✅ Correct
+                }}
+                onDelete={() => {
+                  if (confirm(`Are you sure you want to delete this service?`)) {
+                    handleDeleteService(p._id);
+                  }
                 }}
               />
             </div>

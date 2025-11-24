@@ -9,37 +9,39 @@ import { createBusinessProfile } from "@/redux/features/auth/authSlice";
 import { showErrorToast, showSuccessToast } from "@/lib/toast";
 import Button from "@/components/MyButton";
 
-const daysList = [
-  { short: "Mon", full: "Monday" },
-  { short: "Tue", full: "Tuesday" },
-  { short: "Wed", full: "Wednesday" },
-  { short: "Thu", full: "Thursday" },
-  { short: "Fri", full: "Friday" },
-  { short: "Sat", full: "Saturday" },
-  { short: "Sun", full: "Sunday" },
-];
-
 const CreateBusinessProfileStep3 = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const { adminId: reduxAdminId, status } = useSelector((state) => state.auth);
+
   const storedAdminId =
     typeof window !== "undefined" ? sessionStorage.getItem("s_u_adminId") : null;
+
   const adminId = reduxAdminId || storedAdminId;
 
-  const [selectedDays, setSelectedDays] = useState(["Monday"]);
   const [documentFile, setDocumentFile] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(null);
+  const [error, setError] = useState("");
+
+  // 👉 Per-day working times
+  const [workingDays, setWorkingDays] = useState({
+    Monday: { isActive: false, openingTime: "", closeingTime: "" },
+    Tuesday: { isActive: false, openingTime: "", closeingTime: "" },
+    Wednesday: { isActive: false, openingTime: "", closeingTime: "" },
+    Thursday: { isActive: false, openingTime: "", closeingTime: "" },
+    Friday: { isActive: false, openingTime: "", closeingTime: "" },
+    Saturday: { isActive: false, openingTime: "", closeingTime: "" },
+    Sunday: { isActive: false, openingTime: "", closeingTime: "" },
+  });
 
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm();
 
-  // ✅ Redirect if not authenticated
+  // Redirect if not logged in
   useEffect(() => {
     if (
       (status === "authenticated" ||
@@ -51,15 +53,29 @@ const CreateBusinessProfileStep3 = () => {
     }
   }, [adminId, status, router]);
 
-  const toggleDay = (day) => {
-    setSelectedDays((prev) =>
-      prev.includes(day)
-        ? prev.filter((d) => d !== day)
-        : [...prev, day]
-    );
+  // Toggle active day
+  const handleActiveToggle = (day) => {
+    setWorkingDays((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        isActive: !prev[day].isActive,
+      },
+    }));
   };
 
-  // ✅ Validate file type for document (only PDF)
+  // Change per-day time
+  const handleTimeChange = (day, field, value) => {
+    setWorkingDays((prev) => ({
+      ...prev,
+      [day]: {
+        ...prev[day],
+        [field]: value,
+      },
+    }));
+  };
+
+  // Validate Document
   const handleDocumentUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type !== "application/pdf") {
@@ -70,22 +86,22 @@ const CreateBusinessProfileStep3 = () => {
     setDocumentFile(file);
   };
 
-  // ✅ Validate cover image (only image formats)
+  // Validate Cover Image
   const handleCoverUpload = (e) => {
     const file = e.target.files[0];
     if (
       file &&
       !["image/jpeg", "image/png", "image/jpg", "image/webp"].includes(file.type)
     ) {
-      showErrorToast("Only image formats (jpg, png, webp) are allowed for cover.");
+      showErrorToast("Only image formats (jpg, png, webp) are allowed.");
       e.target.value = "";
       return;
     }
     setCoverFile(file);
-    setCoverPreview(URL.createObjectURL(file)); // preview image
+    setCoverPreview(URL.createObjectURL(file));
   };
 
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     if (!adminId) {
       showErrorToast("Session expired. Please log in again.");
       router.replace("/auth/signin");
@@ -93,127 +109,150 @@ const CreateBusinessProfileStep3 = () => {
     }
 
     if (!documentFile || !coverFile) {
-      showErrorToast("Please upload both document and cover files.");
+      showErrorToast("Please upload both document and cover.");
       return;
     }
 
-    // ✅ Construct properly formatted workingDays array
-    const formattedDays = daysList.map((dayObj) => ({
-      day: dayObj.full,
-      isActive: selectedDays.includes(dayObj.full),
-      startTime: data.startTime,
-      endTime: data.endTime,
+    // Validate working days
+    const activeDays = Object.keys(workingDays).filter(
+      (d) => workingDays[d].isActive
+    );
+
+    if (activeDays.length === 0) {
+      setError("Please select at least one working day.");
+      return;
+    }
+
+    for (const day of activeDays) {
+      const { openingTime, closeingTime } = workingDays[day];
+      if (!openingTime || !closeingTime) {
+        setError(`Please add start & end time for ${day}.`);
+        return;
+      }
+    }
+
+    setError("");
+
+    // Convert working days for API
+    const formattedWorkingDays = Object.keys(workingDays).map((day) => ({
+      day,
+      isActive: workingDays[day].isActive,
+      startTime: workingDays[day].openingTime,
+      endTime: workingDays[day].closeingTime,
     }));
 
     const formData = new FormData();
     formData.append("id", adminId);
-    formData.append("workingDays", JSON.stringify(formattedDays));
-    formData.append("bDocuments", documentFile); // ✅ must match backend multer field
-    formData.append("bCover", coverFile); // ✅ must match backend multer field
+    formData.append("workingDays", JSON.stringify(formattedWorkingDays));
+    formData.append("bDocuments", documentFile);
+    formData.append("bCover", coverFile);
     formData.append("path", "/dashboard");
 
-    // Optional: Debug
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    const result = await dispatch(createBusinessProfile(formData));
 
-    const resultAction = await dispatch(createBusinessProfile(formData));
-
-    if (createBusinessProfile.fulfilled.match(resultAction)) {
-      showSuccessToast("Business profile updated successfully!");
+    if (createBusinessProfile.fulfilled.match(result)) {
+      showSuccessToast("Business profile updated!");
       router.push("/auth/signin");
     } else {
-      showErrorToast(resultAction.payload || "Failed to update profile.");
+      showErrorToast(result.payload || "Failed to update profile.");
     }
   };
 
   return (
-    <div className="content align-self-start mw-500">
+    <div className="content align-self-start maxw-500">
       <div className="auth_container">
         <div className="logo d-block d-lg-none">
-          <Image src={"/images/logo.png"} className="object-fit-contain" alt="Profile" width={200} height={100} />
+          <Image src={"/images/logo.png"} width={200} height={100} alt="Logo" />
         </div>
+
         <div className="auth_head">
           <h2>Create a business profile</h2>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
-          {/* ✅ Working Days */}
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="calender_container text-start">
-            <label className="pb-1">Including These Days</label>
-            <div className="d-flex my-2 justify-content-sm-between flex-wrap" style={{ gap: 10 }}>
-              {daysList.map(({ short, full }) => (
-                <div className="calender_item" key={full}>
-                  <input
-                    type="checkbox"
-                    id={`checkbox-${short}`}
-                    checked={selectedDays.includes(full)}
-                    onChange={() => toggleDay(full)}
-                  />
-                  <label htmlFor={`checkbox-${short}`}>{short}</label>
-                  <div className="calender_spot"></div>
-                </div>
-              ))}
+            {/* Working Days Table */}
+            <div className="wd_table wd_table_cp3 table-responsive">
+              <label className="mb-2">Working days & timing</label>
+
+              <table className="table table-bordered">
+                <thead>
+                  <tr>
+                    {/* <th>Day</th> */}
+                    <th>Active</th>
+                    <th>Start</th>
+                    <th>End</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {Object.keys(workingDays).map((day) => (
+                    <tr key={day}>
+                      {/* <td>{day}</td> */}
+
+                      <td>
+                        {/* <input
+                          type="checkbox"
+                          checked={workingDays[day].isActive}
+                          onChange={() => handleActiveToggle(day)}
+                        /> */}
+                        <div className="calender_item">
+                          <input
+                            type="checkbox"
+                            id={`checkbox-${day}`}
+                            checked={workingDays[day].isActive || false}
+                            onChange={() => handleActiveToggle(day)}
+                          />
+                          <label htmlFor={`checkbox-${day}`}>{day.slice(0, 3)}</label>
+                          <div className="calender_spot"></div>
+                        </div>
+                      </td>
+
+                      <td>
+                        <input
+                          type="time"
+                          className="form-control"
+                          disabled={!workingDays[day].isActive}
+                          value={workingDays[day].openingTime}
+                          onChange={(e) =>
+                            handleTimeChange(day, "openingTime", e.target.value)
+                          }
+                        />
+                      </td>
+
+                      <td>
+                        <input
+                          type="time"
+                          className="form-control"
+                          disabled={!workingDays[day].isActive}
+                          value={workingDays[day].closeingTime}
+                          onChange={(e) =>
+                            handleTimeChange(day, "closeingTime", e.target.value)
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
 
-            {/* ✅ Time Range */}
-            <label className="mt-2">Time Range</label>
-            <div className="cs-form time_picker d-flex gap-3 align-items-center py-2">
-              <input
-                type="time"
-                {...register("startTime", { required: true })}
-                className="classInput"
-              />
-              <span>To</span>
-              <input
-                type="time"
-                {...register("endTime", { required: true })}
-                className="classInput"
-              />
-            </div>
-
-            {/* ✅ Upload Document */}
+            {/* Upload Document */}
             <label className="mt-2">Upload Document (PDF)</label>
             <div className="cp_upload_img mt-2">
-              <Image
-                src="/images/cp_upload_cover.svg"
-                style={{ width: "100%", height: "auto" }}
-                width={400}
-                height={150}
-                alt="Upload Document"
-              />
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={handleDocumentUpload}
-              />
-              {documentFile && (
-                <p className="mt-1 text-success small">
-                  📄 {documentFile.name}
-                </p>
-              )}
+              <Image src="/images/cp_upload_cover.svg" width={400} height={150} alt="" />
+              <input type="file" accept="application/pdf" onChange={handleDocumentUpload} />
+              {documentFile && <p className="mt-1 text-success small">📄 {documentFile.name}</p>}
             </div>
 
-            {/* ✅ Upload Business Cover */}
-            <label className="mt-3">Upload the Business Cover (Image)</label>
-            <div className="cp_upload_img mt-2 position-relative">
-              <Image
-                src={"/images/cp_upload_cover.svg"}
-                style={{ width: "100%", height: "auto" }}
-                width={400}
-                height={150}
-                alt="Upload Cover"
-              />
-              <input
-                type="file"
-                accept="image/png, image/jpeg, image/jpg, image/webp"
-                onChange={handleCoverUpload}
-              />
-              {coverFile && (
-                <p className="mt-1 text-success small">
-                  🖼️ {coverFile.name}
-                </p>
-              )}
+            {/* Upload Cover */}
+            <label className="mt-3">Upload Business Cover (Image)</label>
+            <div className="cp_upload_img mt-2">
+              <Image src="/images/cp_upload_cover.svg" width={400} height={150} alt="" />
+              <input type="file" accept="image/*" onChange={handleCoverUpload} />
+              {coverFile && <p className="mt-1 text-success small">🖼️ {coverFile.name}</p>}
             </div>
           </div>
 
